@@ -1,0 +1,27 @@
+# IGNORE FOLDER
+templateFixation/data/
+templateFixation/dep/
+templateFixation/stim/
+
+templateSameDiff/data/
+templateSameDiff/dep/
+templateSameDiff/stim/
+
+templateSameDiffV2/
+
+# IGNORING TEMP FILES
+*.asv
+
+
+# Ignoring files in the main folder
+*.ffs_db
+todos.m
+
+
+
+
+
+
+
+
+
