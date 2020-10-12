@@ -16,6 +16,7 @@ templateSameDiffV2/
 # Ignoring files in the main folder
 *.ffs_db
 todos.m
+todos.txt
 
 
 

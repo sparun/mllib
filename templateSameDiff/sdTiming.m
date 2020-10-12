@@ -32,14 +32,10 @@ if ~ML_eyepresent,   error('This task requires eye signal input!');   end
 showcursor(false);
 
 % GLOBAL variables
-global iscan prevGoodXY clampCount eccThresh 
-prevGoodXY = [0.1 0.1]; 
-clampCount = 0; 
-eccThresh  = 50; 
+global iscan
 
 %% INIT checks when starting task-------------------------------------------------
 if ~isfield(TrialRecord.User, 'initFlag')
-    keyboard
     % CHECK if Experiment PC; Initialize IScan if true
     if strcmpi(getenv('COMPUTERNAME'), 'EXPERIMENT-PC') == 1
         IOPort('CloseAll');
@@ -71,12 +67,12 @@ end
 if(TrialRecord.User.mlPcFlag)
     % CLEAR out ISCAN serial buffer before beginning of this trial
     IOPort('Purge', iscan.port);
-    
-    % INVALIDATE all 0,0 eye data information with a custom function
-    EyeCal.custom_calfunc(@clampEye);
 end
 
 %% VARIABLES ---------------------------------------------------------------------
+% POINTER to trial number
+trialNum = TrialRecord.CurrentTrialNumber;
+
 % ITI (set to 0 to measure true ITI in ML Dashboard)
 set_iti(Info.iti);
 
@@ -165,7 +161,7 @@ while outcome < 0
     toggleobject(ptd);
     
     % WAIT for touch in INIT period
-    [ontarget, tTrialInit] = eyejoytrack(...
+    [ontarget, ~, tTrialInit] = eyejoytrack(...
         'touchtarget',  hold, holdRadius,...
         '~touchtarget', hold, holdRadius,...
         initPeriod);
@@ -188,10 +184,8 @@ while outcome < 0
     pause(ptdPeriod);
     toggleobject(ptd);
     
-    keyboardFlag = 1;
-    
-    % WAIT for fixation and CHECK for hold in HOLD period
-    [ontarget, tFixAcq] = eyejoytrack(...
+    % WAIT for fixation and CHECK for hold 
+    [ontarget, ~, tFixAcq] = eyejoytrack(...
         'releasetarget', hold, holdRadius,...
         '~touchtarget',  hold, holdRadius,...
         'acquirefix',    fix,  fixRadius,...
@@ -214,6 +208,30 @@ while outcome < 0
         eventmarker([bhv.holdMaint bhv.fixInit]);
     end
     
+    % CHECK hold and fixation in HOLD period
+    ontarget = eyejoytrack(...
+        'releasetarget', hold, holdRadius,...
+        '~touchtarget',  hold, holdRadius,...
+        'holdfix',    fix,  fixRadius,...
+        holdPeriod);
+    
+    if ontarget(1) == 0
+        % Error if monkey has released hold 
+        event   = [pic.holdOff pic.fixOff bhv.holdNotMaint]; 
+        outcome = err.holdBreak; break
+    elseif ontarget(2) == 1
+        % Error if monkey touched outside
+        event   = [pic.holdOff pic.fixOff bhv.holdOutside]; 
+        outcome = err.holdOutside; break
+    elseif ontarget(3) == 0
+        % Error if monkey went outside fixRadius
+        event   = [pic.holdOff pic.sampleOff bhv.fixNotMaint]; 
+        outcome = err.fixBreak; break
+    else
+        % Correctly held fixation & hold
+        eventmarker([bhv.holdMaint bhv.fixMaint]);
+    end
+    
     % REMOVE fixation cue and PRESENT sample image
     tFixAcqCueOff = toggleobject([fix sample ptd], 'eventmarker', [pic.fixOff pic.sampleOn]); 
     tSampleOn     = tFixAcqCueOff;
@@ -221,7 +239,7 @@ while outcome < 0
     toggleobject(ptd);
         
     % CHECK hold and fixation in SAMPLE ON period
-    [ontarget, ~] = eyejoytrack(...
+    ontarget = eyejoytrack(...
         'releasetarget', hold,   holdRadius,...
         '~touchtarget',  hold,   holdRadius,...
         'holdfix',       sample, fixRadius,...
@@ -251,7 +269,7 @@ while outcome < 0
     toggleobject(ptd);
 
     % CHECK hold and fixation in DELAY period
-    [ontarget, ~] = eyejoytrack('releasetarget', hold, holdRadius,...
+    ontarget = eyejoytrack('releasetarget', hold, holdRadius,...
         '~touchtarget', hold, holdRadius, 'holdfix', fix, fixRadius, delayPeriod);
     
     if ontarget(1) == 0
@@ -392,22 +410,19 @@ if(TrialRecord.User.mlPcFlag)
         serialData.paramTable = paramTable;
         serialData.when       = when;
     end
-    bhv_variable('serialData', {serialData});
-    
-    
+    bhv_variable('serialData', {serialData});  
 end
 
 % SAVE timing and reward related information
 bhv_variable(...
-    'juiceConsumed',  juiceConsumed, 'tHoldButtonOn',   tHoldButtonOn,...
-    'tTrialInit',     tTrialInit,    'tFixAcqCueOn',    tFixAcqCueOn,...
-    'tFixAcq',        tFixAcq,       'tFixAcqCueOff',   tFixAcqCueOff,...
-    'tSampleOn',      tSampleOn,     'tSampleOff',      tSampleOff,...
-    'tFixMaintCueOn', tFixAcq,       'tFixMaintCueOff', tFixMaintCueOff,...
-    'tTestRespOn',    tTestRespOn,   'tBhvResp',        tBhvResp,...
-    'tTestOff',       tTestOff,      'tAllOff',         tAllOff,...
-    'ptdPeriod',      ptdPeriod,     'clampCount',      clampCount);
-    %'clampflag',       clampflag, 'clampdata', clampdata); 
+    'juiceConsumed',  juiceConsumed,  'tHoldButtonOn',   tHoldButtonOn,...
+    'tTrialInit',     tTrialInit,     'tFixAcqCueOn',    tFixAcqCueOn,...
+    'tFixAcq',        tFixAcq,        'tFixAcqCueOff',   tFixAcqCueOff,...
+    'tSampleOn',      tSampleOn,      'tSampleOff',      tSampleOff,...
+    'tFixMaintCueOn', tFixMaintCueOn, 'tFixMaintCueOff', tFixMaintCueOff,...
+    'tTestRespOn',    tTestRespOn,    'tBhvResp',        tBhvResp,...
+    'tTestOff',       tTestOff,       'tAllOff',         tAllOff,...
+    'ptdPeriod',      ptdPeriod); 
 
 %% FOOTER END (Will automatically be updated on running UpdateTimingHeaderFooter.m)
     
@@ -415,22 +430,4 @@ bhv_variable(...
 lines       = fillDashboard(TrialData.VariableChanges, TrialRecord.User);
 for lineNum = 1:length(lines)
     dashboard(lineNum, char(lines(lineNum, 1)), [1 1 1]);
-end
-
-%% EYE-CAL FUNCTION--------------------------------------------------------------
-function xyNew = clampEye(xy)
-clampCount = clampCount + 1; 
-ecc        = sqrt(sum(xy.^2)); 
-isBad      = (sum(abs(xy)) == 0 | ecc > eccThresh); % will be 1 if xy is bad
-
-if(isBad)
-    xy = prevGoodXY;
-%     clampFlag(clampCount) = 1; 
-else
-    prevGoodXY = xy; 
-%     clampFlag(clampCount) = 0; 
-end
-% if(size(xy,1)==1), clampdata(clampCount,:) = xy;end
-% if(size(xy,1)>1), save clampdataall xy; end
-xyNew = xy; 
 end

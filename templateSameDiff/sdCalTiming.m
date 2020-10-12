@@ -21,10 +21,7 @@ if ~ML_touchpresent, error('This task requires touch signal input!'); end
 if ~ML_eyepresent,   error('This task requires eye signal input!');   end
 
 % REMOVE the joystick cursor
-global iscan prevGoodXY clampCount eccThresh 
-prevGoodXY = [0.1 0.1]; 
-clampCount = 0; 
-eccThresh  = 50; 
+global iscan 
 
 %% INIT checks when starting task-------------------------------------------------
 if ~isfield(TrialRecord.User, 'initFlag')
@@ -59,9 +56,6 @@ end
 if(TrialRecord.User.mlPcFlag)
     % CLEAR out ISCAN serial buffer before beginning of this trial
     IOPort('Purge', iscan.port);
-    
-    % INVALIDATE all 0,0 eye data information with a custom function
-    EyeCal.custom_calfunc(@clampEye);
 end
 
 %% VARIABLES ---------------------------------------------------------------------
@@ -167,7 +161,7 @@ while outcome < 0
     toggleobject(ptd);
     
     % WAIT for touch in INIT period
-    [ontarget, tTrialInit] = eyejoytrack(...
+    [ontarget, ~, tTrialInit] = eyejoytrack(...
         'touchtarget',  hold, holdRadius,...
         '~touchtarget', hold, holdRadius,...
         initPeriod);
@@ -195,7 +189,7 @@ while outcome < 0
         toggleobject(ptd);
     
         % WAIT for fixation and check for hold maintenance
-        [ontarget, tFixAcq(locID)] = eyejoytrack(...
+        [ontarget, ~, tFixAcq(locID)] = eyejoytrack(...
             'releasetarget',hold,  holdRadius,...
             '~touchtarget', hold,  holdRadius,...
             'acquirefix',   calib, fixRadius,...
@@ -219,7 +213,7 @@ while outcome < 0
         end
         
         % CHECK fixation and hold maintenance for fixationPeriod
-        [ontarget, ~] = eyejoytrack(...
+        ontarget = eyejoytrack(...
             'releasetarget',hold,  holdRadius,...
             '~touchtarget', hold,  holdRadius,...
             'holdfix',      calib, fixRadius,...
@@ -336,8 +330,7 @@ bhv_variable(...
     'juiceConsumed', juiceConsumed, 'tHoldButtonOn', tHoldButtonOn,...
     'tTrialInit',    tTrialInit,    'tFixAcqCueOn',  tFixAcqCueOn,...
     'tFixAcq',       tFixAcq,       'tFixAcqCueOff', tFixAcqCueOff,...
-    'tAllOff',       tAllOff,       'ptdPeriod',     ptdPeriod,...
-    'clampcount',    clampcount);
+    'tAllOff',       tAllOff,       'ptdPeriod',     ptdPeriod);
 
 %% FOOTER END (Will automatically be updated on running UpdateTimingHeaderFooter.m)
 
@@ -345,22 +338,4 @@ bhv_variable(...
 lines       = fillDashboard(TrialData.VariableChanges, TrialRecord.User);
 for lineNum = 1:length(lines)
     dashboard(lineNum, char(lines(lineNum, 1)), [1 1 1]);
-end
-
-%% EYE-CAL FUNCTION---------------------------------------------------------------
-function xyNew = clampEye(xy)
-clampCount = clampCount + 1; 
-ecc        = sqrt(sum(xy.^2)); 
-isBad      = (sum(abs(xy)) == 0 | ecc > eccThresh); % will be 1 if xy is bad
-
-if(isBad)
-    xy = prevGoodXY;
-%     clampFlag(clampCount) = 1; 
-else
-    prevGoodXY = xy; 
-%     clampFlag(clampCount) = 0; 
-end
-% if(size(xy,1)==1), clampdata(clampCount,:) = xy;end
-% if(size(xy,1)>1), save clampdataall xy; end
-xyNew = xy; 
 end

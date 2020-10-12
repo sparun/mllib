@@ -1,0 +1,12 @@
+templateSD - version 0.0 - thomas (28-09-2020)
+	- used to retrain monkeys
+	- clampeye disabled to check raw traces
+	- no fixation maintenance after fix acquire
+	- all eyejoytracks (other than for monkey choice) store rt
+
+templateSD - version 0.1 - thomas (12-10-2020)
+	- corrected all rt's from eyejoytrack into time from trial start
+	- incorporated a fixation maintenance period after fix acquire
+	- removed any clampEye codes (will add later if needed)
+	- still using legacy PsychtoolBox serialport funcs
+	- copied cfg file from generalSDV_0.0 as that is latest
