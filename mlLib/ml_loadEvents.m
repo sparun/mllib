@@ -9,7 +9,6 @@
 %  500-599  Auditory stimuli events    (max 30 stimuli x 2 on/off)
 %  600-699  Monkey behavioural events
 %  700-799  Reward events
-%  FILL IN THE REST
 
 function [err, pic, aud, bhv, rew, exp, trl, check, ascii] = ml_loadEvents()
 
@@ -110,8 +109,10 @@ exp.nameStart        = 1002;
 exp.nameStop         = 1003;
 exp.subjNameStart    = 1004;
 exp.subjNameStop     = 1005;
-exp.filesStart       = 1006;
-exp.filesStop        = 1007;
+exp.bhvNameStart     = 1006;
+exp.bhvNameStop      = 1007;
+exp.filesStart       = 1008;
+exp.filesStop        = 1009;
 
 % TRL FOOTER - sent after every trial
 trl.start            = 1101;

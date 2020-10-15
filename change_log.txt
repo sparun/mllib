@@ -10,3 +10,24 @@ templateSD - version 0.1 - thomas (12-10-2020)
 	- removed any clampEye codes (will add later if needed)
 	- still using legacy PsychtoolBox serialport funcs
 	- copied cfg file from generalSDV_0.0 as that is latest
+
+mlLib   - version 1.0 - thomas/georgin (15-10-2020)
+
+	- ml_initExp: asks if netcam auto record is needed.
+	- ml_startNetcamRecord, ml_stopNetcamRecord: requires watchtower to be on and cameras bound
+	  starts and stops netcam record remotely and makes appropriate folder to save files in (E:\series4\expFolder\monkeyFolder\*.mp4)
+	- ml_packHeader: corrected wrong variable name issue
+	- ml_sendHeader: send bhv file name also	
+	- ml_alert_function: updated to close serial port correctly on exp end (but any error in ML task requires MATLAB restart)
+	- ml_loadEvents: added codes for bhvName start and stop
+	- ml_makeConditionSD: increased fixation point size to 0.6dva from 0.3dva
+
+
+templateSD - version 1.0 - thomas/georgin (15-10-2020)
+
+	- removed dependency on legacy iscan serial code
+	- noe use MATLABs own serialport function (always add default file to top of path as ML also has similarly named function)
+	- updated calibration timing file to have cal point acquire time and hodl time as editable vars
+	- cleared up timing code text (removed sections and unwanted variables)
+	- new eye calib settings as juice spout and touchscreen height increased by ~2.5cm.
+	- now there are individual monkeys dqw settings files for iscan also (eg: illumBelowTrackerAbovCoCo20201015.def)

@@ -4,8 +4,7 @@ function lines = fillDashboard(tempVars, tempUser)
 bufferSize       = 50;
 expectedResponse = tempUser.expectedResponse;
 responseCorrect  = tempUser.responseCorrect;
-% invalidInd       = find(responseCorrect ~= 0 & responseCorrect ~= 6);
-invalidInd       = find(responseCorrect == 8);
+invalidInd       = find(responseCorrect ~= 0 & responseCorrect ~= 6);
 
 expectedResponse(invalidInd) = [];
 responseCorrect(invalidInd)  = [];
@@ -45,7 +44,6 @@ if max(trials) > bufferSize
     
     % WEIGHTED running accuracy
     xx               = responseCorrect;
-    xx(xx ~= 0 & xx ~= 6) = 0;
     xx(xx == 0)      = 1;
     xx(xx == 6)      = 0;
     weights          = (1:bufferSize) / (sum(1:bufferSize));

@@ -13,7 +13,7 @@
 %                 Thomas
 % - 19-09-2020  - Thomas  - Updated event codes implemented
 
-function ml_sendHeader(MLConfig)
+function TrialRecord = ml_sendHeader(MLConfig, TrialRecord)
 
 % LOAD mlErrorCodes and evtCodes
 [~, ~, ~, ~, ~, exp, ~, ~, ascii] = ml_loadEvents();
@@ -69,16 +69,40 @@ evtCodeBin = dec2binvec(exp.subjNameStop,nBits);
 outputSingleScan(transmitSession1, evtCodeBin);
 ml_sendStrobe(transmitSession2);
 
+%% TRANSMIT BHV FILE NAME--------------------------------------------------------
+bhvFileName = MLConfig.FormattedName;
+transmitStr = double(bhvFileName);
+
+% START Marker
+evtCodeBin = dec2binvec(exp.bhvNameStart,nBits);
+outputSingleScan(transmitSession1, evtCodeBin);
+ml_sendStrobe(transmitSession2);
+
+% TRANSMIT
+for i = 1:length(transmitStr)
+    evtCodeBin = dec2binvec(ascii.shift + transmitStr(i),nBits);
+    outputSingleScan(transmitSession1, evtCodeBin);
+    ml_sendStrobe(transmitSession2);
+end
+
+% STOP Marker
+evtCodeBin = dec2binvec(exp.bhvNameStop,nBits);
+outputSingleScan(transmitSession1, evtCodeBin);
+ml_sendStrobe(transmitSession2);
+
 %% TRANSMIT FILES-----------------------------------------------------------------
 % PACK allowed files for header transmission
 allowedFileTypes = {'*.m' '*.mat' '*.txt'};
 files            = ml_packHeader(allowedFileTypes);
 
+% SAVE packHeader files into TrialRecord.User
+TrialRecord.User.files = files;
+
 % CREATE header for transmission
 transmitStr = ml_makeHeader(files);
 
 % START Marker
-evtCodeBin = dec2binvec(exp.filesStart,nBits); %
+evtCodeBin = dec2binvec(exp.filesStart,nBits); 
 outputSingleScan(transmitSession1, evtCodeBin);
 ml_sendStrobe(transmitSession2);
 

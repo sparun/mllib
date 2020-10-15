@@ -57,7 +57,7 @@ fprintf(conditionsFile, 'Condition\tInfo\tFrequency\tBlock\tTiming File\tTaskObj
 % TASK objects - Static
 taskObj1Ptd    = sprintf('sqr([%d %d], [%d %d %d], 1,  0,  19)', ptdSize, ptdSize, ptdBoxColor);
 taskObj2Hold   = sprintf('crc(%d, [%d %d %d], 1, 20,   0)', buttonRadius, buttonColor);
-taskObj3Fix    = 'sqr([0.3 0.3], [0.5 0.5 0], 1, 0, 0)';
+taskObj3Fix    = 'sqr([0.6 0.6], [0.5 0.5 0], 1, 0, 0)';
 taskObj4Calib  = sprintf('crc(%1.1f, [%1.1f %1.1f %1.1f], 1, 0, 0)', calibRadius, calibColor);
 % taskObj5Same   = sprintf('crc(%d, [%d %d %d], 1, 20,  15)', buttonRadius, buttonColor);
 % taskObj6Diff   = sprintf('crc(%d, [%d %d %d], 1, 20, -15)', buttonRadius, buttonColor);

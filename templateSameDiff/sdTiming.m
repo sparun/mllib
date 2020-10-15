@@ -1,14 +1,12 @@
-% SAME-DIFF TASK TEMPLATE for MonkeyLogic - Vision Lab, IISc
+% SAME-DIFF TRIAL for MonkeyLogic 
+% - Vision Lab, IISc
 % ----------------------------------------------------------------------------------------
 % Presents a sample and test image at the center of the screen but separated temporally.
 % Provides two touch button on the right side (from subjects' POV) as responses:
 %   - Top button for 'same' response, and
 %   - Bottom button for 'diff' response.
 %
-% NOTE: Response button order is flipped for monkey named 'JuJu'.
-%
 % VERSION HISTORY
-% ----------------------------------------------------------------------------------------
 % - 14-Jun-2019 - Thomas  - First implementation
 %                 Zhivago
 % - 03-Feb-2020 - Harish  - Added fixation contingency to hold and sample on/off period
@@ -21,55 +19,17 @@
 % - 10-Aug-2020 - Thomas  - Removed bulk adding of variables to TrialRecord.User
 %                         - Simplified general code structure, specifically on errors
 % - 14-Sep-2020 - Thomas  - General changes to code structure to improve legibilty
+% - 14-Oct-2020 - Thomas  - Updated all eyejoytrack to absolute time and not rt
+% ----------------------------------------------------------------------------------------
+% HEADER start ---------------------------------------------------------------------------
 
-%% HEADER START (Will automatically be updated on running UpdateTimingHeaderFooter.m)
-
-%% CHECK if touch and eyesignal are present to continue---------------------------
+% CHECK if touch and eyesignal are present to continue
 if ~ML_touchpresent, error('This task requires touch signal input!'); end
 if ~ML_eyepresent,   error('This task requires eye signal input!');   end
 
 % REMOVE the joystick cursor
 showcursor(false);
 
-% GLOBAL variables
-global iscan
-
-%% INIT checks when starting task-------------------------------------------------
-if ~isfield(TrialRecord.User, 'initFlag')
-    % CHECK if Experiment PC; Initialize IScan if true
-    if strcmpi(getenv('COMPUTERNAME'), 'EXPERIMENT-PC') == 1
-        IOPort('CloseAll');
-		iscan  = ml_psy_init_iscan_ETL300HD();
-        TrialRecord.User.mlPcFlag = 1;
-    else
-        TrialRecord.User.mlPcFlag = 0;
-    end
-    
-    % CHECK if correct monkey name is entered
-    if strcmpi(MLConfig.SubjectName, 'didi') ~= 1 &&...
-            strcmpi(MLConfig.SubjectName, 'juju') ~= 1 &&...
-            strcmpi(MLConfig.SubjectName, 'coco') ~= 1 &&...
-            strcmpi(MLConfig.SubjectName, 'test') ~= 1
-        error('Monkey name is incorrect. It can only be either DiDi or JuJu!');
-    end
-    
-    % POPULATE TrialRecord with event codes
-    [TrialRecord.User.err, TrialRecord.User.pic,...
-        TrialRecord.User.aud, TrialRecord.User.bhv,...
-        TrialRecord.User.rew, TrialRecord.User.exp,...
-        TrialRecord.User.trl] = ml_loadEvents();
-    
-    % SET initFlag
-    TrialRecord.User.initFlag = 1;
-end
-
-%% PURGE IScan Serial Port--------------------------------------------------------
-if(TrialRecord.User.mlPcFlag)
-    % CLEAR out ISCAN serial buffer before beginning of this trial
-    IOPort('Purge', iscan.port);
-end
-
-%% VARIABLES ---------------------------------------------------------------------
 % POINTER to trial number
 trialNum = TrialRecord.CurrentTrialNumber;
 
@@ -97,8 +57,8 @@ exp = TrialRecord.User.exp;
 trl = TrialRecord.User.trl;
 
 % POINTERS to TaskObjects
-ptd  = 1; hold    = 2; fix      = 3; calib  = 4; same = 5; 
-diff = 6; audCorr = 7; audWrong = 8; sample = 9; test = 10;  
+ptd  = 1; hold    = 2; fix      = 3; calib  = 4; same = 5;
+diff = 6; audCorr = 7; audWrong = 8; sample = 9; test = 10;
 
 % SET response button order for SD task
 if ~isfield(TrialRecord.User, 'respOrder')
@@ -108,7 +68,6 @@ if ~isfield(TrialRecord.User, 'respOrder')
         TrialRecord.User.respOrder = [same diff];
     end
 end
-
 respOrder = TrialRecord.User.respOrder;
 
 % EDITABLE variables that can be changed during the task
@@ -117,16 +76,16 @@ editable(...
     'fixPeriod',   'calHoldPeriod', 'calRandFlag',...
     'rewardVol',   'rewardLine',    'rewardReps',...
     'rewardRepsGap');
-goodPause     = 200; 
-badPause      = 1000; 
-fixRadius     = 100; 
-fixPeriod     = 200; 
-calHoldPeriod = 500; 
-calRandFlag   = 0; 
+goodPause     = 200;
+badPause      = 1000;
+fixRadius     = 100;
+fixPeriod     = 200;
+calHoldPeriod = 500;
+calRandFlag   = 0;
 rewardVol     = 0.2;
 rewardLine    = 1;
 rewardReps    = 1;
-rewardRepsGap = 500; 
+rewardRepsGap = 500;
 
 % DECLARE select timing and reward variables as NaN
 tHoldButtonOn   = NaN;
@@ -144,9 +103,9 @@ tTestOff        = NaN;
 tAllOff         = NaN;
 juiceConsumed   = NaN;
 
-%% HEADER END (Will automatically be updated on running UpdateTimingHeaderFooter.m)
+% HEADER end -----------------------------------------------------------------------------
+% TRIAL start ----------------------------------------------------------------------------
 
-%% TRIAL -------------------------------------------------------------------------
 % CHECK and proceed only if screen is not being touched
 while istouching(), end
 outcome = -1;
@@ -154,6 +113,7 @@ outcome = -1;
 % TRIAL start
 eventmarker(trl.start);
 
+% RUN trial sequence till outcome registered
 while outcome < 0
     % PRESENT hold button
     tHoldButtonOn = toggleobject([hold ptd], 'eventmarker', pic.holdOn);
@@ -165,7 +125,7 @@ while outcome < 0
         'touchtarget',  hold, holdRadius,...
         '~touchtarget', hold, holdRadius,...
         initPeriod);
-
+    
     if(sum(ontarget) == 0)
         % Error if there's no touch anywhere
         event   = [pic.holdOff bhv.holdNotInit];
@@ -180,11 +140,11 @@ while outcome < 0
     end
     
     % PRESENT fixation cue
-    tFixAcqCueOn = toggleobject([fix ptd], 'eventmarker', pic.fixOn); 
+    tFixAcqCueOn = toggleobject([fix ptd], 'eventmarker', pic.fixOn);
     pause(ptdPeriod);
     toggleobject(ptd);
     
-    % WAIT for fixation and CHECK for hold 
+    % WAIT for fixation and CHECK for hold in HOLD period
     [ontarget, ~, tFixAcq] = eyejoytrack(...
         'releasetarget', hold, holdRadius,...
         '~touchtarget',  hold, holdRadius,...
@@ -192,16 +152,16 @@ while outcome < 0
         holdPeriod);
     
     if ontarget(1) == 0
-        % Error if monkey has released hold 
-        event   = [pic.holdOff pic.fixOff bhv.holdNotMaint]; 
+        % Error if monkey has released hold
+        event   = [pic.holdOff pic.fixOff bhv.holdNotMaint];
         outcome = err.holdBreak; break
     elseif ontarget(2) == 1
         % Error if monkey touched outside
-        event   = [pic.holdOff pic.fixOff bhv.holdOutside]; 
+        event   = [pic.holdOff pic.fixOff bhv.holdOutside];
         outcome = err.holdOutside; break
     elseif ontarget(3) == 0
         % Error if monkey never looked inside fixRadius
-        event   = [pic.holdOff pic.fixOff bhv.fixNotInit ]; 
+        event   = [pic.holdOff pic.fixOff bhv.fixNotInit ];
         outcome = err.fixNil; break
     else
         % Correctly acquired fixation and held hold
@@ -230,14 +190,14 @@ while outcome < 0
     else
         % Correctly held fixation & hold
         eventmarker([bhv.holdMaint bhv.fixMaint]);
-    end
+    end    
     
     % REMOVE fixation cue and PRESENT sample image
-    tFixAcqCueOff = toggleobject([fix sample ptd], 'eventmarker', [pic.fixOff pic.sampleOn]); 
+    tFixAcqCueOff = toggleobject([fix sample ptd], 'eventmarker', [pic.fixOff pic.sampleOn]);
     tSampleOn     = tFixAcqCueOff;
     pause(ptdPeriod);
     toggleobject(ptd);
-        
+    
     % CHECK hold and fixation in SAMPLE ON period
     ontarget = eyejoytrack(...
         'releasetarget', hold,   holdRadius,...
@@ -246,16 +206,16 @@ while outcome < 0
         samplePeriod);
     
     if ontarget(1) == 0
-        % Error if monkey has released hold 
-        event   = [pic.holdOff pic.sampleOff bhv.holdNotMaint]; 
+        % Error if monkey has released hold
+        event   = [pic.holdOff pic.sampleOff bhv.holdNotMaint];
         outcome = err.holdBreak; break
     elseif ontarget(2) == 1
         % Error if monkey touched outside
-        event   = [pic.holdOff pic.sampleOff bhv.holdOutside]; 
+        event   = [pic.holdOff pic.sampleOff bhv.holdOutside];
         outcome = err.holdOutside; break
     elseif ontarget(3) == 0
         % Error if monkey went outside fixRadius
-        event   = [pic.holdOff pic.sampleOff bhv.fixNotMaint]; 
+        event   = [pic.holdOff pic.sampleOff bhv.fixNotMaint];
         outcome = err.fixBreak; break
     else
         % Correctly held fixation & hold
@@ -267,18 +227,18 @@ while outcome < 0
     tFixMaintCueOn = tSampleOff;
     pause(ptdPeriod);
     toggleobject(ptd);
-
+    
     % CHECK hold and fixation in DELAY period
     ontarget = eyejoytrack('releasetarget', hold, holdRadius,...
         '~touchtarget', hold, holdRadius, 'holdfix', fix, fixRadius, delayPeriod);
     
     if ontarget(1) == 0
-        % Error if monkey has released hold 
-        event   = [pic.holdOff pic.fixOff bhv.holdNotMaint]; 
+        % Error if monkey has released hold
+        event   = [pic.holdOff pic.fixOff bhv.holdNotMaint];
         outcome = err.holdBreak; break
     elseif ontarget(2) == 1
         % Error if monkey touched outside
-        event   = [pic.holdOff pic.fixOff bhv.holdOutside]; 
+        event   = [pic.holdOff pic.fixOff bhv.holdOutside];
         outcome = err.holdOutside; break
     elseif ontarget(3) == 0
         % Error if monkey went outside fixRadius
@@ -295,7 +255,7 @@ while outcome < 0
     tTestRespOn     = tFixMaintCueOff;
     pause(ptdPeriod);
     toggleobject(ptd);
-
+    
     % WAIT for response in TEST ON period
     [chosenResp, ~, tBhvResp] = eyejoytrack(...
         'touchtarget',  respOrder, holdRadius,...
@@ -318,28 +278,34 @@ while outcome < 0
     
     if chosenResp(1) == 0 && chosenResp(2) == 0
         % Error if no response from monkey
-        event   = [pic.choiceOff bhv.respNil]; 
+        event   = [pic.choiceOff bhv.respNil];
         outcome = err.respNil; break
     elseif chosenResp(1) == 0 && chosenResp(2) == 1
         % Error if monkey touched outside
-        event   = [pic.choiceOff bhv.holdOutside]; 
+        event   = [pic.choiceOff bhv.holdOutside];
         outcome = err.holdOutside; break
     elseif chosenResp(1) == Info.expectedResponse && chosenResp(2) == 1
         % Correct response by monkey
-        event   = [pic.choiceOff bhv.respCorr rew.juice]; 
+        event   = [pic.choiceOff bhv.respCorr rew.juice];
         outcome = err.respCorr; break
     else
         % Wrong response by monkey
-        event   = [pic.choiceOff bhv.respWrong]; 
+        event   = [pic.choiceOff bhv.respWrong];
         outcome = err.respWrong; break
     end
 end
 
-%% FOOTER START (Will automatically be updated on running UpdateTimingHeaderFooter.m)
+% SET trial outcome and remove all stimuli
 trialerror(outcome);
 tAllOff = toggleobject(1:10, 'status', 'off', 'eventmarker', event);
 
-%% REWARD monkey if correct response given----------------------------------------
+% TRIAL end
+eventmarker(trl.stop);
+
+% TRIAL end ------------------------------------------------------------------------------ 
+% FOOTER start --------------------------------------------------------------------------- 
+
+% REWARD monkey if correct response given
 if outcome == err.holdNil
     % TRIAL not initiated; give good pause
     idle(goodPause);
@@ -359,10 +325,7 @@ else
     idle(badPause);
 end
 
-% TRIAL end
-eventmarker(trl.stop);
-
-%% SEND trial footer eventmarkers-------------------------------------------------
+% SEND trial footer eventmarkers
 cTrial       = trl.trialShift       + TrialRecord.CurrentTrialNumber;
 cBlock       = trl.blockShift       + TrialRecord.CurrentBlock;
 cTrialWBlock = trl.trialWBlockShift + TrialRecord.CurrentTrialWithinBlock;
@@ -379,41 +342,19 @@ end
 eventmarker(trl.footerStart);
 
 % SEND footers
-eventmarker(cTrial);      eventmarker(cBlock);       eventmarker(cTrialWBlock); 
-eventmarker(cCondition);  eventmarker(cTrialError);  eventmarker(cExpResponse); 
+eventmarker(cTrial);      eventmarker(cBlock);       eventmarker(cTrialWBlock);
+eventmarker(cCondition);  eventmarker(cTrialError);  eventmarker(cExpResponse);
 eventmarker(cTrialFlag);
 
 % FOOTER end marker
 eventmarker(trl.footerStop);
 
-%% SAVE to TrialRecord.user-------------------------------------------------------
+% SAVE to TrialRecord.user
 TrialRecord.User.juiceConsumed(trialNum)    = juiceConsumed;
 TrialRecord.User.responseCorrect(trialNum)  = outcome;
 TrialRecord.User.expectedResponse(trialNum) = Info.expectedResponse;
 
-%% SAVE to Data.UserVars----------------------------------------------------------
-% ISCAN serialData ?? ADD eventmarker for IScan serial on off purge ??
-if(TrialRecord.User.mlPcFlag)
-    % SAVE IScan serial eye data ?? on correct trials ??
-    [data, when, errMsg] = IOPort('Read', iscan.port);
-    [paramTable, params] = ml_decode_bin_stream_ETL300HD(data);
-    serialData           = [];
-    
-    if ~isempty(paramTable)
-        serialData.pupilX     = paramTable(:,1);
-        serialData.pupilY     = paramTable(:,2);
-        serialData.cornealX   = paramTable(:,3);
-        serialData.cornealY   = paramTable(:,4);
-        serialData.dx         = paramTable(:,5);
-        serialData.dy         = paramTable(:,6);
-        serialData.data       = data;
-        serialData.paramTable = paramTable;
-        serialData.when       = when;
-    end
-    bhv_variable('serialData', {serialData});  
-end
-
-% SAVE timing and reward related information
+% SAVE to Data.UserVars
 bhv_variable(...
     'juiceConsumed',  juiceConsumed,  'tHoldButtonOn',   tHoldButtonOn,...
     'tTrialInit',     tTrialInit,     'tFixAcqCueOn',    tFixAcqCueOn,...
@@ -422,11 +363,11 @@ bhv_variable(...
     'tFixMaintCueOn', tFixMaintCueOn, 'tFixMaintCueOff', tFixMaintCueOff,...
     'tTestRespOn',    tTestRespOn,    'tBhvResp',        tBhvResp,...
     'tTestOff',       tTestOff,       'tAllOff',         tAllOff,...
-    'ptdPeriod',      ptdPeriod); 
+    'ptdPeriod',      ptdPeriod);
 
-%% FOOTER END (Will automatically be updated on running UpdateTimingHeaderFooter.m)
-    
-%% DASHBOARD (CUSTOMIZE AS REQUIRED)---------------------------------------------
+% FOOTER end------------------------------------------------------------------------------
+% DASHBOARD (customize as required)-------------------------------------------------------
+
 lines       = fillDashboard(TrialData.VariableChanges, TrialRecord.User);
 for lineNum = 1:length(lines)
     dashboard(lineNum, char(lines(lineNum, 1)), [1 1 1]);
