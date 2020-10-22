@@ -42,7 +42,7 @@ switch hook
         if TrialRecord.User.sendHeaderFlag
             % SEND header to eCube if MLPC
             disp('[UPDATE] - sending header to eCube');
-            TrialRecord = ml_sendHeader(MLConfig, TrialRecord);
+            ml_sendHeader(MLConfig);
             disp('[UPDATE] - header info sent to eCube');
         end
         

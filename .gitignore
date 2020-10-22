@@ -4,10 +4,8 @@ templateFixation/dep/
 templateFixation/stim/
 
 templateSameDiff/data/
-templateSameDiff/dep/
-templateSameDiff/stim/
 
-templateSameDiffV2/
+templateSameDiff_*/
 
 # IGNORING TEMP FILES
 *.asv

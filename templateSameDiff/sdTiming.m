@@ -34,10 +34,9 @@ showcursor(false);
 trialNum = TrialRecord.CurrentTrialNumber;
 
 % ITI (set to 0 to measure true ITI in ML Dashboard)
-set_iti(Info.iti);
+set_iti(200);
 
 % PARAMETERS relevant for task timing and hold/fix control
-ptdPeriod    = 0.01;
 initPeriod   = Info.initPeriod;
 holdPeriod   = Info.holdPeriod;
 holdRadius   = Info.holdRadius;
@@ -55,6 +54,7 @@ bhv = TrialRecord.User.bhv;
 rew = TrialRecord.User.rew;
 exp = TrialRecord.User.exp;
 trl = TrialRecord.User.trl;
+chk = TrialRecord.User.chk;
 
 % POINTERS to TaskObjects
 ptd  = 1; hold    = 2; fix      = 3; calib  = 4; same = 5;
@@ -110,6 +110,9 @@ juiceConsumed   = NaN;
 while istouching(), end
 outcome = -1;
 
+% SEND check even lines
+eventmarker(chk.linesEven);
+
 % TRIAL start
 eventmarker(trl.start);
 
@@ -117,8 +120,6 @@ eventmarker(trl.start);
 while outcome < 0
     % PRESENT hold button
     tHoldButtonOn = toggleobject([hold ptd], 'eventmarker', pic.holdOn);
-    pause(ptdPeriod);
-    toggleobject(ptd);
     
     % WAIT for touch in INIT period
     [ontarget, ~, tTrialInit] = eyejoytrack(...
@@ -141,8 +142,6 @@ while outcome < 0
     
     % PRESENT fixation cue
     tFixAcqCueOn = toggleobject([fix ptd], 'eventmarker', pic.fixOn);
-    pause(ptdPeriod);
-    toggleobject(ptd);
     
     % WAIT for fixation and CHECK for hold in HOLD period
     [ontarget, ~, tFixAcq] = eyejoytrack(...
@@ -195,8 +194,6 @@ while outcome < 0
     % REMOVE fixation cue and PRESENT sample image
     tFixAcqCueOff = toggleobject([fix sample ptd], 'eventmarker', [pic.fixOff pic.sampleOn]);
     tSampleOn     = tFixAcqCueOff;
-    pause(ptdPeriod);
-    toggleobject(ptd);
     
     % CHECK hold and fixation in SAMPLE ON period
     ontarget = eyejoytrack(...
@@ -225,8 +222,6 @@ while outcome < 0
     % REMOVE sample image ans PRESENT fixation cue
     tSampleOff     = toggleobject([sample fix ptd], 'eventmarker', [pic.sampleOff pic.fixOn]);
     tFixMaintCueOn = tSampleOff;
-    pause(ptdPeriod);
-    toggleobject(ptd);
     
     % CHECK hold and fixation in DELAY period
     ontarget = eyejoytrack('releasetarget', hold, holdRadius,...
@@ -253,8 +248,6 @@ while outcome < 0
     tFixMaintCueOff = toggleobject([fix hold test same diff ptd], 'eventmarker',...
         [pic.fixOff pic.holdOff pic.choiceOn pic.testOn]);
     tTestRespOn     = tFixMaintCueOff;
-    pause(ptdPeriod);
-    toggleobject(ptd);
     
     % WAIT for response in TEST ON period
     [chosenResp, ~, tBhvResp] = eyejoytrack(...
@@ -264,8 +257,6 @@ while outcome < 0
     
     % REMOVE test image
     tTestOff = toggleobject([test ptd],'eventmarker', pic.testOff);
-    pause(ptdPeriod);
-    toggleobject(ptd);
     
     % WAIT for response if TEST period < RESP period
     if testPeriod < respPeriod
@@ -325,7 +316,7 @@ else
     idle(badPause);
 end
 
-% SEND trial footer eventmarkers
+% ASSIGN trial footer eventmarkers
 cTrial       = trl.trialShift       + TrialRecord.CurrentTrialNumber;
 cBlock       = trl.blockShift       + TrialRecord.CurrentBlock;
 cTrialWBlock = trl.trialWBlockShift + TrialRecord.CurrentTrialWithinBlock;
@@ -338,13 +329,39 @@ if isfield(Info, 'trialFlag')
     cTrialFlag = cTrialFlag + Info.trialFlag;
 end
 
+% ASSIGN trial footer editable
+cGoodPause     = trl.edtShift + TrialRecord.Editable.goodPause;
+cBadPause      = trl.edtShift + TrialRecord.Editable.badPause;
+cFixRadius     = trl.edtShift + TrialRecord.Editable.fixRadius;
+cFixPeriod     = trl.edtShift + TrialRecord.Editable.fixPeriod;
+cCalHoldPeriod = trl.edtShift + TrialRecord.Editable.calHoldPeriod;
+cRewardVol     = trl.edtShift + TrialRecord.Editable.rewardVol*1000;
+
 % FOOTER start marker
 eventmarker(trl.footerStart);
 
 % SEND footers
-eventmarker(cTrial);      eventmarker(cBlock);       eventmarker(cTrialWBlock);
-eventmarker(cCondition);  eventmarker(cTrialError);  eventmarker(cExpResponse);
+eventmarker(cTrial);      
+eventmarker(cBlock);       
+eventmarker(cTrialWBlock);
+eventmarker(cCondition);  
+eventmarker(cTrialError); 
+eventmarker(cExpResponse);
 eventmarker(cTrialFlag);
+
+% EDITABLE start marker
+eventmarker(trl.edtStart);
+
+% SEND editable in following order
+eventmarker(cGoodPause); 
+eventmarker(cBadPause); 
+eventmarker(cFixRadius);
+eventmarker(cFixPeriod); 
+eventmarker(cCalHoldPeriod);
+eventmarker(cRewardVol);
+
+% EDITABLE stop marker
+eventmarker(trl.edtStop);
 
 % FOOTER end marker
 eventmarker(trl.footerStop);
@@ -362,8 +379,10 @@ bhv_variable(...
     'tSampleOn',      tSampleOn,      'tSampleOff',      tSampleOff,...
     'tFixMaintCueOn', tFixMaintCueOn, 'tFixMaintCueOff', tFixMaintCueOff,...
     'tTestRespOn',    tTestRespOn,    'tBhvResp',        tBhvResp,...
-    'tTestOff',       tTestOff,       'tAllOff',         tAllOff,...
-    'ptdPeriod',      ptdPeriod);
+    'tTestOff',       tTestOff,       'tAllOff',         tAllOff);
+
+% SEND check odd lines
+eventmarker(chk.linesOdd);
 
 % FOOTER end------------------------------------------------------------------------------
 % DASHBOARD (customize as required)-------------------------------------------------------

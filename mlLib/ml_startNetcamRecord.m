@@ -1,3 +1,15 @@
+% ml_startNetcamRecord.m - Vision Lab, IISc
+% ----------------------------------------------------------------------------------------
+% Records netcam video remotely on netcamPC by accessing watchtower via LAN and
+% connecting to cameras, renaming the global folder based on exp name and creating a
+% subfolder subject wise and bhv file name wise. 
+%
+% REQUIRED: starting watchtower on netcamPC and logging in and binding the cameras.
+% 
+% VERSION HISTORY
+% - 15-Oct-2020  - Thomas - First implementation
+%-----------------------------------------------------------------------------------------
+
 function [outcome, apitoken] = ml_startNetcamRecord(MLConfig)
 
 folderName    = ['E:\series4\' MLConfig.ExperimentName '\' MLConfig.SubjectName];
@@ -56,8 +68,7 @@ try
         weboptions('CertificateFilename','','ArrayFormat','repeating'));
     
     outcome = 1;
-catch err
-%     rethrow(err)
+catch
     outcome = 0;
 end
 end

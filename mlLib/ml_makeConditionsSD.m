@@ -45,8 +45,8 @@ calibRadius  = 1;
 calibColor   = [0.5 0.5 0.5];
 holdRadius   = buttonRadius;
 
-correctSoundFile   = '.\dep\correct.wav';
-incorrectSoundFile = '.\dep\incorrect.wav';
+correctSoundFile   = '.\aud\correct.wav';
+incorrectSoundFile = '.\aud\incorrect.wav';
 
 infoFixed = sprintf('''iti'', %d,''holdRadius'', %2.2f,''buttonRadius'', %2.2f,''buttonColor'', [%2.2f %2.2f %2.2f],''calibRadius'', %2.2f,''calibColor'', [%2.2f %2.2f %2.2f], ''ptdBoxSize'', %2.2f, ''ptdBoxColor'',[%2.2f %2.2f %2.2f], ''correctSoundFile'',''%s'',''incorrectSoundFile'',''%s''',...
     iti, holdRadius, buttonRadius, buttonColor, calibRadius, calibColor, ptdSize, ptdBoxColor, correctSoundFile, incorrectSoundFile);
@@ -63,8 +63,8 @@ taskObj4Calib  = sprintf('crc(%1.1f, [%1.1f %1.1f %1.1f], 1, 0, 0)', calibRadius
 % taskObj6Diff   = sprintf('crc(%d, [%d %d %d], 1, 20, -15)', buttonRadius, buttonColor);
 taskObj5Same   = sprintf('crc(%d, [%d %d %d], 1, 20,  10)', buttonRadius, buttonColor);
 taskObj6Diff   = sprintf('crc(%d, [%d %d %d], 1, 20, -10)', buttonRadius, buttonColor);
-taskObj7Corr   = 'snd(.\dep\correct)';
-taskObj8Incorr = 'snd(.\dep\incorrect)';
+taskObj7Corr   = 'snd(.\aud\correct)';
+taskObj8Incorr = 'snd(.\aud\incorrect)';
 
 %% WRITE CALIBRATION conditions - Block 1 ------------------------------------------------
 sampleName = sdPairs{1,1};

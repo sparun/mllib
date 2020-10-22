@@ -1,24 +1,24 @@
-% sendHeader.m - Vision Lab, IISc
+% ml_sendHeader.m - Vision Lab, IISc
 % ----------------------------------------------------------------------------------------
-% Opens 24 channels on PCI-6503 and a strobe channel on PCI-6221. Transmits a strobed
+% Opens 24 channels on PCI-6503 and a strobe channel on PCI-6221. Transmits strobed
 % 24-bit words from a headerStr (header string) bounded by header start and header end 
-% markers. 
+% markers. Header includes exp name, monkey name, bhv file name and all the requisite
+% files needed to recreate experiment (timing, condition, configuration and mlLib files)
 %
 % REQUIRED: MATLAB DAQ toolbox
 %
-% ----------------------------------------------------------------------------------------
 % VERSION HISTORY
-% ----------------------------------------------------------------------------------------
-% - 07-03-2020  - Georgin - First implementation
+% - 07-Mar-2020  - Georgin - First implementation
 %                 Thomas
-% - 19-09-2020  - Thomas  - Updated event codes implemented
+% - 19-Sep-2020  - Thomas  - Updated event codes implemented
+% - 22-Oct-2020  - Thomas  - Removed header in TrialRecord. Now handled in ml_initExp
+% ----------------------------------------------------------------------------------------
 
-function TrialRecord = ml_sendHeader(MLConfig, TrialRecord)
-
+function ml_sendHeader(MLConfig)
 % LOAD mlErrorCodes and evtCodes
-[~, ~, ~, ~, ~, exp, ~, ~, ascii] = ml_loadEvents();
+[~, ~, ~, ~, ~, exp, ~, ~, asc] = ml_loadEvents();
 
-%% OPEN DAQ Session---------------------------------------------------------------
+% OPEN DAQ Session------------------------------------------------------------------------
 [transmitSession1, transmitSession2] = ml_openSession();
 nBits = 24; % number of bits transmitted in parallel each time
 
@@ -27,7 +27,7 @@ evtCodeBin = dec2binvec(exp.headerStart,nBits);
 outputSingleScan(transmitSession1, evtCodeBin);
 ml_sendStrobe(transmitSession2);
 
-%% TRANSMIT EXPNAME---------------------------------------------------------------
+% TRANSMIT EXPNAME
 expName     = MLConfig.ExperimentName;
 transmitStr = double(expName);
 
@@ -38,7 +38,7 @@ ml_sendStrobe(transmitSession2);
 
 % TRANSMIT
 for i = 1:length(transmitStr)
-    evtCodeBin = dec2binvec(ascii.shift + transmitStr(i),nBits);
+    evtCodeBin = dec2binvec(asc.shift + transmitStr(i),nBits);
     outputSingleScan(transmitSession1, evtCodeBin);
     ml_sendStrobe(transmitSession2);
 end
@@ -48,7 +48,7 @@ evtCodeBin = dec2binvec(exp.nameStop,nBits);
 outputSingleScan(transmitSession1, evtCodeBin);
 ml_sendStrobe(transmitSession2);
 
-%% TRANSMIT MONKEY NAME-----------------------------------------------------------
+% TRANSMIT MONKEY NAME--------------------------------------------------------------------
 expName     = MLConfig.SubjectName;
 transmitStr = double(expName);
 
@@ -59,7 +59,7 @@ ml_sendStrobe(transmitSession2);
 
 % TRANSMIT
 for i = 1:length(transmitStr)
-    evtCodeBin = dec2binvec(ascii.shift + transmitStr(i),nBits);
+    evtCodeBin = dec2binvec(asc.shift + transmitStr(i),nBits);
     outputSingleScan(transmitSession1, evtCodeBin);
     ml_sendStrobe(transmitSession2);
 end
@@ -69,7 +69,7 @@ evtCodeBin = dec2binvec(exp.subjNameStop,nBits);
 outputSingleScan(transmitSession1, evtCodeBin);
 ml_sendStrobe(transmitSession2);
 
-%% TRANSMIT BHV FILE NAME--------------------------------------------------------
+% TRANSMIT BHV FILE NAME------------------------------------------------------------------
 bhvFileName = MLConfig.FormattedName;
 transmitStr = double(bhvFileName);
 
@@ -80,7 +80,7 @@ ml_sendStrobe(transmitSession2);
 
 % TRANSMIT
 for i = 1:length(transmitStr)
-    evtCodeBin = dec2binvec(ascii.shift + transmitStr(i),nBits);
+    evtCodeBin = dec2binvec(asc.shift + transmitStr(i),nBits);
     outputSingleScan(transmitSession1, evtCodeBin);
     ml_sendStrobe(transmitSession2);
 end
@@ -90,13 +90,10 @@ evtCodeBin = dec2binvec(exp.bhvNameStop,nBits);
 outputSingleScan(transmitSession1, evtCodeBin);
 ml_sendStrobe(transmitSession2);
 
-%% TRANSMIT FILES-----------------------------------------------------------------
+% TRANSMIT FILES--------------------------------------------------------------------------
 % PACK allowed files for header transmission
 allowedFileTypes = {'*.m' '*.mat' '*.txt'};
 files            = ml_packHeader(allowedFileTypes);
-
-% SAVE packHeader files into TrialRecord.User
-TrialRecord.User.files = files;
 
 % CREATE header for transmission
 transmitStr = ml_makeHeader(files);
@@ -108,7 +105,7 @@ ml_sendStrobe(transmitSession2);
 
 % TRANSMIT
 for i = 1:length(transmitStr)
-    evtCodeBin = dec2binvec(ascii.shift + transmitStr(i),nBits);
+    evtCodeBin = dec2binvec(asc.shift + transmitStr(i),nBits);
     outputSingleScan(transmitSession1, evtCodeBin);
     ml_sendStrobe(transmitSession2);
 end
@@ -118,8 +115,7 @@ evtCodeBin = dec2binvec(exp.filesStop,nBits);
 outputSingleScan(transmitSession1, evtCodeBin);
 ml_sendStrobe(transmitSession2);
 
-%% CLOSE DAQ Session -------------------------------------------------------------
-
+% CLOSE DAQ Session-----------------------------------------------------------------------
 % HEADER stop Marker
 evtCodeBin = dec2binvec(exp.headerStop,nBits);
 outputSingleScan(transmitSession1, evtCodeBin);

@@ -10,9 +10,9 @@
 %  600-699  Monkey behavioural events
 %  700-799  Reward events
 
-function [err, pic, aud, bhv, rew, exp, trl, check, ascii] = ml_loadEvents()
+function [err, pic, aud, bhv, rew, exp, trl, chk, asc] = ml_loadEvents()
 
-% TRIAL ERROR values
+% TRIAL ERROR values (for setting trialerror in ML, not sent as eventmarker)
 err.holdNil          = 8; % ignored - hold not initiated
 err.holdOutside      = 9; % aborted - outside touch
 err.holdBreak        = 7; % lever break - hold not maintained
@@ -132,18 +132,14 @@ trl.outcomeShift     = 8500;
 trl.expRespFree      = 9000;
 trl.expRespSame      = 9001;
 trl.expRespDiff      = 9002;
- 
-% CHECK - events to check individual line reliability
-check.linesEven      = 5592405;
-check.linesOdd       = 11184810;
+trl.edtStart         = 9100;
+trl.edtStop          = 9101;
+trl.edtShift         = 10000;
 
 % ASCII SHIFT - add before sending ascii values
-ascii.shift          = 10000;
-end
+asc.shift            = 200000;
 
-% CODES for exracting text(fieldname) from eventmarker value
-% eventVal  = 1;
-% selCode   = err;
-% fieldName = fieldnames(selCode);
-% ind       = structfun(@(x) x == eventVal,err);
-% evtName   = fieldName(ind);
+% CHECK - events to check individual line reliability
+chk.linesEven        = 5592405;
+chk.linesOdd         = 11184810;
+end

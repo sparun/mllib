@@ -1,3 +1,13 @@
+% ml_stopNetcamRecord.m - Vision Lab, IISc
+% ----------------------------------------------------------------------------------------
+% Stops netcam video recording remotely on netcamPC by accessing watchtower via LAN. 
+%
+% REQUIRED: netcam recording being started and apitoken from current remote session
+% 
+% VERSION HISTORY
+% - 15-Oct-2020  - Thomas - First implementation
+%-----------------------------------------------------------------------------------------
+
 function outcome= ml_stopNetcamRecord(apitoken)
 
 try
@@ -23,8 +33,7 @@ try
     end
            
     outcome = 1;
-catch err
-%     rethrow(err)
+catch
     outcome = 0;
 end
 end

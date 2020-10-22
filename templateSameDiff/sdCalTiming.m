@@ -28,10 +28,9 @@ showcursor(false);
 trialNum = TrialRecord.CurrentTrialNumber;
 
 % ITI (set to 0 to measure true ITI in ML Dashboard)
-set_iti(Info.iti);
+set_iti(200);
 
 % PARAMETERS relevant for task timing and hold/fix control
-ptdPeriod    = 0.01;
 initPeriod   = Info.initPeriod;
 holdPeriod   = Info.holdPeriod;
 holdRadius   = Info.holdRadius;
@@ -49,6 +48,7 @@ bhv = TrialRecord.User.bhv;
 rew = TrialRecord.User.rew;
 exp = TrialRecord.User.exp;
 trl = TrialRecord.User.trl;
+chk = TrialRecord.User.chk;
 
 % POINTERS to TaskObjects
 ptd  = 1; hold    = 2; fix      = 3; calib  = 4; same = 5; 
@@ -66,7 +66,7 @@ respOrder = TrialRecord.User.respOrder;
 
 % CALIBRATION locations in DVA and group eventmarkers for easy indexing
 sdLocs   = [0,0; 20,0; 20,15; 20,-15];  % Fix, hold, up & down buttons
-testLocs = [0 0; 0,15; 0,-15; 10,0];
+testLocs = [-8,-8; 8,8; 8,-8; -8,8];
 calLocs  = testLocs;
 selEvts  = [...
     pic.calib1On;  pic.calib1Off; pic.calib2On; pic.calib2Off;...
@@ -113,6 +113,9 @@ juiceConsumed = NaN;
 while istouching(), end
 outcome = -1;
 
+% SEND check even lines
+eventmarker(chk.linesEven);
+
 % TRIAL start
 eventmarker(trl.start);
 
@@ -123,8 +126,6 @@ while outcome < 0
     
     % PRESENT hold button
     tHoldButtonOn = toggleobject([hold ptd], 'eventmarker', pic.holdOn);
-    pause(ptdPeriod);
-    toggleobject(ptd);
     
     % WAIT for touch in INIT period
     [ontarget, ~, tTrialInit] = eyejoytrack(...
@@ -144,15 +145,13 @@ while outcome < 0
         % Correctly initiated hold
         eventmarker(bhv.holdInit);
     end
-    
+           
     % LOOP for presenting calib at each selLoc
     for locID = 1:size(calLocs,1)
         reposition_object(calib, calLocs(locID,:));
         
         % PRESENT fixation cue
         tFixAcqCueOn(locID) = toggleobject([calib ptd], 'eventmarker', selEvts(locID*2-1));
-        pause(ptdPeriod);
-        toggleobject(ptd);
     
         % WAIT for fixation and check for hold maintenance
         [ontarget, ~, tFixAcq(locID)] = eyejoytrack(...
@@ -203,9 +202,7 @@ while outcome < 0
         end
         
         % REMOVE the calibration image image off
-        tFixAcqCueOff(locID) = toggleobject([calib ptd], 'eventmarker', selEvts(locID*2)); 
-        pause(ptdPeriod);
-        toggleobject(ptd);
+        tFixAcqCueOff(locID) = toggleobject(calib, 'eventmarker', selEvts(locID*2));
     end
     
     % TRIAL finished successfully if this point reached on last item
@@ -245,7 +242,7 @@ else
     idle(badPause);
 end
 
-% SEND trial footer eventmarkers
+% ASSIGN trial footer eventmarkers
 cTrial       = trl.trialShift       + TrialRecord.CurrentTrialNumber;
 cBlock       = trl.blockShift       + TrialRecord.CurrentBlock;
 cTrialWBlock = trl.trialWBlockShift + TrialRecord.CurrentTrialWithinBlock;
@@ -257,12 +254,35 @@ if isfield(Info, 'trialFlag')
     cTrialFlag = cTrialFlag + Info.trialFlag;
 end
 
+% ASSIGN trial footer editable
+cGoodPause     = trl.edtShift + TrialRecord.Editable.goodPause;
+cBadPause      = trl.edtShift + TrialRecord.Editable.badPause;
+cFixRadius     = trl.edtShift + TrialRecord.Editable.fixRadius;
+cFixPeriod     = trl.edtShift + TrialRecord.Editable.fixPeriod;
+cCalHoldPeriod = trl.edtShift + TrialRecord.Editable.calHoldPeriod;
+cRewardVol     = trl.edtShift + TrialRecord.Editable.rewardVol*1000;
+
 % FOOTER start 
 eventmarker(trl.footerStart);
 
 % FOOTER information
-eventmarker(cTrial);     eventmarker(cBlock);      eventmarker(cTrialWBlock);
-eventmarker(cCondition); eventmarker(cTrialError); eventmarker(cTrialFlag);
+eventmarker(cTrial);     
+eventmarker(cBlock);     
+eventmarker(cTrialWBlock);
+eventmarker(cCondition); 
+eventmarker(cTrialError); 
+eventmarker(cTrialFlag);
+
+% SEND editable in following order
+eventmarker(cGoodPause); 
+eventmarker(cBadPause); 
+eventmarker(cFixRadius);
+eventmarker(cFixPeriod); 
+eventmarker(cCalHoldPeriod);
+eventmarker(cRewardVol);
+
+% EDITABLE stop marker
+eventmarker(trl.edtStop);
 
 % FOOTER end 
 eventmarker(trl.footerStop);
@@ -277,7 +297,10 @@ bhv_variable(...
     'juiceConsumed', juiceConsumed, 'tHoldButtonOn', tHoldButtonOn,...
     'tTrialInit',    tTrialInit,    'tFixAcqCueOn',  tFixAcqCueOn,...
     'tFixAcq',       tFixAcq,       'tFixAcqCueOff', tFixAcqCueOff,...
-    'tAllOff',       tAllOff,       'ptdPeriod',     ptdPeriod);
+    'tAllOff',       tAllOff);
+
+% SEND check odd lines
+eventmarker(chk.linesOdd);
 
 % FOOTER end------------------------------------------------------------------------------
 % DASHBOARD (customize as required)-------------------------------------------------------

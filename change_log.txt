@@ -31,3 +31,23 @@ templateSD - version 1.0 - thomas/georgin (15-10-2020)
 	- cleared up timing code text (removed sections and unwanted variables)
 	- new eye calib settings as juice spout and touchscreen height increased by ~2.5cm.
 	- now there are individual monkeys dqw settings files for iscan also (eg: illumBelowTrackerAbovCoCo20201015.def)
+
+mlLib   - version 1.0 - thomas/georgin (22-10-2020)
+	
+	- ml_mlconcatenate: modified few lines(commented within) which gave error for touchpoints being NaN
+	- ml_loadEvents: added start stop and shift markers for editable variables and changed ascii shift from 10000 to 200000
+	- Added descriptions and comments for all functions in lib
+	- Removed unneccessary/deprecated functions
+
+templateSD - version 1.0 - thomas/georgin (22-10-2020)
+
+	- packing following editable variable into trial footer using start stop and shift markers (trl.edtStart..etc)
+		- goodPause - badPause - fixRadius - fixPeriod - calHoldPeriod - rewardVol (*1000, hence will be in microlitres)
+	- added check.linesEven before trl.start and check.linesOdd after trl.stop eventmarkers. Good visual marker on OEP lfp viewer
+	- photodiode cue now simply flips state at every visual event in the trial (turned off at beginning and end of trial)
+	- photodiode signal is now in analog mode instead of digital due to iffy reliability in digtial mode
+	- updated fillDashboard.m to calculate and display errors correctly and differentiate type of error, removed weighted accuracy
+	- audio files now located in folder 'aud' instead of ambiguous 'dep'
+	- added config files from iscan(DQW settings), oep(Channel config) and ml(cfg2.mat) into folder 'cfg'
+
+	

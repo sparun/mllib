@@ -1,3 +1,12 @@
+% ml_packHeader.m - Vision Lab, IISc
+% ----------------------------------------------------------------------------------------
+% Unpacks the dependent files (either from TrialRecord or after decoding from eCube file)
+% for ML template experiments into 'unpackedFiles'
+% 
+% VERSION HISTORY
+% - 15-Oct-2020  - Georgin - First implementation
+%-----------------------------------------------------------------------------------------
+
 function ml_unpackHeader(files)
 fileNames = files.fileNames;
 contents  = files.fileContents;

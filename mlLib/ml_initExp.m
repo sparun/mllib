@@ -8,6 +8,19 @@ if strcmpi(MLConfig.SubjectName, 'didi') ~= 1 &&...
     error('[ERROR] - Monkey name is incorrect. It can only be: DiDi, JuJu or CoCo!');
 end
 
+% POPULATE TrialRecord with event codes---------------------------------------------------
+[TrialRecord.User.err, TrialRecord.User.pic,...
+    TrialRecord.User.aud, TrialRecord.User.bhv,...
+    TrialRecord.User.rew, TrialRecord.User.exp,...
+    TrialRecord.User.trl, TrialRecord.User.chk] = ml_loadEvents();
+
+% PACK allowed files for saving into TrialRecord------------------------------------------
+allowedFileTypes = {'*.m' '*.mat' '*.txt'};
+files            = ml_packHeader(allowedFileTypes);
+
+% SAVE packHeader files into TrialRecord.User
+TrialRecord.User.files = files;
+
 % CHECK if Experiment PC------------------------------------------------------------------
 if strcmpi(getenv('COMPUTERNAME'), 'EXPERIMENT-PC') == 1
     TrialRecord.User.mlPcFlag = 1;
@@ -15,7 +28,7 @@ if strcmpi(getenv('COMPUTERNAME'), 'EXPERIMENT-PC') == 1
     % CHECK if header info to be sent to eCube--------------------------------------------
     respGiven = 0;  
     while respGiven == 0
-        fprintf('\n\n[IMPORTANT] - Do you want to send header to eCube? Y/N \n');
+        fprintf('\n\n\n\n\n\n\n\n[IMPORTANT] - Do you want to send header to eCube? Y/N \n');
         ch = ml_getKey();
         
         if ch == 121
@@ -32,7 +45,7 @@ if strcmpi(getenv('COMPUTERNAME'), 'EXPERIMENT-PC') == 1
     % CHECK if netcam video to be saved---------------------------------------------------
     respGiven = 0;  
     while respGiven == 0
-        fprintf('\n\n[IMPORTANT] - Do you want to record netcam videos? Y/N \n');
+        fprintf('\n[IMPORTANT] - Do you want to record netcam videos? Y/N \n');
         ch = ml_getKey();
         
         if ch == 121
@@ -50,12 +63,6 @@ else
     TrialRecord.User.sendHeaderFlag   = 0;
     TrialRecord.User.recordNetcamFlag = 0;
 end
-
-% POPULATE TrialRecord with event codes---------------------------------------------------
-[TrialRecord.User.err, TrialRecord.User.pic,...
-    TrialRecord.User.aud, TrialRecord.User.bhv,...
-    TrialRecord.User.rew, TrialRecord.User.exp,...
-    TrialRecord.User.trl] = ml_loadEvents();
 
 % SET initFlag----------------------------------------------------------------------------
 TrialRecord.User.initFlag = 1;
