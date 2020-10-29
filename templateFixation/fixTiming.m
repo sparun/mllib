@@ -1,66 +1,31 @@
-% FIXATION task for Monkeylogic - Vision Lab, IISc
+% FIXATION TRIAL for Monkeylogic
+% - Vision Lab, IISc
 % ----------------------------------------------------------------------------------------
 % Presents a series of images at center where animal has to fixate while pressing the hold
 % button. Breaking of fixation/hold or touch outside of hold button will abort the trial.
 %
 % VERSION HISTORY
-% ----------------------------------------------------------------------------------------
 % - 02-Sep-2020 - Thomas  - First implementation
 % - 14-Sep-2020 - Thomas  - Updated codes with new implementation of event and error
 %                           codes. Simplified code structure and other changes.
+% - 14-Oct-2020 - Thomas  - Updated all eyejoytrack to absolute time and not rt
+% ----------------------------------------------------------------------------------------
+% HEADER start ---------------------------------------------------------------------------
 
-%% CHECK if touch and eyesignal are present to continue---------------------------
+% CHECK if touch and eyesignal are present to continue---------------------------
 if ~ML_touchpresent, error('This task requires touch signal input!'); end
 if ~ML_eyepresent,   error('This task requires eye signal input!');   end
 
 % REMOVE the joystick cursor
 showcursor(false);
-global iscan;
 
-%% INIT checks when starting task-------------------------------------------------
-if ~isfield(TrialRecord.User, 'initFlag')
-    % CHECK if Experiment PC; Initialize IScan if true
-    if strcmpi(getenv('COMPUTERNAME'), 'EXPERIMENT-PC') == 1
-        IOPort('CloseAll');
-        iscan  = ml_psy_init_iscan_ETL300HD();        
-        TrialRecord.User.mlPcFlag = 1;
-    else
-        TrialRecord.User.mlPcFlag = 0;
-    end
-    
-    % CHECK if correct monkey name is entered
-    if strcmpi(MLConfig.SubjectName, 'didi') ~= 1 && strcmpi(MLConfig.SubjectName, 'juju') ~= 1
-        error('Monkey name is incorrect. It can only be either DiDi or JuJu!');
-    end
-    
-    % POPULATE TrialRecord with event codes
-    [TrialRecord.User.err, TrialRecord.User.pic,...
-        TrialRecord.User.aud, TrialRecord.User.bhv,...
-        TrialRecord.User.rew, TrialRecord.User.exp,...
-        TrialRecord.User.trl] = ml_loadEvents();
-    
-    % SET initFlag
-    TrialRecord.User.initFlag = 1;
-end
-
-%% PURGE IScan Serial Port--------------------------------------------------------
-if(TrialRecord.User.mlPcFlag)
-    % CLEAR out ISCAN serial buffer before beginning of this trial
-    IOPort('Purge', iscan.port);
-    
-    % INVALIDATE all 0,0 eye data information with a custom function
-    EyeCal.custom_calfunc(@clampEye);
-end
-
-%% VARIABLES ---------------------------------------------------------------------
 % POINTER to trial number
 trialNum = TrialRecord.CurrentTrialNumber;
 
 % ITI (set to 0 to measure true ITI in ML Dashboard)
-set_iti(Info.iti);
+set_iti(200);
 
 % PARAMETERS relevant for task timing and hold/fix control
-ptdPeriod    = 0.01;
 initPeriod   = Info.initPeriod;
 holdPeriod   = Info.holdPeriod;
 holdRadius   = Info.holdRadius;
@@ -76,6 +41,7 @@ bhv = TrialRecord.User.bhv;
 rew = TrialRecord.User.rew;
 exp = TrialRecord.User.exp;
 trl = TrialRecord.User.trl;
+chk = TrialRecord.User.chk;
 
 % POINTERS to TaskObjects
 ptd   = 1;  hold  = 2;  fix   = 3;  calib = 4;  audCorr = 5;  audWrong = 6;
@@ -119,22 +85,26 @@ tSampleOff    = NaN;
 tAllOff       = NaN;
 juiceConsumed = NaN;
 
-%% TRIAL -------------------------------------------------------------------------
+% HEADER end -----------------------------------------------------------------------------
+% TRIAL start ----------------------------------------------------------------------------
+
+% CHECK and proceed only if screen is not being touched
 while istouching(), end
 outcome = -1;
+
+% SEND check even lines
+eventmarker(chk.linesEven);
 
 % TRIAL start
 eventmarker(trl.start);
 
-while outcome < 0
-    
+% RUN trial sequence till outcome registered
+while outcome < 0    
     % PRESENT hold button
     tHoldButtonOn = toggleobject([hold ptd], 'eventmarker', pic.holdOn);
-    pause(ptdPeriod);
-    toggleobject(ptd);
     
     % WAIT for touch in INIT period
-    [ontarget, tTrialInit] = eyejoytrack(...
+    [ontarget, ~, tTrialInit] = eyejoytrack(...
         'touchtarget',  hold, holdRadius, ...
         '~touchtarget', hold, holdRadius,...
         initPeriod);
@@ -154,11 +124,9 @@ while outcome < 0
     
     % PRESENT fixation cue
     tFixCueOn(1,:) = toggleobject([fix ptd], 'eventmarker', pic.fixOn);
-    pause(ptdPeriod);
-    toggleobject(ptd);
     
-    % WAIT for fixation and check for hold maintenance
-    [ontarget, tFixAcq] = eyejoytrack(...
+    % WAIT for fixation and CHECK for hold in HOLD period
+    [ontarget, ~, tFixAcq] = eyejoytrack(...
         'releasetarget',hold, holdRadius,...
         '~touchtarget', hold, holdRadius,...
         'acquirefix',   fix,  fixRadius,...
@@ -181,8 +149,8 @@ while outcome < 0
         eventmarker([bhv.holdMaint bhv.fixInit]);
     end
     
-    % CHECK fixation and hold maintenance for delayPeriod
-    [ontarget, ~] = eyejoytrack(...
+    % CHECK hold and fixation in DELAY period
+    ontarget = eyejoytrack(...
         'releasetarget',hold, holdRadius,...
         '~touchtarget', hold, holdRadius,...
         'holdfix',      fix,  fixRadius,...
@@ -212,11 +180,9 @@ while outcome < 0
         tFixCueOff(itemID,:) = toggleobject([fix selStim(itemID) ptd],...
             'eventmarker', [pic.fixOff selEvts(2*itemID)-1]);
         tSampleOn(itemID,:)  = tFixCueOff(itemID,:);
-        pause(ptdPeriod);
-        toggleobject(ptd);
         
         % CHECK fixation and hold maintenance for samplePeriod
-        [ontarget, ~] = eyejoytrack(...
+        ontarget = eyejoytrack(...
             'releasetarget',hold,            holdRadius,...
             '~touchtarget', hold,            holdRadius,...
             'holdfix',      selStim(itemID), fixRadius,...
@@ -243,11 +209,9 @@ while outcome < 0
         tSampleOff(itemID,:)     = toggleobject([fix selStim(itemID) ptd],...
             'eventmarker', [selEvts(2*itemID) pic.fixOn]);
         tFixCueOn(itemID + 1,:)  = tSampleOff(itemID,:);
-        pause(ptdPeriod);
-        toggleobject(ptd);
         
         % CHECK fixation and hold maintenance for delayPeriod
-        [ontarget, ~] = eyejoytrack(...
+        ontarget = eyejoytrack(...
             'releasetarget',hold,            holdRadius,...
             '~touchtarget', hold,            holdRadius,...
             'holdfix',      selStim(itemID), fixRadius,...
@@ -278,10 +242,17 @@ while outcome < 0
     end    
 end
 
+% SET trial outcome and remove all stimuli
 trialerror(outcome);
 tAllOff = toggleobject(1:16, 'status', 'off', 'eventmarker', event);
 
-%% REWARD monkey if correct response given----------------------------------------
+% TRIAL end
+eventmarker(trl.stop);
+
+% TRIAL end ------------------------------------------------------------------------------ 
+% FOOTER start --------------------------------------------------------------------------- 
+
+% REWARD monkey if correct response given
 if outcome == err.holdNil
     % TRIAL not initiated; give good pause
     idle(goodPause);
@@ -301,10 +272,7 @@ else
     idle(badPause);
 end
 
-% TRIAL end
-eventmarker(trl.stop);
-
-%% TRIAL FOOTER-------------------------------------------------------------------
+% ASSIGN trial footer eventmarkers
 cTrial       = trl.trialShift       + TrialRecord.CurrentTrialNumber;
 cBlock       = trl.blockShift       + TrialRecord.CurrentBlock;
 cTrialWBlock = trl.trialWBlockShift + TrialRecord.CurrentTrialWithinBlock;
@@ -316,66 +284,61 @@ if isfield(Info, 'trialFlag')
     cTrialFlag = cTrialFlag + Info.trialFlag;
 end
 
-% FOOTER start 
+% ASSIGN trial footer editable
+cGoodPause     = trl.edtShift + TrialRecord.Editable.goodPause;
+cBadPause      = trl.edtShift + TrialRecord.Editable.badPause;
+cFixRadius     = trl.edtShift + TrialRecord.Editable.fixRadius;
+cFixPeriod     = trl.edtShift + TrialRecord.Editable.fixPeriod;
+cCalHoldPeriod = trl.edtShift + TrialRecord.Editable.calHoldPeriod;
+cRewardVol     = trl.edtShift + TrialRecord.Editable.rewardVol*1000;
+
+% FOOTER start marker
 eventmarker(trl.footerStart);
 
-% FOOTER information
-eventmarker(cTrial);     eventmarker(cBlock);      eventmarker(cTrialWBlock);
-eventmarker(cCondition); eventmarker(cTrialError); eventmarker(cTrialFlag);
+% SEND footers
+eventmarker(cTrial);      
+eventmarker(cBlock);       
+eventmarker(cTrialWBlock);
+eventmarker(cCondition);  
+eventmarker(cTrialError);
+eventmarker(cTrialFlag);
 
-% FOOTER end 
+% EDITABLE start marker
+eventmarker(trl.edtStart);
+
+% SEND editable in following order
+eventmarker(cGoodPause); 
+eventmarker(cBadPause); 
+eventmarker(cFixRadius);
+eventmarker(cFixPeriod); 
+eventmarker(cCalHoldPeriod);
+eventmarker(cRewardVol);
+
+% EDITABLE stop marker
+eventmarker(trl.edtStop);
+
+% FOOTER end marker
 eventmarker(trl.footerStop);
 
-%% SAVE to TrialRecord.user-------------------------------------------------------
+% SAVE to TrialRecord.user
 TrialRecord.User.juiceConsumed(trialNum)   = juiceConsumed;
 TrialRecord.User.responseCorrect(trialNum) = outcome;
 
-%% SAVE to Data.UserVars----------------------------------------------------------
-% ISCAN serialData ?? ADD eventmarker for IScan serial on off purge ??
-if(TrialRecord.User.mlPcFlag)
-    % SAVE IScan serial eye data ?? on correct trials ??
-    [data, when, errMsg] = IOPort('Read', iscan.port);
-    [paramTable, params] = ml_decode_bin_stream_ETL300HD(data);
-    serialData           = [];
-    
-    if ~isempty(paramTable)
-        serialData.pupilX     = paramTable(:,1);
-        serialData.pupilY     = paramTable(:,2);
-        serialData.cornealX   = paramTable(:,3);
-        serialData.cornealY   = paramTable(:,4);
-        serialData.dx         = paramTable(:,5);
-        serialData.dy         = paramTable(:,6);
-        serialData.data       = data;
-        serialData.paramTable = paramTable;
-        serialData.when       = when;
-    end
-    bhv_variable('serialData', {serialData});
-end
-
-% SAVE timing and reward related information
+% SAVE to Data.UserVars
 bhv_variable(...
     'juiceConsumed', juiceConsumed, 'tHoldButtonOn', tHoldButtonOn,...
     'tTrialInit',    tTrialInit,    'tFixCueOn',     tFixCueOn,...
     'tFixAcq',       tFixAcq,       'tFixCueOff',    tFixCueOff,...
     'tSampleOn',     tSampleOn,     'tSampleOff',    tSampleOff,...
-    'tAllOff',       tAllOff,       'ptdPeriod',     ptdPeriod);
+    'tAllOff',       tAllOff);
 
-%% DASHBOARD (CUSTOMIZE AS REQUIRED)----------------------------------------------
+% SEND check odd lines
+eventmarker(chk.linesOdd);
+
+% FOOTER end------------------------------------------------------------------------------
+% DASHBOARD (customize as required)-------------------------------------------------------
+
 % lines       = fillDashboard(TrialData, TrialRecord);
 % for lineNum = 1:length(lines)
 % 	dashboard(lineNum, char(lines(lineNum, 1)), [1 1 1]);
 % end
-
-%% EYE-CAL FUNCTION---------------------------------------------------------------
-function xy = clampEye(xy)
-% FIND 0,0 gaze readings and remove them
-qBad        = xy(:, 1) == 0 | xy(:, 2) == 0;
-xy(qBad, :) = [];
-
-if isempty(xy), return, end
-
-% FIND eccentric points and remove them
-ecc         = sqrt(xy(:, 1).^2 + xy(:, 2).^2);
-qBad        = find(ecc > 50);
-xy(qBad, :) = [];
-end

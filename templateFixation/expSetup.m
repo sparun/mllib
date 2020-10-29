@@ -62,4 +62,4 @@ for trialID = 1:length(imgList)
 end
 
 % CREATE conditions file
-makeConditionsFix(timingFileName, conditionsFileName, fixNames, info, frequency, block)      
+ml_makeConditionsFix(timingFileName, conditionsFileName, fixNames, info, frequency, block)      

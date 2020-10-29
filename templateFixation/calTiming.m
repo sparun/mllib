@@ -1,4 +1,4 @@
-% EYE CALIBRATION TRIAL for MonkeyLogic ror use with Same-Diff trials
+% EYE CALIBRATION TRIAL for MonkeyLogic
 % - Vision Lab, IISc
 % ----------------------------------------------------------------------------------------
 % Presents a set of calibration points where animal has to fixate while pressing the hold
@@ -36,8 +36,6 @@ holdPeriod   = Info.holdPeriod;
 holdRadius   = Info.holdRadius;
 samplePeriod = Info.samplePeriod;
 delayPeriod  = Info.delayPeriod;
-testPeriod   = Info.testPeriod;
-respPeriod   = Info.respPeriod;
 reward       = ml_rewardVol2Time(rewardVol);
 
 % ASSIGN event codes from TrialRecord.User

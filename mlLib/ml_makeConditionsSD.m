@@ -33,7 +33,7 @@ conditionsFile = fopen(conditionsFileName, 'w');
 
 % TIMING file name
 expTimingFile = timingFileName;
-calTimingFile ='sdcalTiming';
+calTimingFile ='sdCalTiming';
 
 % FIXED parameters that dont need to be changed for general task
 iti          = 200;
@@ -55,12 +55,10 @@ infoFixed = sprintf('''iti'', %d,''holdRadius'', %2.2f,''buttonRadius'', %2.2f,'
 fprintf(conditionsFile, 'Condition\tInfo\tFrequency\tBlock\tTiming File\tTaskObject#1\tTaskObject#2\tTaskObject#3\tTaskObject#4\tTaskObject#5\tTaskObject#6\tTaskObject#7\tTaskObject#8\tTaskObject#9\tTaskObject#10\n');
 
 % TASK objects - Static
-taskObj1Ptd    = sprintf('sqr([%d %d], [%d %d %d], 1,  0,  19)', ptdSize, ptdSize, ptdBoxColor);
+taskObj1Ptd    = sprintf('sqr([3 2.5], [%d %d %d], 1,  0,  19)', ptdBoxColor);
 taskObj2Hold   = sprintf('crc(%d, [%d %d %d], 1, 20,   0)', buttonRadius, buttonColor);
 taskObj3Fix    = 'sqr([0.6 0.6], [0.5 0.5 0], 1, 0, 0)';
 taskObj4Calib  = sprintf('crc(%1.1f, [%1.1f %1.1f %1.1f], 1, 0, 0)', calibRadius, calibColor);
-% taskObj5Same   = sprintf('crc(%d, [%d %d %d], 1, 20,  15)', buttonRadius, buttonColor);
-% taskObj6Diff   = sprintf('crc(%d, [%d %d %d], 1, 20, -15)', buttonRadius, buttonColor);
 taskObj5Same   = sprintf('crc(%d, [%d %d %d], 1, 20,  10)', buttonRadius, buttonColor);
 taskObj6Diff   = sprintf('crc(%d, [%d %d %d], 1, 20, -10)', buttonRadius, buttonColor);
 taskObj7Corr   = 'snd(.\aud\correct)';

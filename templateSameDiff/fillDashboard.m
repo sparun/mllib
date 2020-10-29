@@ -1,7 +1,7 @@
 function lines = fillDashboard(tempVars, tempUser)
 
 % DISPLAY the editable parameter values on the dashboard
-bufferSize       = 5;
+bufferSize       = 50;
 expectedResponse = tempUser.expectedResponse;
 responseCorrect  = tempUser.responseCorrect;
 invalidInd       = find(responseCorrect ==8); % Ignoring the non-attempted trials 

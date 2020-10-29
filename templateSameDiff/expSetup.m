@@ -91,12 +91,12 @@ for trialID = 1:length(imgPairs)
     tempVar = [];
     
     for stringID = 1:length(infoFields)
-        
+         
         value      = eval(char(infoFields(stringID,2)));
         stringVal  = char(infoFields(stringID,1));
         
         if isnumeric(value)
-            tempVar = [tempVar stringVal num2str(value) ','];
+            tempVar = [tempVar stringVal sprintf('%03d',value) ','];
         else
             tempVar = [tempVar stringVal '''' value '''' ','];
         end
@@ -107,3 +107,4 @@ end
 
 %% CREATE conditions file
 ml_makeConditionsSD(timingFileName, conditionsFileName, sdPairs, info, frequency, block)      
+% ml_makeConditionsSD_modified(timingFileName, 'test.txt', sdPairs, info, frequency, block)     
