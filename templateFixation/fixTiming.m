@@ -9,6 +9,7 @@
 % - 14-Sep-2020 - Thomas  - Updated codes with new implementation of event and error
 %                           codes. Simplified code structure and other changes.
 % - 14-Oct-2020 - Thomas  - Updated all eyejoytrack to absolute time and not rt
+% - 29-Oct-2020 - Thomas  - Updated to match the version of templateSD
 % ----------------------------------------------------------------------------------------
 % HEADER start ---------------------------------------------------------------------------
 
@@ -25,10 +26,27 @@ trialNum = TrialRecord.CurrentTrialNumber;
 % ITI (set to 0 to measure true ITI in ML Dashboard)
 set_iti(200);
 
+% EDITABLE variables that can be changed during the task
+editable(...
+    'goodPause',   'badPause',      'fixRadius',...
+    'fixPeriod',   'calHoldPeriod', 'calRandFlag',...
+    'rewardVol',   'rewardLine',    'rewardReps',...
+    'rewardRepsGap');
+goodPause     = 200;
+badPause      = 1000;
+fixRadius     = 100;
+fixPeriod     = 200;
+calHoldPeriod = 500;
+calRandFlag   = 0;
+rewardVol     = 0.2;
+rewardLine    = 1;
+rewardReps    = 1;
+rewardRepsGap = 500;
+
 % PARAMETERS relevant for task timing and hold/fix control
 initPeriod   = Info.initPeriod;
 holdPeriod   = Info.holdPeriod;
-holdRadius   = Info.holdRadius;
+holdRadius   = TrialData.TaskObject.Attribute{1, 2}{1, 2};
 samplePeriod = Info.samplePeriod;
 delayPeriod  = Info.delayPeriod;
 reward       = ml_rewardVol2Time(rewardVol);
@@ -56,23 +74,6 @@ selEvts = [...
     pic.fix6On;  pic.fix6Off; pic.fix7On; pic.fix7Off;...
     pic.fix8On;  pic.fix8Off; pic.fix9On; pic.fix9Off;...
     pic.fix10On; pic.fix10Off];
-
-% EDITABLE variables that can be changed during the task
-editable(...
-    'goodPause',   'badPause',      'fixRadius',...
-    'fixPeriod',   'calHoldPeriod', 'calRandFlag',...
-    'rewardVol',   'rewardLine',    'rewardReps',...
-    'rewardRepsGap');
-goodPause     = 200;
-badPause      = 1000;
-fixRadius     = 100;
-fixPeriod     = 200;
-calHoldPeriod = 500;
-calRandFlag   = 0;
-rewardVol     = 0.2;
-rewardLine    = 1;
-rewardReps    = 1;
-rewardRepsGap = 500;
 
 % DECLARE select timing and reward variables as NaN
 tHoldButtonOn = NaN;
@@ -338,7 +339,7 @@ eventmarker(chk.linesOdd);
 % FOOTER end------------------------------------------------------------------------------
 % DASHBOARD (customize as required)-------------------------------------------------------
 
-% lines       = fillDashboard(TrialData, TrialRecord);
-% for lineNum = 1:length(lines)
-% 	dashboard(lineNum, char(lines(lineNum, 1)), [1 1 1]);
-% end
+lines       = fillDashboard(TrialData.VariableChanges, TrialRecord.User);
+for lineNum = 1:length(lines)
+    dashboard(lineNum, char(lines(lineNum, 1)), [1 1 1]);
+end

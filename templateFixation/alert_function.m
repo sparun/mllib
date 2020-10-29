@@ -73,19 +73,7 @@ switch hook
     case 'trial_end'
         if TrialRecord.User.mlPcFlag
             % STORE iScan.UserData at trial end
-            serialDataAscii = [];
-            serialDataNum   = [];
-            serialDataAscii = iScan.UserData;
-            for i = 1:length(serialDataAscii)
-                % Check if there are any lost/corrupted samples
-                % (in practice, happens only on first read of serial port)
-                try
-                    serialDataNum(i,:) = str2num(serialDataAscii(i));
-                catch
-                    serialDataNum(i,:) = [NaN NaN NaN NaN NaN NaN];
-                end
-            end
-            TrialRecord.User.serialData{TrialRecord.CurrentTrialNumber} = serialDataNum;
+            TrialRecord.User.serialData{TrialRecord.CurrentTrialNumber} = iScan.UserData;
             TrialRecord.User.timeStamp{TrialRecord.CurrentTrialNumber}  = timeStamp;
         end
         

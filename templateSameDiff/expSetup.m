@@ -96,9 +96,17 @@ for trialID = 1:length(imgPairs)
         stringVal  = char(infoFields(stringID,1));
         
         if isnumeric(value)
-            tempVar = [tempVar stringVal sprintf('%03d',value) ','];
+            if stringID == length(infoFields)
+                tempVar = [tempVar stringVal sprintf('%03d',value)];
+            else
+                tempVar = [tempVar stringVal sprintf('%03d',value) ','];
+            end
         else
-            tempVar = [tempVar stringVal '''' value '''' ','];
+            if stringID == length(infoFields)
+                tempVar = [tempVar stringVal '''' value ''''];
+            else
+                tempVar = [tempVar stringVal '''' value '''' ','];
+            end            
         end
     end
     
@@ -106,5 +114,4 @@ for trialID = 1:length(imgPairs)
 end
 
 %% CREATE conditions file
-ml_makeConditionsSD(timingFileName, conditionsFileName, sdPairs, info, frequency, block)      
-% ml_makeConditionsSD_modified(timingFileName, 'test.txt', sdPairs, info, frequency, block)     
+ml_makeConditionsSD(timingFileName, conditionsFileName, sdPairs, info, frequency, block)     

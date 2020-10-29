@@ -1,4 +1,4 @@
-% EYE CALIBRATION TRIAL for MonkeyLogic ror use with Same-Diff trials
+% EYE CALIBRATION TRIAL for MonkeyLogic
 % - Vision Lab, IISc
 % ----------------------------------------------------------------------------------------
 % Presents a set of calibration points where animal has to fixate while pressing the hold
@@ -14,6 +14,8 @@
 %                         - Simplified general code structure, specifically on errors
 % - 14-Sep-2020 - Thomas  - General changes to code structure to improve legibilty
 % - 14-Oct-2020 - Thomas  - Updated all eyejoytrack to absolute time and not rt
+% - 29-Oct-2020 - Thomas  - combine calibration codes for template sd and fix 
+%                           (only requirement for this was common editable var names) 
 % ----------------------------------------------------------------------------------------
 % HEADER start ---------------------------------------------------------------------------
 
@@ -28,17 +30,29 @@ showcursor(false);
 trialNum = TrialRecord.CurrentTrialNumber;
 
 % ITI (set to 0 to measure true ITI in ML Dashboard)
-set_iti(200);
+set_iti(0);
+
+% EDITABLE variables that can be changed during the task
+editable(...
+    'goodPause',   'badPause',      'fixRadius',...
+    'fixPeriod',   'calHoldPeriod', 'calRandFlag',...
+    'rewardVol',   'rewardLine',    'rewardReps',...
+    'rewardRepsGap');
+goodPause     = 200; 
+badPause      = 1000; 
+fixRadius     = 100; 
+calFixPeriod  = 500; 
+calHoldPeriod = 500; 
+calRandFlag   = 1; 
+rewardVol     = 0.2;
+rewardLine    = 1;
+rewardReps    = 1;
+rewardRepsGap = 500; 
 
 % PARAMETERS relevant for task timing and hold/fix control
-initPeriod   = Info.initPeriod;
-holdPeriod   = Info.holdPeriod;
-holdRadius   = Info.holdRadius;
-samplePeriod = Info.samplePeriod;
-delayPeriod  = Info.delayPeriod;
-testPeriod   = Info.testPeriod;
-respPeriod   = Info.respPeriod;
-reward       = ml_rewardVol2Time(rewardVol);
+initPeriod = Info.initPeriod;
+holdRadius = TrialData.TaskObject.Attribute{1, 2}{1, 2};
+reward     = ml_rewardVol2Time(rewardVol);
 
 % ASSIGN event codes from TrialRecord.User
 err = TrialRecord.User.err;
@@ -51,24 +65,16 @@ trl = TrialRecord.User.trl;
 chk = TrialRecord.User.chk;
 
 % POINTERS to TaskObjects
-ptd  = 1; hold    = 2; fix      = 3; calib  = 4; same = 5; 
-diff = 6; audCorr = 7; audWrong = 8; sample = 9; test = 10;  
-
-% SET response button order for SD task
-if ~isfield(TrialRecord.User, 'respOrder')
-    if strcmpi(MLConfig.SubjectName, 'didi') == 1 || strcmpi(MLConfig.SubjectName, 'test') == 1
-        TrialRecord.User.respOrder = [same diff];
-    elseif strcmpi(MLConfig.SubjectName, 'juju') == 1 || strcmpi(MLConfig.SubjectName, 'coco') == 1
-        TrialRecord.User.respOrder = [same diff];
-    end
-end
-respOrder = TrialRecord.User.respOrder;
+ptd      = 1; 
+hold     = 2;
+fix      = 3; 
+calib    = 4; 
+audCorr  = 5; 
+audWrong = 6; 
 
 % CALIBRATION locations in DVA and group eventmarkers for easy indexing
-sdLocs   = [0,0; 20,0; 20,15; 20,-15];  % Fix, hold, up & down buttons
-testLocs = [-8,-8; 8,8; 8,-8; -8,8];
-calLocs  = testLocs;
-selEvts  = [...
+calLocs  = [-8,-8; 8,8; 8,-8; -8,8];
+calEvts  = [...
     pic.calib1On;  pic.calib1Off; pic.calib2On; pic.calib2Off;...
     pic.calib3On;  pic.calib4Off; pic.calib5On; pic.calib5Off;...
     pic.calib6On;  pic.calib6Off; pic.calib7On; pic.calib7Off;...
@@ -79,23 +85,6 @@ selEvts  = [...
 if(calRandFlag)
     calLocs = calLocs(randperm(size(calLocs, 1)), :);
 end
-
-% EDITABLE variables that can be changed during the task
-editable(...
-    'goodPause',   'badPause',      'fixRadius',...
-    'fixPeriod',   'calHoldPeriod', 'calRandFlag',...
-    'rewardVol',   'rewardLine',    'rewardReps',...
-    'rewardRepsGap');
-goodPause     = 200; 
-badPause      = 1000; 
-fixRadius     = 100; 
-fixPeriod     = 500; 
-calHoldPeriod = 500; 
-calRandFlag   = 0; 
-rewardVol     = 0.2;
-rewardLine    = 1;
-rewardReps    = 1;
-rewardRepsGap = 500; 
 
 % DECLARE select timing and reward variables as NaN
 tHoldButtonOn = NaN;
@@ -151,26 +140,26 @@ while outcome < 0
         reposition_object(calib, calLocs(locID,:));
         
         % PRESENT fixation cue
-        tFixAcqCueOn(locID) = toggleobject([calib ptd], 'eventmarker', selEvts(locID*2-1));
+        tFixAcqCueOn(locID) = toggleobject([calib ptd], 'eventmarker', calEvts(locID*2-1));
     
         % WAIT for fixation and check for hold maintenance
         [ontarget, ~, tFixAcq(locID)] = eyejoytrack(...
             'releasetarget',hold,  holdRadius,...
             '~touchtarget', hold,  holdRadius,...
             'acquirefix',   calib, fixRadius,...
-            fixPeriod);
+            calFixPeriod);
         
         if ontarget(1) == 0
             % Error if monkey has released hold            
-            event   = [pic.holdOff selEvts(locID*2) bhv.holdNotMaint];  %#ok<*NASGU>
+            event   = [pic.holdOff calEvts(locID*2) bhv.holdNotMaint];
             outcome = err.holdBreak; break
         elseif ontarget(2) == 1
             % Error if monkey touched outside
-            event   = [pic.holdOff selEvts(locID*2) bhv.holdOutside]; 
+            event   = [pic.holdOff calEvts(locID*2) bhv.holdOutside]; 
             outcome = err.holdOutside; break
         elseif ontarget(3) == 0
             % Error if monkey never looked inside fixRadius
-            event   = [pic.holdOff selEvts(locID*2) bhv.fixNotInit]; 
+            event   = [pic.holdOff calEvts(locID*2) bhv.fixNotInit]; 
             outcome = err.fixNil; break
         else
             % Correctly acquired fixation and held hold
@@ -186,15 +175,15 @@ while outcome < 0
         
         if ontarget(1) == 0
             % Error if monkey has released hold 
-            event   = [pic.holdOff selEvts(locID*2) bhv.holdNotMaint]; 
+            event   = [pic.holdOff calEvts(locID*2) bhv.holdNotMaint]; 
             outcome = err.holdBreak; break
         elseif ontarget(2) == 1
             % Error if monkey touched outside
-            event   = [pic.holdOff selEvts(locID*2) bhv.holdOutside]; 
+            event   = [pic.holdOff calEvts(locID*2) bhv.holdOutside]; 
             outcome = err.holdOutside; break
         elseif ontarget(3) == 0
             % Error if monkey went outside fixRadius
-            event   = [pic.holdOff selEvts(locID*2) bhv.fixNotMaint]; 
+            event   = [pic.holdOff calEvts(locID*2) bhv.fixNotMaint]; 
             outcome = err.fixBreak; break
         else
             % Correctly held fixation & hold
@@ -202,7 +191,7 @@ while outcome < 0
         end
         
         % REMOVE the calibration image image off
-        tFixAcqCueOff(locID) = toggleobject(calib, 'eventmarker', selEvts(locID*2));
+        tFixAcqCueOff(locID) = toggleobject(calib, 'eventmarker', calEvts(locID*2));
     end
     
     % TRIAL finished successfully if this point reached on last item

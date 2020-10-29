@@ -34,41 +34,7 @@ showcursor(false);
 trialNum = TrialRecord.CurrentTrialNumber;
 
 % ITI (set to 0 to measure true ITI in ML Dashboard)
-set_iti(200);
-
-% PARAMETERS relevant for task timing and hold/fix control
-initPeriod   = Info.initPeriod;
-holdPeriod   = Info.holdPeriod;
-holdRadius   = Info.holdRadius;
-samplePeriod = Info.samplePeriod;
-delayPeriod  = Info.delayPeriod;
-testPeriod   = Info.testPeriod;
-respPeriod   = Info.respPeriod;
-reward       = ml_rewardVol2Time(rewardVol);
-
-% ASSIGN event codes from TrialRecord.User
-err = TrialRecord.User.err;
-pic = TrialRecord.User.pic;
-aud = TrialRecord.User.aud;
-bhv = TrialRecord.User.bhv;
-rew = TrialRecord.User.rew;
-exp = TrialRecord.User.exp;
-trl = TrialRecord.User.trl;
-chk = TrialRecord.User.chk;
-
-% POINTERS to TaskObjects
-ptd  = 1; hold    = 2; fix      = 3; calib  = 4; same = 5;
-diff = 6; audCorr = 7; audWrong = 8; sample = 9; test = 10;
-
-% SET response button order for SD task
-if ~isfield(TrialRecord.User, 'respOrder')
-    if strcmpi(MLConfig.SubjectName, 'didi') == 1 || strcmpi(MLConfig.SubjectName, 'test') == 1
-        TrialRecord.User.respOrder = [same diff];
-    elseif strcmpi(MLConfig.SubjectName, 'juju') == 1 || strcmpi(MLConfig.SubjectName, 'coco') == 1
-        TrialRecord.User.respOrder = [same diff];
-    end
-end
-respOrder = TrialRecord.User.respOrder;
+set_iti(0);
 
 % EDITABLE variables that can be changed during the task
 editable(...
@@ -86,6 +52,48 @@ rewardVol     = 0.2;
 rewardLine    = 1;
 rewardReps    = 1;
 rewardRepsGap = 500;
+
+% PARAMETERS relevant for task timing and hold/fix control
+initPeriod   = Info.initPeriod;
+holdPeriod   = Info.holdPeriod;
+holdRadius   = TrialData.TaskObject.Attribute{1, 2}{1, 2};
+samplePeriod = Info.samplePeriod;
+delayPeriod  = Info.delayPeriod;
+testPeriod   = Info.testPeriod;
+respPeriod   = Info.respPeriod;
+reward       = ml_rewardVol2Time(rewardVol);
+
+% ASSIGN event codes from TrialRecord.User
+err = TrialRecord.User.err;
+pic = TrialRecord.User.pic;
+aud = TrialRecord.User.aud;
+bhv = TrialRecord.User.bhv;
+rew = TrialRecord.User.rew;
+exp = TrialRecord.User.exp;
+trl = TrialRecord.User.trl;
+chk = TrialRecord.User.chk;
+
+% POINTERS to TaskObjects
+ptd      = 1; 
+hold     = 2;
+fix      = 3; 
+calib    = 4; 
+audCorr  = 5; 
+audWrong = 6; 
+same     = 7;
+diff     = 8; 
+sample   = 9; 
+test     = 10;
+
+% SET response button order for SD task
+if ~isfield(TrialRecord.User, 'respOrder')
+    if strcmpi(MLConfig.SubjectName, 'didi') == 1 || strcmpi(MLConfig.SubjectName, 'test') == 1
+        TrialRecord.User.respOrder = [same diff];
+    elseif strcmpi(MLConfig.SubjectName, 'juju') == 1 || strcmpi(MLConfig.SubjectName, 'coco') == 1
+        TrialRecord.User.respOrder = [same diff];
+    end
+end
+respOrder = TrialRecord.User.respOrder;
 
 % DECLARE select timing and reward variables as NaN
 tHoldButtonOn   = NaN;

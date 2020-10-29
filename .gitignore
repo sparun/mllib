@@ -1,11 +1,6 @@
-# IGNORE FOLDER
+# IGNORE DATA FOLDERS
 templateFixation/data/
-templateFixation/dep/
-templateFixation/stim/
-
 templateSameDiff/data/
-
-templateSameDiff_*/
 
 # IGNORING TEMP FILES
 *.asv
@@ -13,9 +8,6 @@ templateSameDiff_*/
 
 # Ignoring files in the main folder
 *.ffs_db
-todos.m
-todos.txt
-
 
 
 

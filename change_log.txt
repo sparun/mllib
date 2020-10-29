@@ -50,4 +50,20 @@ templateSD - version 2.0 - thomas/georgin (22-10-2020)
 	- audio files now located in folder 'aud' instead of ambiguous 'dep'
 	- added config files from iscan(DQW settings), oep(Channel config) and ml(cfg2.mat) into folder 'cfg'
 
+mlLib   - version 3.0 - thomas/georgin (29-10-2020)
+	
+	- ml_makeConditionsFix/SD - updated theses and removed redundant info values and rearranged all vis stimuli to be come after
+	  ptd,hold,fix,calib,audCorr and audIncorr so as to have commonality between calib files.
+	- ml_alert_function - removed encoding of serial data string to numbers as it added overhead in ITI. Now serial data collected
+	  in trial is directly dumped into TrialRecord.User.serialData{trialNum}
+	- ml_blockChange - checked and verified that it now selects the previous non calib block even if calib block was successively
+	  called twice manually. Will repeat the prior block in full, so ideally load calib block after a block has just ended.
+
+templateSD/Fix - version 3.0 - thomas/georgin (29-10-2020)
+
+	- brought fixation template to sd template version (requisite codes and such)
+	- common calTIming.m across both templates (fix and sd) - as the editables are same between both tasks (even within a task,
+	  timing files should have common editables)
+	- simple fillDashboard.m for fixation tempalte that only shows editable variables and juice consumed
+
 	

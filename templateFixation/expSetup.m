@@ -7,7 +7,7 @@ conditionsFileName = 'fixConditions.txt';
 % IMAGE PAIRS - load filenames and make pairs
 imgFiles    = dir('.\stim\*.bmp');
 numImages   = length(imgFiles);
-imgPerTrial = 4;
+imgPerTrial = 4;  % range 1 to 10
 imgList     = nchoosek(1:numImages, imgPerTrial);
 imgList     = [imgList; fliplr(imgList)];
 imgList     = imgList(randperm(size(imgList, 1)), :);
@@ -17,7 +17,7 @@ trialFlag   = ones(30,1);
 
 %% VARIABLES - trial timings
 initPeriod   = 10000;
-holdPeriod   = 200; 
+holdPeriod   = 200;
 samplePeriod = 400;
 delayPeriod  = 200;
 
@@ -51,15 +51,24 @@ for trialID = 1:length(imgList)
         value      = eval(char(infoFields(stringID,2)));
         stringVal  = char(infoFields(stringID,1));
         
+        
         if isnumeric(value)
-            tempVar = [tempVar stringVal num2str(value) ','];
+            if stringID == length(infoFields)
+                tempVar = [tempVar stringVal sprintf('%03d',value)];
+            else
+                tempVar = [tempVar stringVal sprintf('%03d',value) ','];
+            end
         else
-            tempVar = [tempVar stringVal '''' value '''' ','];
+            if stringID == length(infoFields)
+                tempVar = [tempVar stringVal '''' value ''''];
+            else
+                tempVar = [tempVar stringVal '''' value '''' ','];
+            end
         end
     end
     
-    info{trialID} = tempVar;    
+    info{trialID} = tempVar;
 end
 
 % CREATE conditions file
-ml_makeConditionsFix(timingFileName, conditionsFileName, fixNames, info, frequency, block)      
+ml_makeConditionsFix(timingFileName, conditionsFileName, fixNames, info, frequency, block)

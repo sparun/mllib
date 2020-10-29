@@ -1,6 +1,4 @@
-% Rename to "alert_function.m" if updating code in ML source or exp folder)
-
-function ml_alertFunction(hook,MLConfig,TrialRecord)
+function alert_function(hook,MLConfig,TrialRecord)
 % NIMH MonkeyLogic
 %
 % This function executes pre-defined instructions, when a certain task flow
@@ -17,7 +15,6 @@ function ml_alertFunction(hook,MLConfig,TrialRecord)
 %
 % VERSION HISTORY
 % - 14-Oct-2020 - Thomas  - First version
-% - 22-Oct-2020 - Thomas  - Updated ml_sendHeader and ml_initExp
 % ----------------------------------------------------------------------------------------
 
 % ENSURE path to matlab internal serialport function is at top of MATLAB search path.
@@ -76,19 +73,7 @@ switch hook
     case 'trial_end'
         if TrialRecord.User.mlPcFlag
             % STORE iScan.UserData at trial end
-            serialDataAscii = [];
-            serialDataNum   = [];
-            serialDataAscii = iScan.UserData;
-            for i = 1:length(serialDataAscii)
-                % Check if there are any lost/corrupted samples
-                % (in practice, happens only on first read of serial port)
-                try
-                    serialDataNum(i,:) = str2num(serialDataAscii(i));
-                catch
-                    serialDataNum(i,:) = [NaN NaN NaN NaN NaN NaN];
-                end
-            end
-            TrialRecord.User.serialData{TrialRecord.CurrentTrialNumber} = serialDataNum;
+            TrialRecord.User.serialData{TrialRecord.CurrentTrialNumber} = iScan.UserData;
             TrialRecord.User.timeStamp{TrialRecord.CurrentTrialNumber}  = timeStamp;
         end
         
