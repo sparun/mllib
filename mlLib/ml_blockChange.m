@@ -31,9 +31,7 @@ end
 
 % RERUN previous block if CALIB block run manually----------------------------------------
 if length(TrialRecord.BlockOrder) > 1 && TrialRecord.BlockOrder(end) == 1
-    tempBlockOrder = TrialRecord.BlockOrder;
-    tempBlockOrder(tempBlockOrder == 1) = [];
-    nextBlock = tempBlockOrder(end);
+    nextBlock = TrialRecord.BlockOrder(end-1);
     return
 end
 
