@@ -66,4 +66,15 @@ templateSD/Fix - version 3.0 - thomas/georgin (29-10-2020)
 	  timing files should have common editables)
 	- simple fillDashboard.m for fixation tempalte that only shows editable variables and juice consumed
 
+mlLib   - version 3.1 - thomas/georgin (31-10-2020)
+	
+	- ml_blockChange - corrected instance of calib block not being removed from TrialRecord.User.blockList so that it's not played automatically
+	- ml_alertFunction - added a serialport read before callback initiation to read and discard erroneous data. Also serialdata is now converted 
+	  to double before being saved into TrialRecord.User.serialData (this is now a fast operation)	 
+
+templateSD/Fix - version 3.1 - thomas/georgin (31-10-2020)
+
+	- corrected missing calib and fix image number event markers in fixTiming and calTiming files. cfg2 file in templateFix updates to check 
+	  blockChange updates also (no significant change to other params).
+
 	

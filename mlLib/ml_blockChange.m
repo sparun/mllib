@@ -20,6 +20,7 @@ if TrialRecord.CurrentTrialNumber == 1
     if TrialRecord.User.blockList(1) == 1
         % CALIB block selected if CALIB block in in blockList
         nextBlock = TrialRecord.User.blockList(1);
+        TrialRecord.User.blockList(1) = [];
         return
     else
         % RANDOM block selected if CALIB block not in blockList
@@ -33,11 +34,7 @@ end
 if length(TrialRecord.BlockOrder) > 1 && TrialRecord.BlockOrder(end) == 1
     temp            = TrialRecord.BlockOrder;
     temp(temp == 1) = [];
-    try
     nextBlock       = temp(end);
-    catch
-        keyboard
-    end
     return
 end
 

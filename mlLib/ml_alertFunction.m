@@ -35,6 +35,10 @@ switch hook
             % OPEN serial port to read and save IScan ASCII serial data at 120Hz
             iScan = serialport('COM1', 115200);
             configureTerminator(iScan,10)
+            % READ a single ASCII string from IScan to get rid of incomplete first package
+            % that happens if serialport object starts reading in between terminators. Now
+            % ml_readSerialData will have complete strings read.
+            readline(iScan)
             configureCallback(iScan,"terminator",@ml_readSerialData)
             disp('[UPDATE] - opened serialport session');
         end
@@ -73,7 +77,11 @@ switch hook
     case 'trial_end'
         if TrialRecord.User.mlPcFlag
             % STORE iScan.UserData at trial end
-            TrialRecord.User.serialData{TrialRecord.CurrentTrialNumber} = iScan.UserData;
+            serialDataNum = nan(size(iScan.UserData,1),6);
+            for i = 1:length(iScan.UserData)
+                serialDataNum(i,:) = str2num(iScan.UserData(i));
+            end
+            TrialRecord.User.serialData{TrialRecord.CurrentTrialNumber} = serialDataNum;
             TrialRecord.User.timeStamp{TrialRecord.CurrentTrialNumber}  = timeStamp;
         end
         
@@ -84,7 +92,7 @@ switch hook
         if ~isnan(TrialRecord.User.recordNetcamStartTime)
             % STOP netCam recordings (requires watchtower server running and
             % cameras to be manually bound on netcam PC, recording must be going on)
-            [outcome] = ml_stopNetcamRecord(apitoken);
+            [outcome] = ml_stopNetcamRecord(apitoken);  
             if outcome
                 disp('[UPDATE] - stopped netcam recording');
             else
