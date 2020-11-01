@@ -283,10 +283,14 @@ while outcome < 0
         % Error if monkey touched outside
         event   = [pic.choiceOff bhv.holdOutside];
         outcome = err.holdOutside; break
-    elseif chosenResp(1) == Info.expectedResponse && chosenResp(2) == 1
-        % Correct response by monkey
+    elseif Info.expectedResponse == 0
+        % Correct response by monkey on ambigous/free-choice trial
         event   = [pic.choiceOff bhv.respCorr rew.juice];
         outcome = err.respCorr; break
+    elseif chosenResp(1) == Info.expectedResponse
+        % Correct response by monkey
+        event   = [pic.choiceOff bhv.respCorr rew.juice];
+        outcome = err.respCorr; break   
     else
         % Wrong response by monkey
         event   = [pic.choiceOff bhv.respWrong];
@@ -378,6 +382,7 @@ eventmarker(trl.footerStop);
 TrialRecord.User.juiceConsumed(trialNum)    = juiceConsumed;
 TrialRecord.User.responseCorrect(trialNum)  = outcome;
 TrialRecord.User.expectedResponse(trialNum) = Info.expectedResponse;
+TrialRecord.User.trialFlag(trialNum)        = Info.trialFlag;
 
 % SAVE to Data.UserVars
 bhv_variable(...

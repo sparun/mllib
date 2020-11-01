@@ -280,6 +280,7 @@ eventmarker(trl.footerStop);
 TrialRecord.User.juiceConsumed(trialNum)    = juiceConsumed;
 TrialRecord.User.responseCorrect(trialNum)  = outcome;
 TrialRecord.User.expectedResponse(trialNum) = NaN;
+TrialRecord.User.trialFlag(trialNum)        = NaN;
 
 % SAVE to Data.UserVars
 bhv_variable(...

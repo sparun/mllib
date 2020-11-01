@@ -324,6 +324,7 @@ eventmarker(trl.footerStop);
 % SAVE to TrialRecord.user
 TrialRecord.User.juiceConsumed(trialNum)   = juiceConsumed;
 TrialRecord.User.responseCorrect(trialNum) = outcome;
+TrialRecord.User.trialFlag(trialNum)       = Info.trialFlag;
 
 % SAVE to Data.UserVars
 bhv_variable(...

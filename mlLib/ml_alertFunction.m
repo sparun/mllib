@@ -78,6 +78,7 @@ switch hook
         if TrialRecord.User.mlPcFlag
             % STORE iScan.UserData at trial end
             serialDataNum = nan(size(iScan.UserData,1),6);
+            % removing this for loop doesn't work for some reason
             for i = 1:length(iScan.UserData)
                 serialDataNum(i,:) = str2num(iScan.UserData(i));
             end

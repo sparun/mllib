@@ -77,4 +77,15 @@ templateSD/Fix - version 3.1 - thomas/georgin (31-10-2020)
 	- corrected missing calib and fix image number event markers in fixTiming and calTiming files. cfg2 file in templateFix updates to check 
 	  blockChange updates also (no significant change to other params).
 
+mlLib   - version 3.2 - arun/jhilik (01-11-2020)
+	
+	- ml_alertFunction - added comment about serial data saving at 'trial end'
+	- ml_makeCondiditonsFix - changed color of hold button from green to blue
+
+templateSD/Fix - version 3.2 - thomas (31-10-2020)
+
+	- added trialFlag in TrialRecord.User for cal, fix and sd (NaN in cal trials).
+	- added condition of free choice trial in sd timing so monkey gets reward if Info.expectedResponse is 0.
+
+
 	

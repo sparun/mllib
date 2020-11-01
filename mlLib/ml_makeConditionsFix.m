@@ -27,6 +27,8 @@
 %                 Harish
 % - 22-Oct-2020 - Thomas  - Removed validation block, fixed info and other minor updates
 % - 29-Oct-2020 - Thomas  - Removed extra info
+% - 01-Nov-2020 - Arun    - Changed hold button color to blue from green
+%                 Jhilik 
 % ---------------------------------------------------------------------------------------
 
 function ml_makeConditionsFix(timingFileName, conditionsFileName, fixNames, info, frequency, block)
@@ -39,7 +41,7 @@ calTimingFile ='calTiming';
 
 % TASK objects - Static
 taskObj01Ptd    = 'sqr([3.0 2.5], [1 1 1], 1,  0,  19)';
-taskObj02Hold   = 'crc(4, [0 1 0], 1, 20, 0)';
+taskObj02Hold   = 'crc(4, [0 0 1], 1, 20, 0)';
 taskObj03Fix    = 'sqr([0.6 0.6], [0.5 0.5 0], 1, 0, 0)';
 taskObj04Calib  = 'crc(1, [0.5 0.5 0.5], 1, 0, 0)';
 taskObj05Corr   = 'snd(.\aud\correct)';
