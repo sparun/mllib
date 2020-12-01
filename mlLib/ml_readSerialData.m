@@ -7,9 +7,9 @@
 % - 15-Oct-2020  - Thomas - First implementation
 %-----------------------------------------------------------------------------------------
 
-function ml_readSerialData(iScan,evt)
+function ml_readSerialData(iScan, evt)
 global timeStamp
     data           = readline(iScan);
     iScan.UserData = [iScan.UserData; data];
-    timeStamp      = [timeStamp; clock];
+    timeStamp      = [timeStamp; datevec(now)];
 end

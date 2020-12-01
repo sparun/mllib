@@ -22,7 +22,7 @@ files            = ml_packHeader(allowedFileTypes);
 TrialRecord.User.files = files;
 
 % CHECK if Experiment PC------------------------------------------------------------------
-if strcmpi(getenv('COMPUTERNAME'), 'EXPERIMENT-PC') == 1
+if strcmpi(getenv('COMPUTERNAME'), 'VISIONLABML') == 1
     TrialRecord.User.mlPcFlag = 1;
         
     % CHECK if header info to be sent to eCube--------------------------------------------
@@ -36,7 +36,7 @@ if strcmpi(getenv('COMPUTERNAME'), 'EXPERIMENT-PC') == 1
             disp('[UPDATE] - header will be sent to eCube');
         elseif ch == 110
             TrialRecord.User.sendHeaderFlag = 0; respGiven = 1;
-            disp('[UPDATE] - header will be sent NOT be sent to eCube!!');
+            disp('[UPDATE] - header will NOT be sent to eCube!!');
         else
             disp('[ERROR] - Sorry, choice can only be ''Y'' or ''N''. Please enter again!')
         end

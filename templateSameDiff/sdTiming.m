@@ -38,20 +38,20 @@ set_iti(0);
 
 % EDITABLE variables that can be changed during the task
 editable(...
-    'goodPause',   'badPause',      'fixRadius',...
-    'fixPeriod',   'calHoldPeriod', 'calRandFlag',...
-    'rewardVol',   'rewardLine',    'rewardReps',...
-    'rewardRepsGap');
-goodPause     = 200;
-badPause      = 1000;
-fixRadius     = 100;
-fixPeriod     = 200;
-calHoldPeriod = 500;
-calRandFlag   = 0;
-rewardVol     = 0.2;
-rewardLine    = 1;
-rewardReps    = 1;
-rewardRepsGap = 500;
+    'goodPause',    'badPause',     'taskFixRadius',...
+    'calFixRadius', 'calFixPeriod', 'calFixHoldPeriod', 'calFixRandFlag',...
+    'rewardVol',    'rewardLine',   'rewardReps',       'rewardRepsGap');
+goodPause        = 200;
+badPause         = 1000;
+taskFixRadius    = 12;
+calFixRadius     = 6; 
+calFixPeriod     = 500;
+calFixHoldPeriod = 200; 
+calFixRandFlag   = 1; 
+rewardVol        = 0.2;
+rewardLine       = 1;
+rewardReps       = 1;
+rewardRepsGap    = 500;
 
 % PARAMETERS relevant for task timing and hold/fix control
 initPeriod   = Info.initPeriod;
@@ -123,6 +123,7 @@ eventmarker(chk.linesEven);
 
 % TRIAL start
 eventmarker(trl.start);
+TrialRecord.User.TrialStart(trialNum,:) = datevec(now);
 
 % RUN trial sequence till outcome registered
 while outcome < 0
@@ -155,7 +156,7 @@ while outcome < 0
     [ontarget, ~, tFixAcq] = eyejoytrack(...
         'releasetarget', hold, holdRadius,...
         '~touchtarget',  hold, holdRadius,...
-        'acquirefix',    fix,  fixRadius,...
+        'acquirefix',    fix,  taskFixRadius,...
         holdPeriod);
     
     if ontarget(1) == 0
@@ -179,7 +180,7 @@ while outcome < 0
     ontarget = eyejoytrack(...
         'releasetarget', hold, holdRadius,...
         '~touchtarget',  hold, holdRadius,...
-        'holdfix',    fix,  fixRadius,...
+        'holdfix',    fix,  taskFixRadius,...
         holdPeriod);
     
     if ontarget(1) == 0
@@ -207,7 +208,7 @@ while outcome < 0
     ontarget = eyejoytrack(...
         'releasetarget', hold,   holdRadius,...
         '~touchtarget',  hold,   holdRadius,...
-        'holdfix',       sample, fixRadius,...
+        'holdfix',       sample, taskFixRadius,...
         samplePeriod);
     
     if ontarget(1) == 0
@@ -227,13 +228,13 @@ while outcome < 0
         eventmarker([bhv.holdMaint bhv.fixMaint]);
     end
     
-    % REMOVE sample image ans PRESENT fixation cue
+    % REMOVE sample image and PRESENT fixation cue
     tSampleOff     = toggleobject([sample fix ptd], 'eventmarker', [pic.sampleOff pic.fixOn]);
     tFixMaintCueOn = tSampleOff;
     
     % CHECK hold and fixation in DELAY period
     ontarget = eyejoytrack('releasetarget', hold, holdRadius,...
-        '~touchtarget', hold, holdRadius, 'holdfix', fix, fixRadius, delayPeriod);
+        '~touchtarget', hold, holdRadius, 'holdfix', fix, taskFixRadius, delayPeriod);
     
     if ontarget(1) == 0
         % Error if monkey has released hold
@@ -304,6 +305,7 @@ tAllOff = toggleobject(1:10, 'status', 'off', 'eventmarker', event);
 
 % TRIAL end
 eventmarker(trl.stop);
+TrialRecord.User.TrialStop(trialNum,:) = datevec(now);
 
 % TRIAL end ------------------------------------------------------------------------------ 
 % FOOTER start --------------------------------------------------------------------------- 
@@ -342,12 +344,13 @@ if isfield(Info, 'trialFlag')
 end
 
 % ASSIGN trial footer editable
-cGoodPause     = trl.edtShift + TrialRecord.Editable.goodPause;
-cBadPause      = trl.edtShift + TrialRecord.Editable.badPause;
-cFixRadius     = trl.edtShift + TrialRecord.Editable.fixRadius;
-cFixPeriod     = trl.edtShift + TrialRecord.Editable.fixPeriod;
-cCalHoldPeriod = trl.edtShift + TrialRecord.Editable.calHoldPeriod;
-cRewardVol     = trl.edtShift + TrialRecord.Editable.rewardVol*1000;
+cGoodPause        = trl.edtShift + TrialRecord.Editable.goodPause;
+cBadPause         = trl.edtShift + TrialRecord.Editable.badPause;
+cTaskFixRadius    = trl.edtShift + TrialRecord.Editable.taskFixRadius;
+cCalFixRadius     = trl.edtShift + TrialRecord.Editable.calFixRadius;
+cCalFixPeriod     = trl.edtShift + TrialRecord.Editable.calFixPeriod;
+cCalFixHoldPeriod = trl.edtShift + TrialRecord.Editable.calFixHoldPeriod;
+cRewardVol        = trl.edtShift + TrialRecord.Editable.rewardVol*1000;
 
 % FOOTER start marker
 eventmarker(trl.footerStart);
@@ -367,9 +370,10 @@ eventmarker(trl.edtStart);
 % SEND editable in following order
 eventmarker(cGoodPause); 
 eventmarker(cBadPause); 
-eventmarker(cFixRadius);
-eventmarker(cFixPeriod); 
-eventmarker(cCalHoldPeriod);
+eventmarker(cTaskFixRadius);
+eventmarker(cCalFixRadius);
+eventmarker(cCalFixPeriod); 
+eventmarker(cCalFixHoldPeriod);
 eventmarker(cRewardVol);
 
 % EDITABLE stop marker

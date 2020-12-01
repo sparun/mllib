@@ -87,5 +87,19 @@ templateSD/Fix - version 3.2 - thomas (31-10-2020)
 	- added trialFlag in TrialRecord.User for cal, fix and sd (NaN in cal trials).
 	- added condition of free choice trial in sd timing so monkey gets reward if Info.expectedResponse is 0.
 
+mlLib   - version 4.0 - thomas (01-12-2020)
+	
+	- ml_initExp - updated PC name to 'VISIONLABML', corrected error message for header not sent
+	- ml_readSerialData - update time function to 'datestr(now)' from clock (as millisecond precision wasn't there)
+
+templateSD/Fix - version 4.0 - thomas/georgin (01-12-2020)
+
+	- calibration editable variables separated from task (sd or fix) editable variables
+	- corrected missing editable start event marker in calTiming.m
+	- update time function for trialStart and trialStop to 'datestr(now)' from clock (as millisecond precision wasn't there)
+	- added latest iscan dqw cfg files
+
+	
+
 
 	
