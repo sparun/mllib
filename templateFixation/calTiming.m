@@ -16,6 +16,7 @@
 % - 14-Oct-2020 - Thomas  - Updated all eyejoytrack to absolute time and not rt
 % - 29-Oct-2020 - Thomas  - combine calibration codes for template sd and fix 
 %                           (only requirement for this was common editable var names) 
+% - 31-Dec-2020 - Thomas  - Updated editable names and implemented holdRadiusBuffer
 % ----------------------------------------------------------------------------------------
 % HEADER start ---------------------------------------------------------------------------
 
@@ -30,29 +31,30 @@ showcursor(false);
 trialNum = TrialRecord.CurrentTrialNumber;
 
 % ITI (set to 0 to measure true ITI in ML Dashboard)
-set_iti(0);
+set_iti(200);
 
 % EDITABLE variables that can be changed during the task
 editable(...
-    'goodPause',    'badPause',     'taskFixRadius',...
-    'calFixRadius', 'calFixPeriod', 'calFixHoldPeriod', 'calFixRandFlag',...
-    'rewardVol',    'rewardLine',   'rewardReps',       'rewardRepsGap');
+    'goodPause',    'badPause',         'taskFixRadius',...
+    'calFixRadius', 'calFixInitPeriod', 'calFixHoldPeriod', 'calFixRandFlag',...
+    'rewardVol',    'rewardLine',       'rewardReps',       'rewardRepsGap');
 goodPause        = 200; 
 badPause         = 1000; 
-taskFixRadius    = 12;
+taskFixRadius    = 10;
 calFixRadius     = 6; 
-calFixPeriod     = 500;
+calFixInitPeriod = 500;
 calFixHoldPeriod = 200; 
-calFixRandFlag   = 1; 
+calFixRandFlag   = 1;    % Redundtant?
 rewardVol        = 0.2;
-rewardLine       = 1;
-rewardReps       = 1;
-rewardRepsGap    = 500; 
+rewardLine       = 1;    % Redundtant?
+rewardReps       = 1;    % Redundtant?
+rewardRepsGap    = 500;  % Redundtant?
 
 % PARAMETERS relevant for task timing and hold/fix control
-initPeriod = Info.initPeriod;
-holdRadius = TrialData.TaskObject.Attribute{1, 2}{1, 2};
-reward     = ml_rewardVol2Time(rewardVol);
+holdInitPeriod   = Info.holdInitPeriod;
+holdRadius       = TrialData.TaskObject.Attribute{1, 2}{1, 2};
+holdRadiusBuffer = 2;
+reward           = ml_rewardVol2Time(rewardVol);
 
 % ASSIGN event codes from TrialRecord.User
 err = TrialRecord.User.err;
@@ -120,8 +122,8 @@ while outcome < 0
     % WAIT for touch in INIT period
     [ontarget, ~, tTrialInit] = eyejoytrack(...
         'touchtarget',  hold, holdRadius,...
-        '~touchtarget', hold, holdRadius,...
-        initPeriod);
+        '~touchtarget', hold, holdRadius + holdRadiusBuffer,...
+        holdInitPeriod);
 
     if(sum(ontarget) == 0)
         % Error if there's no touch anywhere
@@ -146,9 +148,9 @@ while outcome < 0
         % WAIT for fixation and check for hold maintenance
         [ontarget, ~, tFixAcq(locID)] = eyejoytrack(...
             'releasetarget',hold,  holdRadius,...
-            '~touchtarget', hold,  holdRadius,...
+            '~touchtarget', hold,  holdRadius + holdRadiusBuffer,...
             'acquirefix',   calib, calFixRadius,...
-            calFixPeriod);
+            calFixInitPeriod);
         
         if ontarget(1) == 0
             % Error if monkey has released hold            
@@ -170,7 +172,7 @@ while outcome < 0
         % CHECK fixation and hold maintenance for fixationPeriod
         ontarget = eyejoytrack(...
             'releasetarget',hold,  holdRadius,...
-            '~touchtarget', hold,  holdRadius,...
+            '~touchtarget', hold,  holdRadius + holdRadiusBuffer,...
             'holdfix',      calib, calFixRadius,...
             calFixHoldPeriod);
         
@@ -250,7 +252,7 @@ cGoodPause        = trl.edtShift + TrialRecord.Editable.goodPause;
 cBadPause         = trl.edtShift + TrialRecord.Editable.badPause;
 cTaskFixRadius    = trl.edtShift + TrialRecord.Editable.taskFixRadius;
 cCalFixRadius     = trl.edtShift + TrialRecord.Editable.calFixRadius;
-cCalFixPeriod     = trl.edtShift + TrialRecord.Editable.calFixPeriod;
+cCalFixInitPeriod = trl.edtShift + TrialRecord.Editable.calFixInitPeriod;
 cCalFixHoldPeriod = trl.edtShift + TrialRecord.Editable.calFixHoldPeriod;
 cRewardVol        = trl.edtShift + TrialRecord.Editable.rewardVol*1000;
 
@@ -273,7 +275,7 @@ eventmarker(cGoodPause);
 eventmarker(cBadPause); 
 eventmarker(cTaskFixRadius);
 eventmarker(cCalFixRadius);
-eventmarker(cCalFixPeriod); 
+eventmarker(cCalFixInitPeriod); 
 eventmarker(cCalFixHoldPeriod);
 eventmarker(cRewardVol);
 
@@ -287,6 +289,7 @@ eventmarker(trl.footerStop);
 TrialRecord.User.juiceConsumed(trialNum)    = juiceConsumed;
 TrialRecord.User.responseCorrect(trialNum)  = outcome;
 TrialRecord.User.expectedResponse(trialNum) = NaN;
+TrialRecord.User.chosenResponse(trialNum)   = NaN;
 TrialRecord.User.trialFlag(trialNum)        = NaN;
 
 % SAVE to Data.UserVars

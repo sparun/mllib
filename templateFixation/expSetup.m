@@ -16,19 +16,19 @@ frequency   = ones(30,1);
 trialFlag   = ones(30,1);
 
 %% VARIABLES - trial timings
-initPeriod   = 10000;
-holdPeriod   = 200;
-samplePeriod = 400;
-delayPeriod  = 200;
+holdInitPeriod = 10000;
+fixInitPeriod  = 500;
+samplePeriod   = 400;
+delayPeriod    = 200;
 
 % INFO fields
 infoFields =  {
-    '''imgPerTrial'',',  'imgPerTrial'
-    '''trialFlag'',',    'trialFlag(trialID,1)'
-    '''initPeriod'',',   'initPeriod'
-    '''holdPeriod'',',   'holdPeriod'
-    '''samplePeriod'',', 'samplePeriod'
-    '''delayPeriod'',',  'delayPeriod'
+    '''imgPerTrial'',',    'imgPerTrial'
+    '''trialFlag'',',      'trialFlag(trialID,1)'
+    '''holdInitPeriod'',', 'holdInitPeriod'
+    '''fixInitPeriod'',',  'fixInitPeriod'
+    '''samplePeriod'',',   'samplePeriod'
+    '''delayPeriod'',',    'delayPeriod'
     };
 
 % TRIAL info

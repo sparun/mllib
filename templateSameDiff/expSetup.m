@@ -46,12 +46,12 @@ while(count <= ((length(pairs)) / blockL))
 end
 
 %% VARIABLES - trial timings
-initPeriod   = 10000;
-holdPeriod   = 200; 
-samplePeriod = 400;
-delayPeriod  = 200;
-testPeriod   = 5000;
-respPeriod   = 5000;
+holdInitPeriod = 10000;
+fixInitPeriod  = 200; 
+samplePeriod   = 400;
+delayPeriod    = 200;
+testPeriod     = 5000;
+respPeriod     = 5000;
 
 % INFO fields
 infoFields =  {
@@ -61,8 +61,8 @@ infoFields =  {
     '''testImageFile'',',    'sdPairs{trialID,2}'
     '''expectedResponse'',', 'expectedResponse(trialID,1)'
     '''trialFlag'',',        'trialFlag(trialID,1)'
-    '''initPeriod'',',       'initPeriod'
-    '''holdPeriod'',',       'holdPeriod'
+    '''holdInitPeriod'',',   'holdInitPeriod'
+    '''fixInitPeriod'',',    'fixInitPeriod'
     '''samplePeriod'',',     'samplePeriod'
     '''delayPeriod'',',      'delayPeriod'
     '''testPeriod'',',       'testPeriod'

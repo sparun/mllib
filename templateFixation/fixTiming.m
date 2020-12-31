@@ -10,10 +10,12 @@
 %                           codes. Simplified code structure and other changes.
 % - 14-Oct-2020 - Thomas  - Updated all eyejoytrack to absolute time and not rt
 % - 29-Oct-2020 - Thomas  - Updated to match the version of templateSD
+% - 31-Dec-2020 - Thomas  - Updated editable names and implemented holdRadiusBuffer and
+%                           accomodated code for delayPeriod of 0
 % ----------------------------------------------------------------------------------------
 % HEADER start ---------------------------------------------------------------------------
 
-% CHECK if touch and eyesignal are present to continue---------------------------
+% CHECK if touch and eyesignal are present to continue------------------------------------
 if ~ML_touchpresent, error('This task requires touch signal input!'); end
 if ~ML_eyepresent,   error('This task requires eye signal input!');   end
 
@@ -28,28 +30,30 @@ set_iti(200);
 
 % EDITABLE variables that can be changed during the task
 editable(...
-    'goodPause',    'badPause',     'taskFixRadius',...
-    'calFixRadius', 'calFixPeriod', 'calFixHoldPeriod', 'calFixRandFlag',...
-    'rewardVol',    'rewardLine',   'rewardReps',       'rewardRepsGap');
+    'goodPause',    'badPause',         'taskFixRadius',...
+    'calFixRadius', 'calFixInitPeriod', 'calFixHoldPeriod', 'calFixRandFlag',...
+    'rewardVol',    'rewardLine',       'rewardReps',       'rewardRepsGap');
 goodPause        = 200;
 badPause         = 1000;
-taskFixRadius    = 100;
-calFixRadius     = 6; 
-calFixPeriod     = 500;
-calFixHoldPeriod = 200; 
-calFixRandFlag   = 1; 
+taskFixRadius    = 10;
+calFixRadius     = 6;
+calFixInitPeriod = 500;
+calFixHoldPeriod = 200;
+calFixRandFlag   = 1;    % Redundtant?
 rewardVol        = 0.2;
-rewardLine       = 1;
-rewardReps       = 1;
-rewardRepsGap    = 500;
+rewardLine       = 1;    % Redundtant?
+rewardReps       = 1;    % Redundtant?
+rewardRepsGap    = 500;  % Redundtant?
 
 % PARAMETERS relevant for task timing and hold/fix control
-initPeriod   = Info.initPeriod;
-holdPeriod   = Info.holdPeriod;
-holdRadius   = TrialData.TaskObject.Attribute{1, 2}{1, 2};
-samplePeriod = Info.samplePeriod;
-delayPeriod  = Info.delayPeriod;
-reward       = ml_rewardVol2Time(rewardVol);
+holdInitPeriod   = Info.holdInitPeriod;
+fixInitPeriod    = Info.fixInitPeriod;
+fixHoldPeriod    = 200;
+holdRadius       = TrialData.TaskObject.Attribute{1, 2}{1, 2};
+holdRadiusBuffer = 2;
+samplePeriod     = Info.samplePeriod;
+delayPeriod      = Info.delayPeriod;
+reward           = ml_rewardVol2Time(rewardVol);
 
 % ASSIGN event codes from TrialRecord.User
 err = TrialRecord.User.err;
@@ -101,15 +105,15 @@ eventmarker(trl.start);
 TrialRecord.User.TrialStart(trialNum,:) = datevec(now);
 
 % RUN trial sequence till outcome registered
-while outcome < 0    
+while outcome < 0
     % PRESENT hold button
     tHoldButtonOn = toggleobject([hold ptd], 'eventmarker', pic.holdOn);
     
     % WAIT for touch in INIT period
     [ontarget, ~, tTrialInit] = eyejoytrack(...
         'touchtarget',  hold, holdRadius, ...
-        '~touchtarget', hold, holdRadius,...
-        initPeriod);
+        '~touchtarget', hold, holdRadius + holdRadiusBuffer,...
+        holdInitPeriod);
     
     if(sum(ontarget) == 0)
         % Error if there's no touch anywhere
@@ -130,9 +134,9 @@ while outcome < 0
     % WAIT for fixation and CHECK for hold in HOLD period
     [ontarget, ~, tFixAcq] = eyejoytrack(...
         'releasetarget',hold, holdRadius,...
-        '~touchtarget', hold, holdRadius,...
+        '~touchtarget', hold, holdRadius + holdRadiusBuffer,...
         'acquirefix',   fix,  taskFixRadius,...
-        holdPeriod);
+        fixInitPeriod);
     
     if ontarget(1) == 0
         % Error if monkey has released hold
@@ -151,12 +155,12 @@ while outcome < 0
         eventmarker([bhv.holdMaint bhv.fixInit]);
     end
     
-    % CHECK hold and fixation in DELAY period
+    % CHECK hold and fixation in DELAY period (200ms to stabilize eye gaze)
     ontarget = eyejoytrack(...
         'releasetarget',hold, holdRadius,...
-        '~touchtarget', hold, holdRadius,...
+        '~touchtarget', hold, holdRadius + holdRadiusBuffer,...
         'holdfix',      fix,  taskFixRadius,...
-        delayPeriod);
+        fixHoldPeriod);
     
     if ontarget(1) == 0
         % Error if monkey released hold
@@ -175,18 +179,26 @@ while outcome < 0
         eventmarker([bhv.holdMaint bhv.fixMaint]);
     end
     
+    
     % LOOP for presenting stim
     for itemID = 1:Info.imgPerTrial
-        
-        % REMOVE fixation cue & PRESENT stim
-        tFixCueOff(itemID,:) = toggleobject([fix selStim(itemID) ptd],...
-            'eventmarker', [pic.fixOff selEvts(2*itemID)-1]);
-        tSampleOn(itemID,:)  = tFixCueOff(itemID,:);
+        % CHECK if delayPeriod is 0 and not the first stim
+        if itemID == 1 || delayPeriod > 0
+            % REMOVE fixation cue & PRESENT stimulus
+            tFixCueOff(itemID,:) = toggleobject([fix selStim(itemID) ptd],...
+                'eventmarker', [pic.fixOff selEvts(2*itemID)-1]);
+            tSampleOn(itemID,:)  = tFixCueOff(itemID,:);
+        else
+            % PRESENT stimulus
+            tSampleOn(itemID,:) = toggleobject([selStim(itemID) ptd],...
+                'eventmarker', selEvts(2*itemID)-1);
+            tFixCueOff(itemID,:)  = NaN;
+        end
         
         % CHECK fixation and hold maintenance for samplePeriod
         ontarget = eyejoytrack(...
             'releasetarget',hold,            holdRadius,...
-            '~touchtarget', hold,            holdRadius,...
+            '~touchtarget', hold,            holdRadius + holdRadiusBuffer,...
             'holdfix',      selStim(itemID), taskFixRadius,...
             samplePeriod);
         
@@ -207,41 +219,50 @@ while outcome < 0
             eventmarker([bhv.holdMaint bhv.fixMaint]);
         end
         
-        % REMOVE stimulus & PRESENT fixation cue
-        tSampleOff(itemID,:)     = toggleobject([fix selStim(itemID) ptd],...
-            'eventmarker', [selEvts(2*itemID) pic.fixOn]);
-        tFixCueOn(itemID + 1,:)  = tSampleOff(itemID,:);
-        
-        % CHECK fixation and hold maintenance for delayPeriod
-        ontarget = eyejoytrack(...
-            'releasetarget',hold,            holdRadius,...
-            '~touchtarget', hold,            holdRadius,...
-            'holdfix',      selStim(itemID), taskFixRadius,...
-            delayPeriod);
-        
-        if ontarget(1) == 0
-            % Error if monkey released hold
-            event   = [pic.holdOff pic.fixOff bhv.holdNotMaint];
-            outcome = err.holdBreak; break
-        elseif ontarget(2) == 1
-            % Error if monkey touched outside
-            event   = [pic.holdOff pic.fixOff bhv.holdOutside];
-            outcome = err.holdOutside; break
-        elseif ontarget(3) == 0
-            % Error if monkey went outside fixRadius
-            event   = [pic.holdOff pic.fixOff bhv.fixNotMaint];
-            outcome = err.fixBreak; break
+        % CHECK if delayPeriod is 0
+        if delayPeriod > 0
+            % REMOVE stimulus & PRESENT fixation cue
+            tSampleOff(itemID,:)     = toggleobject([fix selStim(itemID) ptd],...
+                'eventmarker', [selEvts(2*itemID) pic.fixOn]);
+            tFixCueOn(itemID + 1,:)  = tSampleOff(itemID,:);
+            
+            % CHECK fixation and hold maintenance for delayPeriod
+            ontarget = eyejoytrack(...
+                'releasetarget',hold,            holdRadius,...
+                '~touchtarget', hold,            holdRadius + holdRadiusBuffer,...
+                'holdfix',      selStim(itemID), taskFixRadius,...
+                delayPeriod);
+            
+            if ontarget(1) == 0
+                % Error if monkey released hold
+                event   = [pic.holdOff pic.fixOff bhv.holdNotMaint];
+                outcome = err.holdBreak; break
+            elseif ontarget(2) == 1
+                % Error if monkey touched outside
+                event   = [pic.holdOff pic.fixOff bhv.holdOutside];
+                outcome = err.holdOutside; break
+            elseif ontarget(3) == 0
+                % Error if monkey went outside fixRadius
+                event   = [pic.holdOff pic.fixOff bhv.fixNotMaint];
+                outcome = err.fixBreak; break
+            else
+                % Correctly held fixation & hold
+                eventmarker([bhv.holdMaint bhv.fixMaint]);
+            end
         else
-            % Correctly held fixation & hold
-            eventmarker([bhv.holdMaint bhv.fixMaint]);
-        end        
+            % REMOVE stimulus
+            tSampleOff(itemID,:)     = toggleobject(selStim(itemID),...
+                'eventmarker', selEvts(2*itemID));
+            tFixCueOn(itemID + 1,:)  = NaN;
+        end
+        
     end
     
     % TRIAL finished successfully if this point reached on last item
     if itemID == Info.imgPerTrial
         event   = [pic.fixOff pic.holdOff bhv.respCorr rew.juice];
         outcome = err.respCorr;
-    end    
+    end
 end
 
 % SET trial outcome and remove all stimuli
@@ -252,8 +273,8 @@ tAllOff = toggleobject(1:16, 'status', 'off', 'eventmarker', event);
 eventmarker(trl.stop);
 TrialRecord.User.TrialStop(trialNum,:) = datevec(now);
 
-% TRIAL end ------------------------------------------------------------------------------ 
-% FOOTER start --------------------------------------------------------------------------- 
+% TRIAL end ------------------------------------------------------------------------------
+% FOOTER start ---------------------------------------------------------------------------
 
 % REWARD monkey if correct response given
 if outcome == err.holdNil
@@ -292,7 +313,7 @@ cGoodPause        = trl.edtShift + TrialRecord.Editable.goodPause;
 cBadPause         = trl.edtShift + TrialRecord.Editable.badPause;
 cTaskFixRadius    = trl.edtShift + TrialRecord.Editable.taskFixRadius;
 cCalFixRadius     = trl.edtShift + TrialRecord.Editable.calFixRadius;
-cCalFixPeriod     = trl.edtShift + TrialRecord.Editable.calFixPeriod;
+cCalFixInitPeriod = trl.edtShift + TrialRecord.Editable.calFixInitPeriod;
 cCalFixHoldPeriod = trl.edtShift + TrialRecord.Editable.calFixHoldPeriod;
 cRewardVol        = trl.edtShift + TrialRecord.Editable.rewardVol*1000;
 
@@ -300,10 +321,10 @@ cRewardVol        = trl.edtShift + TrialRecord.Editable.rewardVol*1000;
 eventmarker(trl.footerStart);
 
 % SEND footers
-eventmarker(cTrial);      
-eventmarker(cBlock);       
+eventmarker(cTrial);
+eventmarker(cBlock);
 eventmarker(cTrialWBlock);
-eventmarker(cCondition);  
+eventmarker(cCondition);
 eventmarker(cTrialError);
 eventmarker(cTrialFlag);
 
@@ -311,11 +332,11 @@ eventmarker(cTrialFlag);
 eventmarker(trl.edtStart);
 
 % SEND editable in following order
-eventmarker(cGoodPause); 
-eventmarker(cBadPause); 
+eventmarker(cGoodPause);
+eventmarker(cBadPause);
 eventmarker(cTaskFixRadius);
 eventmarker(cCalFixRadius);
-eventmarker(cCalFixPeriod); 
+eventmarker(cCalFixInitPeriod);
 eventmarker(cCalFixHoldPeriod);
 eventmarker(cRewardVol);
 

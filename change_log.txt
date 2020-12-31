@@ -99,6 +99,12 @@ templateSD/Fix - version 4.0 - thomas/georgin (01-12-2020)
 	- update time function for trialStart and trialStop to 'datestr(now)' from clock (as millisecond precision wasn't there)
 	- added latest iscan dqw cfg files
 
+templateSD/Fix - version 4.1 - thomas/georgin (31-12-2020)
+
+	- editable variables renamed
+	- fixTiming.m updated to handle delayPeriod of 0 ms
+	- fixed fixation hold period (after fix init) implemented (set at 200ms) across timing files
+	- updated variable names in info field and in timing files (holdInitPeriod and fixInitPeriod)
 	
 
 
