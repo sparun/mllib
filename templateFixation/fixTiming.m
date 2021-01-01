@@ -258,9 +258,10 @@ while outcome < 0
         
     end
     
-    % TRIAL finished successfully if this point reached on last item
-    if itemID == Info.imgPerTrial
-        event   = [pic.fixOff pic.holdOff bhv.respCorr rew.juice];
+    % TRIAL finished successfully if all stims fixated correctly
+    nCorrStims = length(tSampleOff);
+    if nCorrStims == Info.imgPerTrial
+        event   = [pic.holdOff pic.fixOff bhv.respCorr rew.juice];
         outcome = err.respCorr;
     end
 end

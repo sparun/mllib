@@ -106,6 +106,10 @@ templateSD/Fix - version 4.1 - thomas/georgin (31-12-2020)
 	- fixed fixation hold period (after fix init) implemented (set at 200ms) across timing files
 	- updated variable names in info field and in timing files (holdInitPeriod and fixInitPeriod)
 	
+templateSD/Fix - version 4.2 - thomas/georgin (01-01-2021)
 
+	- calTiming.m/fixTiming.m - error in some calib trials with missing events and erroneous fixation on 4th point rewarded is rectified
+	- 'outcome' variable was being reassigned within the while loop in calTiming.m
+	- an additional check to ensure correct number of stimuli (in both cal and fix timing) are fixated on is done now
 
 	

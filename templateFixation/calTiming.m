@@ -197,12 +197,15 @@ while outcome < 0
         tFixAcqCueOff(locID) = toggleobject(calib, 'eventmarker', calEvts(locID*2));
     end
     
-    % TRIAL finished successfully if this point reached on last item
-    if locID == size(calLocs,1)
-        event   = [pic.holdOff bhv.respCorr rew.juice];
+    % TRIAL finished successfully if all stims fixated correctly
+    nCorrStims = length(tFixAcqCueOff);
+    if nCorrStims == size(calLocs,1)
+        event   = [pic.holdOff calEvts(locID*2) bhv.respCorr rew.juice];
         outcome = err.respCorr;
     end
 end
+
+
 
 % SET trial outcome and remove all stimuli
 trialerror(outcome);

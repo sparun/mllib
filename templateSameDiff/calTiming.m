@@ -15,8 +15,8 @@
 % - 14-Sep-2020 - Thomas  - General changes to code structure to improve legibilty
 % - 14-Oct-2020 - Thomas  - Updated all eyejoytrack to absolute time and not rt
 % - 29-Oct-2020 - Thomas  - combine calibration codes for template sd and fix 
-%                           (only requirement for this was common editable var names)
-% - 31-Dec-2020 - Thomas  - Updated editable names and implemented holdRadiusBuffer 
+%                           (only requirement for this was common editable var names) 
+% - 31-Dec-2020 - Thomas  - Updated editable names and implemented holdRadiusBuffer
 % ----------------------------------------------------------------------------------------
 % HEADER start ---------------------------------------------------------------------------
 
@@ -197,12 +197,15 @@ while outcome < 0
         tFixAcqCueOff(locID) = toggleobject(calib, 'eventmarker', calEvts(locID*2));
     end
     
-    % TRIAL finished successfully if this point reached on last item
-    if locID == size(calLocs,1)
-        event   = [pic.holdOff bhv.respCorr rew.juice];
+    % TRIAL finished successfully if all stims fixated correctly
+    nCorrStims = length(tFixAcqCueOff);
+    if nCorrStims == size(calLocs,1)
+        event   = [pic.holdOff calEvts(locID*2) bhv.respCorr rew.juice];
         outcome = err.respCorr;
     end
 end
+
+
 
 % SET trial outcome and remove all stimuli
 trialerror(outcome);
