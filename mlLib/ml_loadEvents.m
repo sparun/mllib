@@ -13,9 +13,9 @@
 function [err, pic, aud, bhv, rew, exp, trl, chk, asc] = ml_loadEvents()
 
 % TRIAL ERROR values (for setting trialerror in ML, not sent as eventmarker)
-err.holdNil          = 8; % ignored - hold not initiated
-err.holdOutside      = 9; % aborted - outside touch
-err.holdBreak        = 7; % lever break - hold not maintained
+err.holdNil          = 8; % hold not initiated
+err.holdOutside      = 9; % outside touch
+err.holdBreak        = 7; % hold not maintained
 err.fixNil           = 4; % no fixation
 err.fixBreak         = 3; % break fixation
 err.respNil          = 1; % no response
@@ -53,26 +53,26 @@ pic.calib10On        = 218;
 pic.calib10Off       = 219;
 
 % VISUAL STIM - Fixation task
-pic.fix1On           = 300;
-pic.fix1Off          = 301;
-pic.fix2On           = 302;
-pic.fix2Off          = 303;
-pic.fix3On           = 304;
-pic.fix3Off          = 305;
-pic.fix4On           = 306;
-pic.fix4Off          = 307;
-pic.fix5On           = 308;
-pic.fix5Off          = 309;
-pic.fix6On           = 310;
-pic.fix6Off          = 311;
-pic.fix7On           = 312;
-pic.fix7Off          = 313;
-pic.fix8On           = 314;
-pic.fix8Off          = 315;
-pic.fix9On           = 316;
-pic.fix9Off          = 317;
-pic.fix10On          = 318;
-pic.fix10Off         = 319;
+pic.stim1On          = 300;
+pic.stim1Off         = 301;
+pic.stim2On          = 302;
+pic.stim2Off         = 303;
+pic.stim3On          = 304;
+pic.stim3Off         = 305;
+pic.stim4On          = 306;
+pic.stim4Off         = 307;
+pic.stim5On          = 308;
+pic.stim5Off         = 309;
+pic.stim6On          = 310;
+pic.stim6Off         = 311;
+pic.stim7On          = 312;
+pic.stim7Off         = 313;
+pic.stim8On          = 314;
+pic.stim8Off         = 315;
+pic.stim9On          = 316;
+pic.stim9Off         = 317;
+pic.stim10On         = 318;
+pic.stim10Off        = 319;
 
 % VISUAL STIM - Same Different task
 pic.sampleOn         = 400;

@@ -44,11 +44,11 @@ taskFixRadius    = 10;
 calFixRadius     = 6; 
 calFixInitPeriod = 500;
 calFixHoldPeriod = 200; 
-calFixRandFlag   = 1;    % Redundtant?
+calFixRandFlag   = 1;
 rewardVol        = 0.2;
-rewardLine       = 1;    % Redundtant?
-rewardReps       = 1;    % Redundtant?
-rewardRepsGap    = 500;  % Redundtant?
+rewardLine       = 1;
+rewardReps       = 1;
+rewardRepsGap    = 500;
 
 % PARAMETERS relevant for task timing and hold/fix control
 holdInitPeriod   = Info.holdInitPeriod;
@@ -91,9 +91,9 @@ end
 % DECLARE select timing and reward variables as NaN
 tHoldButtonOn = NaN;
 tTrialInit    = NaN;
-tFixAcqCueOn  = NaN;
-tFixAcq       = NaN;
-tFixAcqCueOff = NaN;
+tFixAcqCueOn  = NaN(size(calLocs, 1), 1);
+tFixAcq       = NaN(size(calLocs, 1), 1);
+tFixAcqCueOff = NaN(size(calLocs, 1), 1);
 tAllOff       = NaN;
 juiceConsumed = NaN;
 
@@ -198,14 +198,11 @@ while outcome < 0
     end
     
     % TRIAL finished successfully if all stims fixated correctly
-    nCorrStims = length(tFixAcqCueOff);
-    if nCorrStims == size(calLocs,1)
-        event   = [pic.holdOff calEvts(locID*2) bhv.respCorr rew.juice];
+    if outcome < 0
+        event   = [pic.holdOff bhv.respCorr rew.juice];
         outcome = err.respCorr;
     end
 end
-
-
 
 % SET trial outcome and remove all stimuli
 trialerror(outcome);

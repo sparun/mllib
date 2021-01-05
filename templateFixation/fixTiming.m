@@ -39,11 +39,11 @@ taskFixRadius    = 10;
 calFixRadius     = 6;
 calFixInitPeriod = 500;
 calFixHoldPeriod = 200;
-calFixRandFlag   = 1;    % Redundtant?
+calFixRandFlag   = 1;
 rewardVol        = 0.2;
-rewardLine       = 1;    % Redundtant?
-rewardReps       = 1;    % Redundtant?
-rewardRepsGap    = 500;  % Redundtant?
+rewardLine       = 1;
+rewardReps       = 1;
+rewardRepsGap    = 500;
 
 % PARAMETERS relevant for task timing and hold/fix control
 holdInitPeriod   = Info.holdInitPeriod;
@@ -73,20 +73,20 @@ stim6 = 12; stim7 = 13; stim8 = 14; stim9 = 15; stim10  = 16;
 % GROUP TaskObjects and eventmarkers for easy indexing
 selStim = [stim1; stim2; stim3; stim4; stim5; stim6; stim7; stim8; stim9; stim10];
 selEvts  = [...
-    pic.fix1On; pic.fix1Off; pic.fix2On;  pic.fix2Off;...
-    pic.fix3On; pic.fix3Off; pic.fix4On;  pic.fix4Off;...
-    pic.fix5On; pic.fix5Off; pic.fix6On;  pic.fix6Off;...
-    pic.fix7On; pic.fix7Off; pic.fix8On;  pic.fix8Off;...
-    pic.fix9On; pic.fix9Off; pic.fix10On; pic.fix10Off];
+    pic.stim1On; pic.stim1Off; pic.stim2On;  pic.stim2Off;...
+    pic.stim3On; pic.stim3Off; pic.stim4On;  pic.stim4Off;...
+    pic.stim5On; pic.stim5Off; pic.stim6On;  pic.stim6Off;...
+    pic.stim7On; pic.stim7Off; pic.stim8On;  pic.stim8Off;...
+    pic.stim9On; pic.stim9Off; pic.stim10On; pic.stim10Off];
 
 % DECLARE select timing and reward variables as NaN
 tHoldButtonOn = NaN;
 tTrialInit    = NaN;
-tFixCueOn     = NaN;
+tFixCueOn     = NaN(Info.imgPerTrial+1, 1);
 tFixAcq       = NaN;
-tFixCueOff    = NaN;
-tSampleOn     = NaN;
-tSampleOff    = NaN;
+tFixCueOff    = NaN(Info.imgPerTrial+1, 1);
+tSampleOn     = NaN(Info.imgPerTrial, 1);
+tSampleOff    = NaN(Info.imgPerTrial, 1);
 tAllOff       = NaN;
 juiceConsumed = NaN;
 
@@ -192,7 +192,6 @@ while outcome < 0
             % PRESENT stimulus
             tSampleOn(itemID,:) = toggleobject([selStim(itemID) ptd],...
                 'eventmarker', selEvts(2*itemID)-1);
-            tFixCueOff(itemID,:)  = NaN;
         end
         
         % CHECK fixation and hold maintenance for samplePeriod
@@ -222,15 +221,15 @@ while outcome < 0
         % CHECK if delayPeriod is 0
         if delayPeriod > 0
             % REMOVE stimulus & PRESENT fixation cue
-            tSampleOff(itemID,:)     = toggleobject([fix selStim(itemID) ptd],...
+            tSampleOff(itemID,:)  = toggleobject([fix selStim(itemID) ptd],...
                 'eventmarker', [selEvts(2*itemID) pic.fixOn]);
-            tFixCueOn(itemID + 1,:)  = tSampleOff(itemID,:);
+            tFixCueOn(itemID+1,:) = tSampleOff(itemID,:);
             
             % CHECK fixation and hold maintenance for delayPeriod
             ontarget = eyejoytrack(...
-                'releasetarget',hold,            holdRadius,...
-                '~touchtarget', hold,            holdRadius + holdRadiusBuffer,...
-                'holdfix',      selStim(itemID), taskFixRadius,...
+                'releasetarget',hold, holdRadius,...
+                '~touchtarget', hold, holdRadius + holdRadiusBuffer,...
+                'holdfix',      fix,  taskFixRadius,...
                 delayPeriod);
             
             if ontarget(1) == 0
@@ -251,17 +250,18 @@ while outcome < 0
             end
         else
             % REMOVE stimulus
-            tSampleOff(itemID,:)     = toggleobject(selStim(itemID),...
+            tSampleOff(itemID,:) = toggleobject(selStim(itemID),...
                 'eventmarker', selEvts(2*itemID));
-            tFixCueOn(itemID + 1,:)  = NaN;
         end
-        
     end
     
     % TRIAL finished successfully if all stims fixated correctly
-    nCorrStims = length(tSampleOff);
-    if nCorrStims == Info.imgPerTrial
-        event   = [pic.holdOff pic.fixOff bhv.respCorr rew.juice];
+    if outcome < 0
+        if delayPeriod > 0
+            tFixCueOff(itemID+1,:) = toggleobject(fix,...
+                'eventmarker', pic.fixOff);
+        end
+        event   = [pic.holdOff bhv.respCorr rew.juice];
         outcome = err.respCorr;
     end
 end

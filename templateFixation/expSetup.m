@@ -7,18 +7,24 @@ conditionsFileName = 'fixConditions.txt';
 % IMAGE PAIRS - load filenames and make pairs
 imgFiles    = dir('.\stim\*.bmp');
 numImages   = length(imgFiles);
-imgPerTrial = 4;  % range 1 to 10
+imgPerTrial = 6;  % range 1 to 10
 imgList     = nchoosek(1:numImages, imgPerTrial);
 imgList     = [imgList; fliplr(imgList)];
 imgList     = imgList(randperm(size(imgList, 1)), :);
-block       = [ones(10,1); 2*ones(10,1); 3*ones(10,1);];
-frequency   = ones(30,1);
-trialFlag   = ones(30,1);
+
+Ntrials     = size(imgList,1);
+Ntrials_perBlock = 20;
+Nblock      = ceil(Ntrials/Ntrials_perBlock);
+block       = repmat(1:Nblock,Ntrials_perBlock,1);
+block       = vec(block);
+block       = block(1:Ntrials);
+frequency   = ones(Ntrials,1);
+trialFlag   = ones(Ntrials,1);
 
 %% VARIABLES - trial timings
 holdInitPeriod = 10000;
 fixInitPeriod  = 500;
-samplePeriod   = 400;
+samplePeriod   = 200;
 delayPeriod    = 200;
 
 % INFO fields
@@ -39,7 +45,7 @@ if diff > 0
     imgList = [imgList ones(size(imgList,1), diff)];
 end
 
-for trialID = 1:length(imgList)
+for trialID = 1:size(imgList,1)
     for i = 1:10
         tempVar             = strsplit(imgFiles(imgList(trialID,i)).name, '.');
         fixNames{trialID, i} = ['.\stim\' tempVar{1}];

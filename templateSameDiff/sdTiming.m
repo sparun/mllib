@@ -48,11 +48,11 @@ taskFixRadius    = 10;
 calFixRadius     = 6;
 calFixInitPeriod = 500;
 calFixHoldPeriod = 200;
-calFixRandFlag   = 1;    % Redundtant?
+calFixRandFlag   = 1;
 rewardVol        = 0.2;
-rewardLine       = 1;    % Redundtant?
-rewardReps       = 1;    % Redundtant?
-rewardRepsGap    = 500;  % Redundtant?
+rewardLine       = 1;
+rewardReps       = 1;
+rewardRepsGap    = 500;
 
 % PARAMETERS relevant for task timing and hold/fix control
 holdInitPeriod   = Info.holdInitPeriod;

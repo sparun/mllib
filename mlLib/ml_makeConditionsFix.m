@@ -83,7 +83,7 @@ fprintf(conditionsFile, ['%d\t', '%s\t', '%d\t', '%d\t', '%s\t', '%s\t',...
 % Increment 'block' by 1 as block 1 = calibration
 block = block + 1;
 
-for trialID = 1:length(fixNames)
+for trialID = 1:size(fixNames,1)
     % TASK objects - variable
     taskObj07Fix01 = sprintf('pic(%s, 0, 0)', fixNames{trialID,1});
     taskObj08Fix02 = sprintf('pic(%s, 0, 0)', fixNames{trialID,2});

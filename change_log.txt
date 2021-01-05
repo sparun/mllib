@@ -11,8 +11,7 @@ templateSD - version 0.1 - thomas (12-10-2020)
 	- still using legacy PsychtoolBox serialport funcs
 	- copied cfg file from generalSDV_0.0 as that is latest
 
-mlLib   - version 1.0 - thomas/georgin (15-10-2020)
-
+mlLib - version 1.0 - thomas/georgin (15-10-2020)
 	- ml_initExp: asks if netcam auto record is needed.
 	- ml_startNetcamRecord, ml_stopNetcamRecord: requires watchtower to be on and cameras bound
 	  starts and stops netcam record remotely and makes appropriate folder to save files in (E:\series4\expFolder\monkeyFolder\*.mp4)
@@ -22,9 +21,7 @@ mlLib   - version 1.0 - thomas/georgin (15-10-2020)
 	- ml_loadEvents: added codes for bhvName start and stop
 	- ml_makeConditionSD: increased fixation point size to 0.6dva from 0.3dva
 
-
 templateSD - version 1.0 - thomas/georgin (15-10-2020)
-
 	- removed dependency on legacy iscan serial code
 	- noe use MATLABs own serialport function (always add default file to top of path as ML also has similarly named function)
 	- updated calibration timing file to have cal point acquire time and hodl time as editable vars
@@ -32,15 +29,13 @@ templateSD - version 1.0 - thomas/georgin (15-10-2020)
 	- new eye calib settings as juice spout and touchscreen height increased by ~2.5cm.
 	- now there are individual monkeys dqw settings files for iscan also (eg: illumBelowTrackerAbovCoCo20201015.def)
 
-mlLib   - version 2.0 - thomas/georgin (22-10-2020)
-	
+mlLib - version 2.0 - thomas/georgin (22-10-2020)	
 	- ml_mlconcatenate: modified few lines(commented within) which gave error for touchpoints being NaN
 	- ml_loadEvents: added start stop and shift markers for editable variables and changed ascii shift from 10000 to 200000
 	- Added descriptions and comments for all functions in lib
 	- Removed unneccessary/deprecated functions
 
 templateSD - version 2.0 - thomas/georgin (22-10-2020)
-
 	- packing following editable variable into trial footer using start stop and shift markers (trl.edtStart..etc)
 		- goodPause - badPause - fixRadius - fixPeriod - calHoldPeriod - rewardVol (*1000, hence will be in microlitres)
 	- added check.linesEven before trl.start and check.linesOdd after trl.stop eventmarkers. Good visual marker on OEP lfp viewer
@@ -50,8 +45,7 @@ templateSD - version 2.0 - thomas/georgin (22-10-2020)
 	- audio files now located in folder 'aud' instead of ambiguous 'dep'
 	- added config files from iscan(DQW settings), oep(Channel config) and ml(cfg2.mat) into folder 'cfg'
 
-mlLib   - version 3.0 - thomas/georgin (29-10-2020)
-	
+mlLib - version 3.0 - thomas/georgin (29-10-2020)	
 	- ml_makeConditionsFix/SD - updated theses and removed redundant info values and rearranged all vis stimuli to be come after
 	  ptd,hold,fix,calib,audCorr and audIncorr so as to have commonality between calib files.
 	- ml_alert_function - removed encoding of serial data string to numbers as it added overhead in ITI. Now serial data collected
@@ -60,56 +54,56 @@ mlLib   - version 3.0 - thomas/georgin (29-10-2020)
 	  called twice manually. Will repeat the prior block in full, so ideally load calib block after a block has just ended.
 
 templateSD/Fix - version 3.0 - thomas/georgin (29-10-2020)
-
 	- brought fixation template to sd template version (requisite codes and such)
 	- common calTIming.m across both templates (fix and sd) - as the editables are same between both tasks (even within a task,
 	  timing files should have common editables)
 	- simple fillDashboard.m for fixation tempalte that only shows editable variables and juice consumed
 
-mlLib   - version 3.1 - thomas/georgin (31-10-2020)
-	
+mlLib - version 3.1 - thomas/georgin (31-10-2020)	
 	- ml_blockChange - corrected instance of calib block not being removed from TrialRecord.User.blockList so that it's not played automatically
 	- ml_alertFunction - added a serialport read before callback initiation to read and discard erroneous data. Also serialdata is now converted 
 	  to double before being saved into TrialRecord.User.serialData (this is now a fast operation)	 
 
 templateSD/Fix - version 3.1 - thomas/georgin (31-10-2020)
-
 	- corrected missing calib and fix image number event markers in fixTiming and calTiming files. cfg2 file in templateFix updates to check 
 	  blockChange updates also (no significant change to other params).
 
-mlLib   - version 3.2 - arun/jhilik (01-11-2020)
-	
+mlLib - version 3.2 - arun/jhilik (01-11-2020)	
 	- ml_alertFunction - added comment about serial data saving at 'trial end'
 	- ml_makeCondiditonsFix - changed color of hold button from green to blue
 
-templateSD/Fix - version 3.2 - thomas (31-10-2020)
-
+templateSD/Fix - version 3.2 - thomas (01-11-2020)
 	- added trialFlag in TrialRecord.User for cal, fix and sd (NaN in cal trials).
 	- added condition of free choice trial in sd timing so monkey gets reward if Info.expectedResponse is 0.
 
-mlLib   - version 4.0 - thomas (01-12-2020)
-	
+mlLib - version 4.0 - thomas (01-12-2020)	
 	- ml_initExp - updated PC name to 'VISIONLABML', corrected error message for header not sent
 	- ml_readSerialData - update time function to 'datestr(now)' from clock (as millisecond precision wasn't there)
 
 templateSD/Fix - version 4.0 - thomas/georgin (01-12-2020)
-
 	- calibration editable variables separated from task (sd or fix) editable variables
 	- corrected missing editable start event marker in calTiming.m
 	- update time function for trialStart and trialStop to 'datestr(now)' from clock (as millisecond precision wasn't there)
 	- added latest iscan dqw cfg files
 
 templateSD/Fix - version 4.1 - thomas/georgin (31-12-2020)
-
 	- editable variables renamed
 	- fixTiming.m updated to handle delayPeriod of 0 ms
 	- fixed fixation hold period (after fix init) implemented (set at 200ms) across timing files
 	- updated variable names in info field and in timing files (holdInitPeriod and fixInitPeriod)
 	
 templateSD/Fix - version 4.2 - thomas/georgin (01-01-2021)
-
 	- calTiming.m/fixTiming.m - error in some calib trials with missing events and erroneous fixation on 4th point rewarded is rectified
 	- 'outcome' variable was being reassigned within the while loop in calTiming.m
 	- an additional check to ensure correct number of stimuli (in both cal and fix timing) are fixated on is done now
 
-	
+mlLib - version 4.3 - thomas (05-12-2020)	
+	- ml_loadEvents - eventmarker for stimuli in fixTiming updated to stim1On/stim1Off etc. (instead of fix1On/fix2On)
+    - ml_makeConditionsFix - deal with conditions less than 6
+
+templateSD/Fix - version 4.3 - thomas/georgin (05-01-2021)
+	- calTiming.m/fixTiming.m - rectified further error in inability to deal with error on fixation after last stim
+	- correct outcome is assigned if outcome value hasn't be assigned as greater than -1 by the end of while loop
+    - NaN values initiated to max required size
+    - event names for stimuli in fixTiming updated to match with ml_loadEvents	
+    - expSetup.m for templateFixation updated to assign blocks
