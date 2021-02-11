@@ -1,6 +1,7 @@
 # IGNORE DATA FOLDERS
 templateFixation/data/
 templateSameDiff/data/
+templateSearch/data/
 
 # IGNORING TEMP FILES
 *.asv

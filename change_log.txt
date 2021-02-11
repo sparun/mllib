@@ -104,6 +104,15 @@ mlLib - version 4.3 - thomas (05-12-2020)
 templateSD/Fix - version 4.3 - thomas/georgin (05-01-2021)
 	- calTiming.m/fixTiming.m - rectified further error in inability to deal with error on fixation after last stim
 	- correct outcome is assigned if outcome value hasn't be assigned as greater than -1 by the end of while loop
-    - NaN values initiated to max required size
-    - event names for stimuli in fixTiming updated to match with ml_loadEvents	
-    - expSetup.m for templateFixation updated to assign blocks
+	- NaN values initiated to max required size
+	- event names for stimuli in fixTiming updated to match with ml_loadEvents	
+	- expSetup.m for templateFixation updated to assign blocks
+
+templateSD/Fix/Search - version 5.0 - thomas/georgin (11-02-2021)
+	- templateSearch code added for present absent visual search (using templateSD as base)
+	- test period is essentiall the search period and consequently there is no sample period
+    - calTiming.m has an additional editable ('taskStimRadius') over the regular calTiming.m
+
+mlLib - version 5.0 - thomas/georgin (11-02-2021)
+	- ml_makeConditionsSearch - 1 target and 3 distractors from td pairs. hold and resp buttons pink and x-pos is 25 dva (was 20dva in templateSD)
+	- ml_initExp - updated monkey names to include chacha and cocochacha in error message

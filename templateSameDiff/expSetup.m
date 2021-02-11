@@ -47,7 +47,7 @@ end
 
 %% VARIABLES - trial timings
 holdInitPeriod = 10000;
-fixInitPeriod  = 200; 
+fixInitPeriod  = 350; 
 samplePeriod   = 400;
 delayPeriod    = 200;
 testPeriod     = 5000;
