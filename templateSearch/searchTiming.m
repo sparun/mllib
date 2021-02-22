@@ -1,14 +1,13 @@
-% PRESENT-ABSENT SEARCH TRIAL for MonkeyLogic 
-% - Vision Lab, IISc
-% ----------------------------------------------------------------------------------------
-% Presents present-absent visual search array at screen center. Provides two touch button
-% on the right side (from subjects' POV) as responses:
-%   - Top button for 'same/absent' response, and
-%   - Bottom button for 'diff/present' response.
-%
-% VERSION HISTORY
-% - 06-Feb-2021 - Thomas  - First implementation
-% ----------------------------------------------------------------------------------------
+% PRESENT-ABSENT SEARCH TRIAL for MonkeyLogic - Vision Lab, IISc
+%{
+Presents present-absent visual search array at screen center. Provides two touch button
+on the right side (from subjects' POV) as responses:
+  - Top button for 'same/absent' response, and
+  - Bottom button for 'diff/present' response.
+
+VERSION HISTORY
+- 06-Feb-2021 - Thomas  - First implementation
+%}
 % HEADER start ---------------------------------------------------------------------------
 
 % CHECK if touch and eyesignal are present to continue
@@ -78,36 +77,46 @@ target      = 9;
 distractor1 = 10;
 distractor2 = 11;
 distractor3 = 12;
+distractor4 = 13;
+distractor5 = 14;
+distractor6 = 15;
+distractor7 = 16;
+distractor8 = 17;
+
+searchArray = [target distractor1 distractor2 distractor3 distractor4...
+        distractor5 distractor6 distractor7 distractor8];
 
 % REPOSITION target and distractor to random locations
-if spatialSDFlag == 0
-    arrayLocs   = [taskStimRadius,  taskStimRadius,...
-        taskStimRadius, -taskStimRadius,...
-        -taskStimRadius,  taskStimRadius,...
-        -taskStimRadius, -taskStimRadius];
-    normJitter  = rand(8,1)*2;
-    arrayLocs   = reshape((arrayLocs + normJitter'), 2, 4)';
-    arrayLocs   = arrayLocs(randperm(size(arrayLocs, 1)), :);
-    
-    reposition_object(target,      arrayLocs(1,:));
-    reposition_object(distractor1, arrayLocs(2,:));
-    reposition_object(distractor2, arrayLocs(3,:));
-    reposition_object(distractor3, arrayLocs(4,:));
-else
-    arrayLocs   = [taskStimRadius,  0; -taskStimRadius, 0];
-    arrayLocs   = arrayLocs(randperm(size(arrayLocs, 1)), :);
-    
-    reposition_object(target,      arrayLocs(1,:));
-    reposition_object(distractor1, arrayLocs(2,:));
-    reposition_object(distractor2, [100, 100]);
-    reposition_object(distractor3, [100, 100]);
-end
+arrayLocs   = [...
+    0,               0,...
+    0,               taskStimRadius,...
+    0,              -taskStimRadius,...
+    taskStimRadius,  0,...
+    -taskStimRadius, 0,...
+    taskStimRadius,  taskStimRadius,...
+    taskStimRadius, -taskStimRadius,...
+    -taskStimRadius,  taskStimRadius,...
+    -taskStimRadius, -taskStimRadius];
+
+normJitter  = rand(18,1)*2;
+arrayLocs   = reshape((arrayLocs + normJitter'), 2, 9)';
+arrayLocs   = arrayLocs(randperm(size(arrayLocs, 1)), :);
+
+reposition_object(target,      arrayLocs(1,:));
+reposition_object(distractor1, arrayLocs(2,:));
+reposition_object(distractor2, arrayLocs(3,:));
+reposition_object(distractor3, arrayLocs(4,:));
+reposition_object(distractor4, arrayLocs(5,:));
+reposition_object(distractor5, arrayLocs(6,:));
+reposition_object(distractor6, arrayLocs(7,:));
+reposition_object(distractor7, arrayLocs(8,:));
+reposition_object(distractor8, arrayLocs(9,:));
 
 % SCALE objects
 if taskStimScale ~= 1
-    rescale_object([target distractor1 distractor2 distractor3], taskStimScale);
+    rescale_object(searchArray, taskStimScale);
 end
-    
+        
 % SET response button order for SD task
 if ~isfield(TrialRecord.User, 'respOrder')
     TrialRecord.User.respOrder = [same diff];
@@ -216,7 +225,7 @@ while outcome < 0
     end    
     
     % REMOVE fixation cue and PRESENT search array
-    tFixAcqCueOff = toggleobject([fix hold respOrder target distractor1 distractor2 distractor3 ptd],...
+    tFixAcqCueOff = toggleobject([fix hold respOrder searchArray ptd],...
         'eventmarker', [pic.fixOff pic.sampleOn]);
     tSearchRespOn = tFixAcqCueOff;
     
@@ -227,7 +236,7 @@ while outcome < 0
         searchPeriod);
     
     % REMOVE search array
-    tSearchOff = toggleobject([target distractor1 distractor2 distractor3 ptd],...
+    tSearchOff = toggleobject([searchArray ptd],...
         'eventmarker', pic.sampleOff);
     
     % WAIT for response if TEST period < RESP period
@@ -372,7 +381,7 @@ eventmarker(chk.linesOdd);
 % FOOTER end------------------------------------------------------------------------------
 % DASHBOARD (customize as required)-------------------------------------------------------
 
-lines       = fillDashboard(TrialData.VariableChanges, TrialRecord.User);
+lines       = fillDashboard(TrialData.VariableChanges, TrialRecord);
 for lineNum = 1:length(lines)
     dashboard(lineNum, char(lines(lineNum, 1)), [1 1 1]);
 end

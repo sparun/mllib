@@ -1,23 +1,22 @@
-% EYE CALIBRATION TRIAL for MonkeyLogic
-% - Vision Lab, IISc
-% ----------------------------------------------------------------------------------------
-% Presents a set of calibration points where animal has to fixate while pressing the hold
-% button. Breaking of fixation/hold or touch outside of hold button will abort the trial.
-%
-% VERSION HISTORY
-% - 14-Jun-2019 - Thomas  - First implementation
-%                 Zhivago 
-% - 03-Feb-2020 - Harish  - Added fixation contingency to sample on/off period
-%                           Added serial data read and store
-%                           Added touching outside hold buttons breaks trial
-% - 10-Aug-2020 - Thomas  - Removed bulk adding of variables to TrialRecord.User
-%                         - Simplified general code structure, specifically on errors
-% - 14-Sep-2020 - Thomas  - General changes to code structure to improve legibilty
-% - 14-Oct-2020 - Thomas  - Updated all eyejoytrack to absolute time and not rt
-% - 29-Oct-2020 - Thomas  - combine calibration codes for template sd and fix 
-%                           (only requirement for this was common editable var names) 
-% - 31-Dec-2020 - Thomas  - Updated editable names and implemented holdRadiusBuffer
-% ----------------------------------------------------------------------------------------
+% EYE CALIBRATION TRIAL for MonkeyLogic - Vision Lab, IISc
+%{
+Presents a set of calibration points where animal has to fixate while pressing the hold
+button. Breaking of fixation/hold or touch outside of hold button will abort the trial.
+
+VERSION HISTORY
+- 14-Jun-2019 - Thomas  - First implementation
+                Zhivago 
+- 03-Feb-2020 - Harish  - Added fixation contingency to sample on/off period
+                          Added serial data read and store
+                          Added touching outside hold buttons breaks trial
+- 10-Aug-2020 - Thomas  - Removed bulk adding of variables to TrialRecord.User
+                        - Simplified general code structure, specifically on errors
+  14-Sep-2020 - Thomas  - General changes to code structure to improve legibilty
+  14-Oct-2020 - Thomas  - Updated all eyejoytrack to absolute time and not rt
+  29-Oct-2020 - Thomas  - combine calibration codes for template sd and fix 
+                          (only requirement for this was common editable var names) 
+  31-Dec-2020 - Thomas  - Updated editable names and implemented holdRadiusBuffer
+%}
 % HEADER start ---------------------------------------------------------------------------
 
 % CHECK if touch and eyesignal are present to continue
@@ -305,7 +304,7 @@ eventmarker(chk.linesOdd);
 % FOOTER end------------------------------------------------------------------------------
 % DASHBOARD (customize as required)-------------------------------------------------------
 
-lines       = fillDashboard(TrialData.VariableChanges, TrialRecord.User);
+lines       = fillDashboard(TrialData.VariableChanges, TrialRecord);
 for lineNum = 1:length(lines)
     dashboard(lineNum, char(lines(lineNum, 1)), [1 1 1]);
 end

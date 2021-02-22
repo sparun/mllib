@@ -1,27 +1,26 @@
-% SAME-DIFF TRIAL for MonkeyLogic 
-% - Vision Lab, IISc
-% ----------------------------------------------------------------------------------------
-% Presents a sample and test image at the center of the screen but separated temporally.
-% Provides two touch button on the right side (from subjects' POV) as responses:
-%   - Top button for 'same' response, and
-%   - Bottom button for 'diff' response.
-%
-% VERSION HISTORY
-% - 14-Jun-2019 - Thomas  - First implementation
-%                 Zhivago
-% - 03-Feb-2020 - Harish  - Added fixation contingency to hold and sample on/off period
-%                         - Added serial data read and store
-%                         - Added trial break when dragging hand
-% - 07-Mar-2020 - Thomas  - Added separation of hold and fixation error types
-%                 Georgin - Flipped button order for JuJu
-%                         - Sending footer information as eventmarker()
-%                         - Dashboard outsourced to function fillDashboard()
-% - 10-Aug-2020 - Thomas  - Removed bulk adding of variables to TrialRecord.User
-%                         - Simplified general code structure, specifically on errors
-% - 14-Sep-2020 - Thomas  - General changes to code structure to improve legibilty
-% - 14-Oct-2020 - Thomas  - Updated all eyejoytrack to absolute time and not rt
-% - 31-Dec-2020 - Thomas  - Updated editable names and implemented holdRadiusBuffer
-% ----------------------------------------------------------------------------------------
+% SAME-DIFF TRIAL for MonkeyLogic - Vision Lab, IISc
+%{
+Presents a sample and test image at the center of the screen but separated temporally.
+Provides two touch button on the right side (from subjects' POV) as responses:
+ - Top button for 'same' response, and
+ - Bottom button for 'diff' response.
+
+VERSION HISTORY
+- 14-Jun-2019 - Thomas  - First implementation
+                Zhivago
+- 03-Feb-2020 - Harish  - Added fixation contingency to hold and sample on/off period
+                        - Added serial data read and store
+                        - Added trial break when dragging hand
+- 07-Mar-2020 - Thomas  - Added separation of hold and fixation error types
+                Georgin - Flipped button order for JuJu
+                        - Sending footer information as eventmarker()
+                        - Dashboard outsourced to function fillDashboard()
+- 10-Aug-2020 - Thomas  - Removed bulk adding of variables to TrialRecord.User
+                        - Simplified general code structure, specifically on errors
+- 14-Sep-2020 - Thomas  - General changes to code structure to improve legibilty
+- 14-Oct-2020 - Thomas  - Updated all eyejoytrack to absolute time and not rt
+- 31-Dec-2020 - Thomas  - Updated editable names and implemented holdRadiusBuffer
+%}
 % HEADER start ---------------------------------------------------------------------------
 
 % CHECK if touch and eyesignal are present to continue
@@ -413,7 +412,7 @@ eventmarker(chk.linesOdd);
 % FOOTER end------------------------------------------------------------------------------
 % DASHBOARD (customize as required)-------------------------------------------------------
 
-lines       = fillDashboard(TrialData.VariableChanges, TrialRecord.User);
+lines       = fillDashboard(TrialData.VariableChanges, TrialRecord);
 for lineNum = 1:length(lines)
     dashboard(lineNum, char(lines(lineNum, 1)), [1 1 1]);
 end

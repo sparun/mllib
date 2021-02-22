@@ -13,6 +13,8 @@ function alert_function(hook,MLConfig,TrialRecord)
 % To make this alert_function executed, turn on the alert button on the
 % task panel of the main menu.
 %
+% NOTE - save this file as alert_function eith in exp folder.
+%
 % VERSION HISTORY
 % - 14-Oct-2020 - Thomas  - First version
 % ----------------------------------------------------------------------------------------

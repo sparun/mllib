@@ -1,18 +1,17 @@
-% FIXATION TRIAL for Monkeylogic
-% - Vision Lab, IISc
-% ----------------------------------------------------------------------------------------
-% Presents a series of images at center where animal has to fixate while pressing the hold
-% button. Breaking of fixation/hold or touch outside of hold button will abort the trial.
-%
-% VERSION HISTORY
-% - 02-Sep-2020 - Thomas  - First implementation
-% - 14-Sep-2020 - Thomas  - Updated codes with new implementation of event and error
-%                           codes. Simplified code structure and other changes.
-% - 14-Oct-2020 - Thomas  - Updated all eyejoytrack to absolute time and not rt
-% - 29-Oct-2020 - Thomas  - Updated to match the version of templateSD
-% - 31-Dec-2020 - Thomas  - Updated editable names and implemented holdRadiusBuffer and
-%                           accomodated code for delayPeriod of 0
-% ----------------------------------------------------------------------------------------
+% FIXATION TRIAL for Monkeylogic - Vision Lab, IISc
+%{
+Presents a series of images at center where animal has to fixate while pressing the hold
+button. Breaking of fixation/hold or touch outside of hold button will abort the trial.
+
+VERSION HISTORY
+- 02-Sep-2020 - Thomas  - First implementation
+- 14-Sep-2020 - Thomas  - Updated codes with new implementation of event and error
+                          codes. Simplified code structure and other changes.
+- 14-Oct-2020 - Thomas  - Updated all eyejoytrack to absolute time and not rt
+- 29-Oct-2020 - Thomas  - Updated to match the version of templateSD
+- 31-Dec-2020 - Thomas  - Updated editable names and implemented holdRadiusBuffer and
+                          accomodated code for delayPeriod of 0
+%}
 % HEADER start ---------------------------------------------------------------------------
 
 % CHECK if touch and eyesignal are present to continue------------------------------------
@@ -366,7 +365,7 @@ eventmarker(chk.linesOdd);
 % FOOTER end------------------------------------------------------------------------------
 % DASHBOARD (customize as required)-------------------------------------------------------
 
-lines       = fillDashboard(TrialData.VariableChanges, TrialRecord.User);
+lines       = fillDashboard(TrialData.VariableChanges, TrialRecord);
 for lineNum = 1:length(lines)
     dashboard(lineNum, char(lines(lineNum, 1)), [1 1 1]);
 end
