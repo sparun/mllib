@@ -2,6 +2,14 @@ changeLog for series4 MonkeyLogic template codes - VisionLab, IISc
 maintained by - Georgin/Thomas
 
 -----------------------------------------
+29-08-2021 VERSION 5.3 - thomas/georgin
+	templateSD/Fix/Search
+	- calTiming.m now sends a vector of X and Y values (dva) for all calibration points shown using trl.picPosShift in trial Footer
+	- ml_loadEvents.m includes trl.picPosShift to enable encoding and decoding of dva values to precision of 3 decimal places between (-50 to 50 dva range), see within file for instructions
+
+04-03-2021 VERSION 5.2 - thomas/georgin
+	templateSD/Fix/Search
+	- updated all iscan cfg files for didi and juju
 
 21-02-2021 VERSION 5.1 - thomas/georgin
 	templateSD/Fix/Search

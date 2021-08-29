@@ -34,19 +34,15 @@ set_iti(200);
 
 % EDITABLE variables that can be changed during the task
 editable(...
-    'goodPause',    'badPause',         'taskFixRadius',    'taskStimRadius',...
-    'taskStimScale','spatialSDFlag',...
+    'goodPause',    'badPause',         'taskFixRadius',...
     'calFixRadius', 'calFixInitPeriod', 'calFixHoldPeriod', 'calFixRandFlag',...
     'rewardVol',    'rewardLine',       'rewardReps',       'rewardRepsGap');
-goodPause        = 200;
-badPause         = 1000;
+goodPause        = 200; 
+badPause         = 1000; 
 taskFixRadius    = 10;
-taskStimRadius   = 5;
-taskStimScale    = 1;
-spatialSDFlag    = 0;
-calFixRadius     = 6;
+calFixRadius     = 6; 
 calFixInitPeriod = 500;
-calFixHoldPeriod = 200;
+calFixHoldPeriod = 200; 
 calFixRandFlag   = 1;
 rewardVol        = 0.2;
 rewardLine       = 1;
@@ -90,6 +86,7 @@ calEvts  = [...
 if(calFixRandFlag)
     calLocs = calLocs(randperm(size(calLocs, 1)), :);
 end
+% calLocs = [0,0; calLocs];
 
 % DECLARE select timing and reward variables as NaN
 tHoldButtonOn = NaN;
@@ -259,6 +256,16 @@ cCalFixInitPeriod = trl.edtShift + TrialRecord.Editable.calFixInitPeriod;
 cCalFixHoldPeriod = trl.edtShift + TrialRecord.Editable.calFixHoldPeriod;
 cRewardVol        = trl.edtShift + TrialRecord.Editable.rewardVol*1000;
 
+% CONVERT calLocs values for sending through trial footer
+cCalLocs = nan(1,numel(calLocs));
+count    = 0;
+for CalLocsR = 1:size(calLocs,1)
+    for CalLocsC =1:size(calLocs,2)
+        count = count+1;
+        cCalLocs(count) = trl.picPosShift + calLocs(CalLocsR,CalLocsC)*1000;
+    end
+end
+
 % FOOTER start 
 eventmarker(trl.footerStart);
 
@@ -281,6 +288,7 @@ eventmarker(cCalFixRadius);
 eventmarker(cCalFixInitPeriod); 
 eventmarker(cCalFixHoldPeriod);
 eventmarker(cRewardVol);
+eventmarker(cCalLocs);
 
 % EDITABLE stop marker
 eventmarker(trl.edtStop);

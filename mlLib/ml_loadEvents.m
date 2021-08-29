@@ -136,6 +136,10 @@ trl.edtStart         = 9100;
 trl.edtStop          = 9101;
 trl.edtShift         = 10000;
 
+% PIC POSITION - in dva between range of 100000-199999 (midpoint 150000)
+% Usage = Value(dva)*1000 + trl.picPosShift (for e.g. -8*1000+150000 = 142000)
+trl.picPosShift      = 150000;
+
 % ASCII SHIFT - add before sending ascii values
 asc.shift            = 200000;
 

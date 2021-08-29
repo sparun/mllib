@@ -86,6 +86,7 @@ calEvts  = [...
 if(calFixRandFlag)
     calLocs = calLocs(randperm(size(calLocs, 1)), :);
 end
+% calLocs = [0,0; calLocs];
 
 % DECLARE select timing and reward variables as NaN
 tHoldButtonOn = NaN;
@@ -255,6 +256,16 @@ cCalFixInitPeriod = trl.edtShift + TrialRecord.Editable.calFixInitPeriod;
 cCalFixHoldPeriod = trl.edtShift + TrialRecord.Editable.calFixHoldPeriod;
 cRewardVol        = trl.edtShift + TrialRecord.Editable.rewardVol*1000;
 
+% CONVERT calLocs values for sending through trial footer
+cCalLocs = nan(1,numel(calLocs));
+count    = 0;
+for CalLocsR = 1:size(calLocs,1)
+    for CalLocsC =1:size(calLocs,2)
+        count = count+1;
+        cCalLocs(count) = trl.picPosShift + calLocs(CalLocsR,CalLocsC)*1000;
+    end
+end
+
 % FOOTER start 
 eventmarker(trl.footerStart);
 
@@ -277,6 +288,7 @@ eventmarker(cCalFixRadius);
 eventmarker(cCalFixInitPeriod); 
 eventmarker(cCalFixHoldPeriod);
 eventmarker(cRewardVol);
+eventmarker(cCalLocs);
 
 % EDITABLE stop marker
 eventmarker(trl.edtStop);
