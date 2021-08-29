@@ -86,7 +86,6 @@ calEvts  = [...
 if(calFixRandFlag)
     calLocs = calLocs(randperm(size(calLocs, 1)), :);
 end
-% calLocs = [0,0; calLocs];
 
 % DECLARE select timing and reward variables as NaN
 tHoldButtonOn = NaN;

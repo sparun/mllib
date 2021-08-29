@@ -34,15 +34,19 @@ set_iti(200);
 
 % EDITABLE variables that can be changed during the task
 editable(...
-    'goodPause',    'badPause',         'taskFixRadius',...
+    'goodPause',    'badPause',         'taskFixRadius',    'taskStimRadius',...
+    'taskStimScale','spatialSDFlag',...
     'calFixRadius', 'calFixInitPeriod', 'calFixHoldPeriod', 'calFixRandFlag',...
     'rewardVol',    'rewardLine',       'rewardReps',       'rewardRepsGap');
-goodPause        = 200; 
-badPause         = 1000; 
+goodPause        = 200;
+badPause         = 1000;
 taskFixRadius    = 10;
-calFixRadius     = 6; 
+taskStimRadius   = 5;
+taskStimScale    = 1;
+spatialSDFlag    = 0;
+calFixRadius     = 6;
 calFixInitPeriod = 500;
-calFixHoldPeriod = 200; 
+calFixHoldPeriod = 200;
 calFixRandFlag   = 1;
 rewardVol        = 0.2;
 rewardLine       = 1;
@@ -86,7 +90,6 @@ calEvts  = [...
 if(calFixRandFlag)
     calLocs = calLocs(randperm(size(calLocs, 1)), :);
 end
-% calLocs = [0,0; calLocs];
 
 % DECLARE select timing and reward variables as NaN
 tHoldButtonOn = NaN;
