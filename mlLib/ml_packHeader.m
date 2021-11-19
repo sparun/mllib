@@ -1,15 +1,19 @@
-% ml_packHeader.m - Vision Lab, IISc
+% PACK HEADER - NIMH MonkeyLogic - Vision Lab, IISc
 % ----------------------------------------------------------------------------------------
 % Pack the dependent files for ML template experiments from the current folder (timing,
 % condition and configuration files) and lib functions from the specified mlLib folder
 % 
 % OPTIONAL INPUTS
-%  allowedFileTypes: Cell array of allowed file types. Eg.{'*.m','*.mat','*.txt'}
-%  mlLibFolderName : String specifying the folder name of monkey-logic lib which is
-%                    added to the current path
+%   allowedFileTypes - Cell array of allowed file types. Eg.{'*.m','*.mat','*.txt'}
+%   mlLibFolderName  - String specifying the folder name of monkey-logic lib which is
+%                      added to the current path
+% OUTPUT
+%   files            - struture with the fileNames, fileDates and fileContents
 % 
+%{
 % VERSION HISTORY
-% - 15-Oct-2020  - Georgin - First implementation
+15-Oct-2020  - Georgin - First implementation
+%}
 %-----------------------------------------------------------------------------------------
 
 function files = ml_packHeader(allowedFileTypes,mlLibFolderName)

@@ -1,11 +1,16 @@
-% ml_openSession.m - Vision Lab, IISc
+% OPEN DAQ SESSION - NIMH MonkeyLogic - Vision Lab, IISc
 % ----------------------------------------------------------------------------------------
 % Creates sessions for both DAQ cards on ML PC for trasmission of header info to eCube 
 % before start of trials.
+% 
+% NOTE: Will not work from MATLAB R2021 (tested till R2020b) as certain functions
+% are renamed.
 %
 % VERSION HISTORY
-% ----------------------------------------------------------------------------------------
+%{
 % - 22-Oct-2020 - Thomas  - Added comments
+%}
+% ----------------------------------------------------------------------------------------
 
 function[transmitSession1, transmitSession2] = ml_openSession()
 % GET all DAQ devices

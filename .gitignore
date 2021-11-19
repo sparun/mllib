@@ -3,12 +3,21 @@ templateFixation/data/
 templateSameDiff/data/
 templateSearch/data/
 
+# IGNORE BHV FILES
+templateFixation/*.bhv2
+templateSameDiff/*.bhv2
+templateSearch/*.bhv2
+
 # IGNORING TEMP FILES
 *.asv
 
 
 # Ignoring files in the main folder
 *.ffs_db
+
+
+
+test.txt
 
 
 

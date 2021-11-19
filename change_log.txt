@@ -1,11 +1,42 @@
 changeLog for series4 MonkeyLogic template codes - VisionLab, IISc
 maintained by - Georgin/Thomas
 
+18-11-2021 VERSION 6.0 - thomas/georgin
+	templateSD/Fix/Search
+	- all timing files now include eventmarker indicating task in trial footer
+    - expSetup in each templateExp now updated as fixSetup/sdSetip/searchSetup etc. and
+      includes verbose comments about what the code does.
+    - sdTiming.m updated to deal with delayPeriod == 0 and also with testOff ~= respPeriod. 
+      A new variable visibleStims is used to keep track of stimuli visible on screen (except ptd).
+	  This is useful to turn off only stimuli visible on outcome and to keep a separate ptd off 
+      toggleobject at end of trials. Reworked trial end to happen after reward and associated pauses.
+	  Included stimFixCue as TaskObject.
+	- calTiming.m calib point is now 0.5 dva radius and timing/variables updated to be similar
+      to sdTiming.m. Adjusted task objects pointers as wmFixCue is a new TaskObject in conditions file.
+    - fixTiming.m and searchTiming.m updated to latest spec (in spirit of sdTiming)
+    - stimuli ID and position is sent in all timing files as triads of ID,xPos and yPos (pos in DVA).
+    - photodiode signal in ML is collected in General Input 2 channel (some wierd bug with PhotoDiode assignment)
+    - Stimuli durations on screen are enabled with scanline threshold at 0 (to be done in photodiode tuner tool)
+    - this version works with ML version 2.2.20 (Jaewons first updates, find in X:\software\mlpc\monkeylogic)
+    	
+	mlLib   
+    - ml_makeConditionsSD.m fix size is now 0.1 dva radius and full yellow circle. Hold and response
+      buttons color is now dark green (rgb = [0 0.33 0]), included wmFixCue as TaskObject and wmFixCueState as input.
+	- ml_makeConditionsSearch.m/ml_makeConditionsFix.m updated to latest spec - changes similar to makeConditionsSD.
+	- ml_alertFunction.m now clears serialport object iScan upon any error in timing file. No need to restart MATLAB each time.
+	- ml_loadEvents.m added a value for NaN (exp.nan = 999) and a value for response made in task (bhv.respGiven)
+	- ml_loadEvents.m added events to indicated type of task (trl.taskXXXX)
+    - ml_alertFucntion.m includes an error in case scanline threshold for task isn't set as 0. Task will quit.
+      Please set scanline threshold as 0 in photodiode tuner tool.
+    - all ml_xxx functions updated to have comments to describe functionality
+
 -----------------------------------------
 29-08-2021 VERSION 5.3 - thomas/georgin
 	templateSD/Fix/Search
-	- calTiming.m now sends a vector of X and Y values (dva) for all calibration points shown using trl.picPosShift in trial Footer
-	- ml_loadEvents.m includes trl.picPosShift to enable encoding and decoding of dva values to precision of 3 decimal places between (-50 to 50 dva range), see within file for instructions
+	- calTiming.m now sends a vector of X and Y values (dva) for all calibration points shown using
+      trl.picPosShift in trial Footer
+	- ml_loadEvents.m includes trl.picPosShift to enable encoding and decoding of dva values to precision of 
+      3 decimal places between (-50 to 50 dva range), see within file for instructions
 
 04-03-2021 VERSION 5.2 - thomas/georgin
 	templateSD/Fix/Search

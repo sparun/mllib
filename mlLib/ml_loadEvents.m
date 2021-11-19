@@ -1,17 +1,19 @@
-% ml_loadEvents.m -> Declare event codes
-% 
-% EVENT CODES PLAN
-%  000-009  ML error codes
-%  100-199  Common visual events       (hold on/off, fix on/off) 
-%  200-299  Calibration event codes    (10 cues x 2 on/off) 
-%  300-399  Fixation task events       (10 stimuli x 2 on/off)
-%  400-499  SD task events             (sample on/off, test on/off, choice on/off)
-%  500-599  Auditory stimuli events    (max 30 stimuli x 2 on/off)
-%  600-699  Monkey behavioural events
-%  700-799  Reward events
+% LOAD eventcodes - NIMH MonkeyLogic - Vision Lab, IISc
+% ----------------------------------------------------------------------------------------
+% Define the eventcodes that may be transmitted during a calib, fixation, same-different
+% and search task. Each value is assigned to a struct in certain logical groupings such
+% that dissimilar events are not together and makes later decoding (i.e. gettign event
+% name label from event code easy)
+%
+% VERSION HISTORY
+%{
+09-Nov-2021 - Zhivago - Final version
+              Thomas  
+              Georgin
+%}
+% ----------------------------------------------------------------------------------------
 
 function [err, pic, aud, bhv, rew, exp, trl, chk, asc] = ml_loadEvents()
-
 % TRIAL ERROR values (for setting trialerror in ML, not sent as eventmarker)
 err.holdNil          = 8; % hold not initiated
 err.holdOutside      = 9; % outside touch
@@ -95,14 +97,16 @@ bhv.fixInit          = 605;
 bhv.fixNotInit       = 606;
 bhv.fixMaint         = 607;
 bhv.fixNotMaint      = 608;
-bhv.respCorr         = 609;
-bhv.respWrong        = 610;
-bhv.respNil          = 611;
+bhv.respGiven        = 609;
+bhv.respCorr         = 610;
+bhv.respWrong        = 611;
+bhv.respNil          = 612;
 
 % REWARD
 rew.juice            = 700;
 
 % EXP HEADER - sent before first trial in alert_function.m
+exp.nan              =  999;
 exp.headerStart      = 1000;
 exp.headerStop       = 1001;
 exp.nameStart        = 1002;
@@ -119,6 +123,10 @@ trl.start            = 1101;
 trl.stop             = 1102;
 trl.footerStart      = 1103;
 trl.footerStop       = 1104;
+trl.taskCalib        = 1105;
+trl.taskFix          = 1106;
+trl.taskSameDiff     = 1107;
+trl.taskSearch       = 1108;
 
 % TRL FOOTER SHIFT - add to actual value
 trl.trialShift       = 2000;
@@ -132,18 +140,26 @@ trl.outcomeShift     = 8500;
 trl.expRespFree      = 9000;
 trl.expRespSame      = 9001;
 trl.expRespDiff      = 9002;
+
+% TRL FOOTER EDITABLE - sent within trial footer 
 trl.edtStart         = 9100;
 trl.edtStop          = 9101;
-trl.edtShift         = 10000;
 
-% PIC POSITION - in dva between range of 100000-199999 (midpoint 150000)
+% TRL FOOTER STIM IDS - sent within trial footer 
+trl.stimStart        = 9200;
+trl.stimStop         = 9201;
+
+% TRL FOOTER SHIFT
+trl.shift            = 10000;
+
+% TRL FOOTER PIC POSITION SHIFT- in dva between range of 100000-199999 (midpoint 150000)
 % Usage = Value(dva)*1000 + trl.picPosShift (for e.g. -8*1000+150000 = 142000)
 trl.picPosShift      = 150000;
 
 % ASCII SHIFT - add before sending ascii values
 asc.shift            = 200000;
 
-% CHECK - events to check individual line reliability
+% CHECK - events to check individual digital line reliability
 chk.linesEven        = 5592405;
 chk.linesOdd         = 11184810;
 end

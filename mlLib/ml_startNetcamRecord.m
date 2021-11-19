@@ -1,4 +1,4 @@
-% ml_startNetcamRecord.m - Vision Lab, IISc
+% START NETCAM RECORD - NIMH MonkeyLogic - Vision Lab, IISc
 % ----------------------------------------------------------------------------------------
 % Records netcam video remotely on netcamPC by accessing watchtower via LAN and
 % connecting to cameras, renaming the global folder based on exp name and creating a
@@ -7,21 +7,24 @@
 % REQUIRED: starting watchtower on netcamPC and logging in and binding the cameras.
 % 
 % VERSION HISTORY
-% - 15-Oct-2020  - Thomas - First implementation
+%{
+15-Oct-2020 - Thomas - First implementation
+%}
 %-----------------------------------------------------------------------------------------
 
 function [outcome, apitoken] = ml_startNetcamRecord(MLConfig)
 
+% FOLDER and subfolder names for recording the video files on Netcam PC
 folderName    = ['E:\series4\' MLConfig.ExperimentName '\' MLConfig.SubjectName];
 subFolderName = string(['\'  MLConfig.FormattedName '\']);
 
 try
-    % Watchtower details
+    % WATCHTOWER details (on Netcam PC)
     watchtowerURL = 'https://10.120.10.57:4343';
     username      = 'admin';
     password      = 'admin';
     
-    % Camera and Recording parameters
+    % PARAMETERS for camera and recording
     cameraID     = {'e3v810f', 'e3v817d', 'e3v8191', 'e3v817a'};
     watchtowerIP = '10.120.10.57';
     resolution   = '720p30';
@@ -56,8 +59,8 @@ try
             weboptions('CertificateFilename',''));
     end
     
-    % PAUSE let all cameras sync
-    pause(8)
+    % PAUSE to let all cameras sync
+    pause(10)
     
     % START recording
     response = webwrite([watchtowerURL, '/api/cameras/action'], ...
@@ -69,6 +72,7 @@ try
     
     outcome = 1;
 catch
+    % ERROR
     outcome = 0;
 end
 end

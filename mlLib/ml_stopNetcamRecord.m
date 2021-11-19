@@ -1,20 +1,22 @@
-% ml_stopNetcamRecord.m - Vision Lab, IISc
+% STOP NETCAM RECORD - NIMH MonkeyLogic - Vision Lab, IISc
 % ----------------------------------------------------------------------------------------
 % Stops netcam video recording remotely on netcamPC by accessing watchtower via LAN. 
 %
 % REQUIRED: netcam recording being started and apitoken from current remote session
 % 
 % VERSION HISTORY
-% - 15-Oct-2020  - Thomas - First implementation
+%{
+15-Oct-2020  - Thomas - First implementation
+%}
 %-----------------------------------------------------------------------------------------
 
 function outcome= ml_stopNetcamRecord(apitoken)
 
 try
-    % Watchtower details
+    % WATCHTOWER details (on Netcam PC)
     watchtowerURL = 'https://10.120.10.57:4343';
     
-    % Camera and Recording parameters
+    % PARAMETERS for camera
     cameraID     = {'e3v810f', 'e3v817d', 'e3v8191', 'e3v817a'};
     
     % STOP recording
@@ -34,6 +36,7 @@ try
            
     outcome = 1;
 catch
+    % ERROR
     outcome = 0;
 end
 end

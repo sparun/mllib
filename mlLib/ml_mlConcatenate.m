@@ -1,5 +1,7 @@
-% SLIGHT update to mlconcatenate (rename to "mlconcatenate.m" if updating code
-% in ML source folder)
+% SLIGHT update to mlconcatenate 
+% 
+% JAEWON has corrected the mistake for NaN in touch data but keeping it here for legacy sake
+% (rename to "mlconcatenate.m" if updating codein ML source folder)
 %
 % Thomas - 19-10-2020 - Touch points are NaN from getgo so error is thrown
            

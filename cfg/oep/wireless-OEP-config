@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<SETTINGS>
+  <INFO>
+    <VERSION>0.4.4</VERSION>
+    <PLUGIN_API_VERSION>5</PLUGIN_API_VERSION>
+    <DATE>5 Nov 2021 17:25:04</DATE>
+    <OS>Windows 8.0</OS>
+    <MACHINE>VISIONLABOP</MACHINE>
+  </INFO>
+  <SIGNALCHAIN>
+    <PROCESSOR name="Sources/eCube Wireless" insertionPoint="1" pluginName="eCube Wireless"
+               pluginType="4" pluginIndex="1" libraryName="White Matter eCube Wireless Source"
+               libraryVersion="1" isSource="1" isSink="0" NodeId="100">
+      <CHANNEL_INFO>
+        <CHANNEL name="129" number="0" gain="0"/>
+        <CHANNEL name="130" number="1" gain="0"/>
+      </CHANNEL_INFO>
+      <CHANNEL name="0" number="0">
+        <SELECTIONSTATE param="1" record="1" audio="0"/>
+      </CHANNEL>
+      <CHANNEL name="1" number="1">
+        <SELECTIONSTATE param="1" record="1" audio="0"/>
+      </CHANNEL>
+      <EDITOR isCollapsed="0" displayName="eCube Wireless"/>
+    </PROCESSOR>
+    <PROCESSOR name="Utilities/Splitter" insertionPoint="1" pluginName="Splitter"
+               pluginType="-1" pluginIndex="1" libraryName="" libraryVersion="-1"
+               isSource="0" isSink="0" NodeId="102">
+      <EDITOR isCollapsed="0" displayName="Splitter"/>
+    </PROCESSOR>
+    <PROCESSOR name="Sinks/LFP Viewer" insertionPoint="1" pluginName="LFP Viewer"
+               pluginType="1" pluginIndex="8" libraryName="LFP viewer" libraryVersion="1"
+               isSource="0" isSink="1" NodeId="101">
+      <CHANNEL name="0" number="0">
+        <SELECTIONSTATE param="1" record="0" audio="0"/>
+      </CHANNEL>
+      <CHANNEL name="1" number="1">
+        <SELECTIONSTATE param="1" record="0" audio="0"/>
+      </CHANNEL>
+      <EDITOR isCollapsed="0" displayName="LFP Viewer" Type="LfpDisplayEditor">
+        <TAB Active="1"/>
+        <WINDOW Active="0"/>
+        <LFPDISPLAY Range="1000,2000,10.0" Timebase="1.0" Spread="60" colorGrouping="1"
+                    isInverted="0" drawMethod="0" EventButtonState="255" ChannelDisplayState="11"
+                    ScrollX="0" ScrollY="0"/>
+        <VALUES SubprocessorId="0"/>
+      </EDITOR>
+    </PROCESSOR>
+    <SWITCH number="1"/>
+    <PROCESSOR name="Filters/Bandpass Filter" insertionPoint="1" pluginName="Bandpass Filter"
+               pluginType="1" pluginIndex="7" libraryName="Bandpass Filter"
+               libraryVersion="1" isSource="0" isSink="0" NodeId="103">
+      <CHANNEL name="0" number="0">
+        <SELECTIONSTATE param="1" record="0" audio="0"/>
+        <PARAMETERS highcut="6000" lowcut="300" shouldFilter="1"/>
+      </CHANNEL>
+      <CHANNEL name="1" number="1">
+        <SELECTIONSTATE param="1" record="0" audio="0"/>
+        <PARAMETERS highcut="6000" lowcut="300" shouldFilter="1"/>
+      </CHANNEL>
+      <EDITOR isCollapsed="1" displayName="Bandpass Filter" Type="FilterEditor">
+        <VALUES HighCut="6000" LowCut="300" ApplyToADC="0"/>
+      </EDITOR>
+    </PROCESSOR>
+    <PROCESSOR name="Filters/Spike Sorter" insertionPoint="1" pluginName="Spike Sorter"
+               pluginType="1" pluginIndex="15" libraryName="Spike Sorter" libraryVersion="1"
+               isSource="0" isSink="0" NodeId="104">
+      <SpikeSorter numElectrodes="2" activeElectrode="1" numPreSamples="8" numPostSamples="32"
+                   autoDACassignment="0" syncThresholds="0" uniqueID="2" flipSignal="0">
+        <ELECTRODE_COUNTER numElectrodeTypes="1">
+          <ELECTRODE_TYPE type="Single Electrode" count="3"/>
+        </ELECTRODE_COUNTER>
+        <ELECTRODE name="Single Electrode 1" numChannels="1" prePeakSamples="8"
+                   postPeakSamples="32" advancerID="-1" depthOffsetMM="0" electrodeID="1">
+          <SUBCHANNEL ch="0" thresh="-147.530853271484375" isActive="1"/>
+          <SPIKESORTING numBoxUnits="0" numPCAUnits="0" selectedUnit="-1" selectedBox="-1"/>
+          <PCA numChannels="1" waveformLength="40" pc1min="-18475.552734375"
+               pc2min="-7002.7587890625" pc1max="10844.1640625" pc2max="4546.3935546875"
+               PCAjobFinished="1" PCAcomputed="1">
+            <PCA_DIM pc1="-0.016902295872569084167" pc2="0.016812574118375778198"/>
+            <PCA_DIM pc1="-0.01861605420708656311" pc2="0.017396677285432815552"/>
+            <PCA_DIM pc1="-0.01574039459228515625" pc2="0.020782250910997390747"/>
+            <PCA_DIM pc1="-0.012324743904173374176" pc2="0.031205909326672554016"/>
+            <PCA_DIM pc1="-0.048555925488471984863" pc2="0.15305830538272857666"/>
+            <PCA_DIM pc1="-0.16004572808742523193" pc2="0.45102396607398986816"/>
+            <PCA_DIM pc1="-0.11328817158937454224" pc2="0.3163547515869140625"/>
+            <PCA_DIM pc1="0.33591401576995849609" pc2="-0.068856529891490936279"/>
+            <PCA_DIM pc1="0.69947147369384765625" pc2="0.17720587551593780518"/>
+            <PCA_DIM pc1="0.38624784350395202637" pc2="0.10256636887788772583"/>
+            <PCA_DIM pc1="-0.1349115222692489624" pc2="-0.35369727015495300293"/>
+            <PCA_DIM pc1="-0.25763246417045593262" pc2="-0.071835257112979888916"/>
+            <PCA_DIM pc1="-0.19293202459812164307" pc2="0.2358452528715133667"/>
+            <PCA_DIM pc1="-0.18312829732894897461" pc2="0.12610399723052978516"/>
+            <PCA_DIM pc1="-0.16220334172248840332" pc2="0.039509002119302749634"/>
+            <PCA_DIM pc1="-0.11367679387331008911" pc2="-0.010151673108339309692"/>
+            <PCA_DIM pc1="-0.074414879083633422852" pc2="-0.086803488433361053467"/>
+            <PCA_DIM pc1="-0.044603642076253890991" pc2="-0.17110875248908996582"/>
+            <PCA_DIM pc1="-0.016006298363208770752" pc2="-0.2168696969747543335"/>
+            <PCA_DIM pc1="0.0060812397859990596771" pc2="-0.2118444293737411499"/>
+            <PCA_DIM pc1="0.015553059056401252747" pc2="-0.2075122445821762085"/>
+            <PCA_DIM pc1="0.018964564427733421326" pc2="-0.22339753806591033936"/>
+            <PCA_DIM pc1="0.024770891293883323669" pc2="-0.22994880378246307373"/>
+            <PCA_DIM pc1="0.02598651498556137085" pc2="-0.22282949090003967285"/>
+            <PCA_DIM pc1="0.019343530759215354919" pc2="-0.19902078807353973389"/>
+            <PCA_DIM pc1="0.017809914425015449524" pc2="-0.14155842363834381104"/>
+            <PCA_DIM pc1="0.025452865287661552429" pc2="-0.087095327675342559814"/>
+            <PCA_DIM pc1="0.024929456412792205811" pc2="-0.08213771134614944458"/>
+            <PCA_DIM pc1="0.0103665962815284729" pc2="-0.084994181990623474121"/>
+            <PCA_DIM pc1="0.0017618547426536679268" pc2="-0.042205642908811569214"/>
+            <PCA_DIM pc1="-0.0002198247384512796998" pc2="0.02541765943169593811"/>
+            <PCA_DIM pc1="-0.0077654048800468444824" pc2="0.060946058481931686401"/>
+            <PCA_DIM pc1="-0.01134658418595790863" pc2="0.050029288977384567261"/>
+            <PCA_DIM pc1="-0.001408453797921538353" pc2="0.026632908731698989868"/>
+            <PCA_DIM pc1="0.011884603649377822876" pc2="0.0053559467196464538574"/>
+            <PCA_DIM pc1="0.0072821951471269130707" pc2="0.0050953095778822898865"/>
+            <PCA_DIM pc1="-0.0048633646219968795776" pc2="0.015882968902587890625"/>
+            <PCA_DIM pc1="-0.001011151936836540699" pc2="0.013434666208922863007"/>
+            <PCA_DIM pc1="0.00086397735867649316788" pc2="0.034146271646022796631"/>
+            <PCA_DIM pc1="-0.01076731458306312561" pc2="0.067323654890060424805"/>
+          </PCA>
+        </ELECTRODE>
+        <ELECTRODE name="Single Electrode 2" numChannels="1" prePeakSamples="8"
+                   postPeakSamples="32" advancerID="-1" depthOffsetMM="0" electrodeID="2">
+          <SUBCHANNEL ch="0" thresh="-150" isActive="1"/>
+          <SPIKESORTING numBoxUnits="1" numPCAUnits="0" selectedUnit="1" selectedBox="0">
+            <BOXUNIT UnitID="1" ColorR="255" ColorG="255" ColorB="0" NumBoxes="1">
+              <BOX ch="0" x="473" y="93" w="300" h="89"/>
+            </BOXUNIT>
+          </SPIKESORTING>
+          <PCA numChannels="1" waveformLength="40" pc1min="-18501.236328125"
+               pc2min="-4571.66845703125" pc1max="10907.4140625" pc2max="7053.68603515625"
+               PCAjobFinished="0" PCAcomputed="1">
+            <PCA_DIM pc1="-0.01319373399019241333" pc2="0.008636735379695892334"/>
+            <PCA_DIM pc1="-0.018574068322777748108" pc2="-0.011695386841893196106"/>
+            <PCA_DIM pc1="-0.019579529762268066406" pc2="-0.037397708743810653687"/>
+            <PCA_DIM pc1="-0.015855001285672187805" pc2="-0.053576890379190444946"/>
+            <PCA_DIM pc1="-0.054847531020641326904" pc2="-0.1754633486270904541"/>
+            <PCA_DIM pc1="-0.16525191068649291992" pc2="-0.45590066909790039062"/>
+            <PCA_DIM pc1="-0.11155150085687637329" pc2="-0.32079386711120605469"/>
+            <PCA_DIM pc1="0.3384539484977722168" pc2="0.070612743496894836426"/>
+            <PCA_DIM pc1="0.7015330195426940918" pc2="-0.17349927127361297607"/>
+            <PCA_DIM pc1="0.38547128438949584961" pc2="-0.10159350186586380005"/>
+            <PCA_DIM pc1="-0.13490407168865203857" pc2="0.35299339890480041504"/>
+            <PCA_DIM pc1="-0.25668811798095703125" pc2="0.0751190185546875"/>
+            <PCA_DIM pc1="-0.18708918988704681396" pc2="-0.219537392258644104"/>
+            <PCA_DIM pc1="-0.17557407915592193604" pc2="-0.1061522364616394043"/>
+            <PCA_DIM pc1="-0.15788605809211730957" pc2="-0.027213634923100471497"/>
+            <PCA_DIM pc1="-0.11199537664651870728" pc2="0.01443209964781999588"/>
+            <PCA_DIM pc1="-0.075591951608657836914" pc2="0.084234260022640228271"/>
+            <PCA_DIM pc1="-0.046604551374912261963" pc2="0.16597320139408111572"/>
+            <PCA_DIM pc1="-0.013408769853413105011" pc2="0.21956436336040496826"/>
+            <PCA_DIM pc1="0.011406042613089084625" pc2="0.22148369252681732178"/>
+            <PCA_DIM pc1="0.019920552149415016174" pc2="0.21574278175830841064"/>
+            <PCA_DIM pc1="0.022559467703104019165" pc2="0.22701962292194366455"/>
+            <PCA_DIM pc1="0.021106967702507972717" pc2="0.21394547820091247559"/>
+            <PCA_DIM pc1="0.015981061384081840515" pc2="0.19142739474773406982"/>
+            <PCA_DIM pc1="0.019842762500047683716" pc2="0.19812847673892974854"/>
+            <PCA_DIM pc1="0.032891251146793365479" pc2="0.18777377903461456299"/>
+            <PCA_DIM pc1="0.036331068724393844604" pc2="0.12594105303287506104"/>
+            <PCA_DIM pc1="0.016927659511566162109" pc2="0.060465019196271896362"/>
+            <PCA_DIM pc1="-0.0059962854720652103424" pc2="0.031470984220504760742"/>
+            <PCA_DIM pc1="-0.0078448913991451263428" pc2="0.0073205414228141307831"/>
+            <PCA_DIM pc1="9.4025053840596228838e-06" pc2="-0.029471546411514282227"/>
+            <PCA_DIM pc1="-0.0028237912338227033615" pc2="-0.0484407767653465271"/>
+            <PCA_DIM pc1="-0.0095471777021884918213" pc2="-0.041291318833827972412"/>
+            <PCA_DIM pc1="-0.0043133879080414772034" pc2="-0.025274163112044334412"/>
+            <PCA_DIM pc1="0.0037431635428220033646" pc2="-0.018399411812424659729"/>
+            <PCA_DIM pc1="0.0045707589015364646912" pc2="-0.011854842305183410645"/>
+            <PCA_DIM pc1="0.0055913045071065425873" pc2="0.0063890940509736537933"/>
+            <PCA_DIM pc1="0.0099698128178715705872" pc2="0.009239543229341506958"/>
+            <PCA_DIM pc1="0.006381186656653881073" pc2="-0.022977188229560852051"/>
+            <PCA_DIM pc1="-0.010224463418126106262" pc2="-0.061111200600862503052"/>
+          </PCA>
+        </ELECTRODE>
+      </SpikeSorter>
+      <CHANNEL name="0" number="0">
+        <SELECTIONSTATE param="1" record="0" audio="0"/>
+      </CHANNEL>
+      <CHANNEL name="1" number="1">
+        <SELECTIONSTATE param="0" record="0" audio="0"/>
+      </CHANNEL>
+      <SPIKECHANNEL name="0" number="0"/>
+      <SPIKECHANNEL name="1" number="1"/>
+      <EDITOR isCollapsed="0" displayName="Spike Sorter" Type="Visualizer">
+        <TAB Active="1"/>
+        <WINDOW Active="0"/>
+      </EDITOR>
+    </PROCESSOR>
+    <PROCESSOR name="Sinks/Event Broadcaster" insertionPoint="1" pluginName="Event Broadcaster"
+               pluginType="1" pluginIndex="5" libraryName="Event Broadcaster"
+               libraryVersion="1" isSource="0" isSink="1" NodeId="105">
+      <EVENTBROADCASTER port="5557"/>
+      <CHANNEL name="0" number="0">
+        <SELECTIONSTATE param="1" record="0" audio="0"/>
+      </CHANNEL>
+      <CHANNEL name="1" number="1">
+        <SELECTIONSTATE param="1" record="0" audio="0"/>
+      </CHANNEL>
+      <SPIKECHANNEL name="0" number="0"/>
+      <SPIKECHANNEL name="1" number="1"/>
+      <EDITOR isCollapsed="0" displayName="Event Broadcaster"/>
+    </PROCESSOR>
+  </SIGNALCHAIN>
+  <AUDIO bufferSize="1024"/>
+  <GLOBAL_TIMESTAMP selected_index="0" selected_sub_index="0"/>
+  <CONTROLPANEL isOpen="0" recordPath="D:\software\wmpc\current_software\OpenEphys-v0.4.4-eCube-v0.2.3-HSW-v0.2.1"
+                prependText="" appendText="" recordEngine="OPENEPHYS"/>
+  <AUDIOEDITOR isMuted="0" volume="0" noiseGate="0"/>
+  <RECORDENGINES>
+    <ENGINE id="OPENEPHYS" name="Open Ephys">
+      <PARAMETER id="0" type="bool" value="0"/>
+      <PARAMETER id="1" type="bool" value="0"/>
+      <PARAMETER id="2" type="string" value="CH"/>
+    </ENGINE>
+    <ENGINE id="RAWBINARY" name="Binary">
+      <PARAMETER id="0" type="bool" value="1"/>
+    </ENGINE>
+    <ENGINE id="ECUBEREMOTE" name="On ServerNode">
+      <PARAMETER id="0" type="multi" value="0"/>
+    </ENGINE>
+    <ENGINE id="KWIK" name="Kwik"/>
+    <ENGINE id="NWB" name="NWB">
+      <PARAMETER id="0" type="string" value=""/>
+    </ENGINE>
+  </RECORDENGINES>
+  <PROCESSORLIST>
+    <COLOR ID="801" R="59" G="59" B="59"/>
+    <COLOR ID="804" R="241" G="90" B="41"/>
+    <COLOR ID="802" R="0" G="174" B="239"/>
+    <COLOR ID="803" R="0" G="166" B="81"/>
+    <COLOR ID="805" R="147" G="149" B="152"/>
+  </PROCESSORLIST>
+  <UICOMPONENT isProcessorListOpen="1" isEditorViewportOpen="1"/>
+</SETTINGS>
