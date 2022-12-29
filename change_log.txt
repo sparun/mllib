@@ -1,6 +1,25 @@
 changeLog for series4 MonkeyLogic template codes - VisionLab, IISc
 maintained by - Georgin/Thomas
 
+TO-DO
+- make VS as SSD
+- ODDBALl as VSO
+- SD as      TSD
+- FIX is     FIX
+- ml_loadEvents        - added a new event code for oddball search task
+- templateOddball - updated to remove ~touchtarget and also to send the new eventmarker specific for the oddball task - like monkeyperception baseline
+correct search/sd pair issue
+
+update all nomenclature and ml_loadEvents to reflect the above
+
+23-12-2022 VERSION 7.0 - thomas
+    - ml_sendHeader        - now sends the actual file bhv file name (MLConfig.MLPath.DataFile) that updates each time we press 'RUN' in ML GUI.
+    - ml_startNetcamRecord - netcamPC IP and storage drive locations updated
+    - iscan cfg for juju and didi updated
+
+29-12-2021 VERSION 6.1 - thomas/georgin
+    -ml_startNetcamRecord.m - record destination drive on netcamPC changed to D:/ instead of E:/
+
 25-12-2021 VERSION 6.1 - thomas/georgin
 	Added decoding codes. 	
 	createL1str: This is a common L1_str creation codes across tasks. This code will pool data from ML (.bhv2) file, wired eCube (.bin), and wireless eCube (.bin) files and create L1_str.   
