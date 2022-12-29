@@ -30,7 +30,7 @@ outputSingleScan(transmitSession1, evtCodeBin);
 ml_sendStrobe(transmitSession2);
 
 % TRANSMIT EXPNAME
-expName     = MLConfig.ExperimentName;
+expName     = MLConfig.MLPath.DataFile;
 transmitStr = double(expName);
 
 % START Marker

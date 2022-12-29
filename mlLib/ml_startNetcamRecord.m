@@ -15,7 +15,7 @@
 function [outcome, apitoken] = ml_startNetcamRecord(MLConfig)
 
 % FOLDER and subfolder names for recording the video files on Netcam PC
-folderName    = ['E:\series4\' MLConfig.ExperimentName '\' MLConfig.SubjectName];
+folderName    = ['D:\series4\' MLConfig.ExperimentName '\' MLConfig.SubjectName];
 subFolderName = string(['\'  MLConfig.FormattedName '\']);
 
 try
