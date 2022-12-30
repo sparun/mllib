@@ -6,11 +6,11 @@
 % name label from event code easy)
 %
 % VERSION HISTORY
-%{
-09-Nov-2021 - Zhivago - Final version
-              Thomas  
-              Georgin
-%}
+% 09-Nov-2021 - Zhivago - Final version
+%               Thomas  
+%               Georgin
+% 30-Dec-2022 - Thomas  - Updated the task names (trl.taskXXX) 
+%                         to CAL, FIX, TSD, SDD and added task VSO
 % ----------------------------------------------------------------------------------------
 
 function [err, pic, aud, bhv, rew, exp, trl, chk, asc] = ml_loadEvents()
@@ -123,10 +123,11 @@ trl.start            = 1101;
 trl.stop             = 1102;
 trl.footerStart      = 1103;
 trl.footerStop       = 1104;
-trl.taskCalib        = 1105;
-trl.taskFix          = 1106;
-trl.taskSameDiff     = 1107;
-trl.taskSearch       = 1108;
+trl.taskCAL          = 1105; % Calibration
+trl.taskFIX          = 1106; % Fixation
+trl.taskTSD          = 1107; % Temporal Same-Different
+trl.taskSSD          = 1108; % Spatial Same-Different
+trl.taskVSO          = 1109; % Visual Search (Oddball)
 
 % TRL FOOTER SHIFT - add to actual value
 trl.trialShift       = 2000;

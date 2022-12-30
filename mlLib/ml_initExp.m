@@ -5,10 +5,9 @@
 % recording and send header to ecube system.
 %
 % VERSION HISTORY
-%{
-14-Oct-2020 - Thomas  - First version
-08-Nov-2021 - Thomas  - Commented
-%}
+% 14-Oct-2020 - Thomas  - First version
+% 08-Nov-2021 - Thomas  - Commented
+% 30-Dec-2022 - Thomas  - Added Tutu as monkey name
 % ----------------------------------------------------------------------------------------
 
 function TrialRecord = ml_initExp(TrialRecord, MLConfig)
@@ -20,9 +19,10 @@ if strcmpi(MLConfig.SubjectName, 'didi') ~= 1 &&...
         strcmpi(MLConfig.SubjectName, 'chacha') ~= 1 &&...
         strcmpi(MLConfig.SubjectName, 'mama') ~= 1 &&...
         strcmpi(MLConfig.SubjectName, 'pepe') ~= 1 &&...
+        strcmpi(MLConfig.SubjectName, 'tutu') ~= 1 &&...
         strcmpi(MLConfig.SubjectName, 'test') ~= 1
     error(['[ERROR] - Monkey name is incorrect. It can only be:',...
-        ' DiDi, JuJu, CoCo, CoCoChaCha, ChaCha, PePe, MaMa or Test!']);
+        ' DiDi, JuJu, CoCo, CoCoChaCha, ChaCha, PePe, MaMa, TuTu or Test!']);
 end
 
 % POPULATE TrialRecord with event codes

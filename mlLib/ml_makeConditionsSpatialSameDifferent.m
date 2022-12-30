@@ -2,7 +2,7 @@
 % ----------------------------------------------------------------------------------------
 % Creates the condition file (*.txt) in the format readable by MonkeyLogic 2. This file is
 % then loaded in the GUI, which in turn loads all taskobjects required to run the
-% Spatial Same-Different/Present-Absent Visual Search template experiment.
+% Spatial Same-Different/Present-Absent Visual Search experiment.
 %
 % INPUTS
 %   timingFileName      - the name of the timing file (without file extension).

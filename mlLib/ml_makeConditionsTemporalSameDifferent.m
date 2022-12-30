@@ -13,10 +13,10 @@
 %                         that can be accessed in the timing file (eg:'text','ab','num',1).
 %   frequency           - the repetitions required for each condition to counter-balance.
 %   block               - the block ID for each condition.
-%   stimFixCueColorFlag - if 1, stimFixCue visible (same as initFixCue), else black.
+%   stimFixCueColorFlag - if 1, stimFixCue visible and same color as initFixCue, else black.
 %
 % OUTPUT
-%   "conditionsFileName.txt" in the current directory
+%   "TSD-conditionsFileName.txt" in the current directory
 %
 % VERSION HISTORY
 % 14-Jun-2019 - Thomas  - First implementation
