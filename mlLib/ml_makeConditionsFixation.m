@@ -5,38 +5,36 @@
 % Same Diff template experiment.
 %
 % INPUTS
-%   timingFileName      - the name of the timing file (extension not required).
-%   conditionsFileName  - the name of the conditions file (*.txt).
-%   sdPairs             - file names (without extension) of the stimuli used in each trial
-%                         (sample and test stimuli).
-%   info                - text string containing variable names followed by variable values
+%   timingFileName      - the name of the timing file (without file extension).
+%   conditionsFileName  - the name of the conditions file (without FIX-prefix or file extension).
+%   fixNames            - nTrials x 10 - file names (without extension) of the stimuli used in each trial.
+%   info                - nTrials x 1 - text string containing variable names followed by variable values
 %                         that can be accessed in the timing file (eg:'text','ab','num',1).
-%   frequency           - the repetitions required for each condition to counter-balance.
-%   block               - the block ID for each condition.
-%   stimFixCueColorFlag - if 1, stimFixCue visible (same as initFixCue), else black.
+%   frequency           - nTrials x 1 - repetitions for each condition within the block (for most cases = 1).
+%   block               - nTrials x 1 - block ID for each condition.
+%   stimFixCueColorFlag - if 1, stimFixCue visible and same color as initFixCue, else black.
 %
 % OUTPUT
-%   "conditionsFileName.txt" in the current directory
+%   "FIX-conditionsFileName.txt" in the current directory
 %
 % VERSION HISTORY
-%{
-14-Jun-2019 - Thomas  - First implementation
-              Zhivago
-09-Mar-2020 - Thomas  - Integrated calibration and validation blocks as block 1
-              Jhilik    and 2 respectively
-              Harish
-22-Oct-2020 - Thomas  - Removed validation block, fixed info and other minor updates
-29-Oct-2020 - Thomas  - Removed extra info
-01-Nov-2020 - Arun    - Changed hold button color to blue from green
-              Jhilik 
-03-Nov-2021 - Thomas  - Reworked to include stimFix cue, reduced holf brightness and 
-                        fixCue and calibCue size
-%}
+% 14-Jun-2019 - Thomas  - First implementation
+%               Zhivago
+% 09-Mar-2020 - Thomas  - Integrated calibration and validation blocks as block 1
+%               Jhilik    and 2 respectively
+%               Harish
+% 22-Oct-2020 - Thomas  - Removed validation block, fixed info and other minor updates
+% 29-Oct-2020 - Thomas  - Removed extra info
+% 01-Nov-2020 - Arun    - Changed hold button color to blue from green
+%               Jhilik 
+% 03-Nov-2021 - Thomas  - Reworked to include stimFix cue, reduced holf brightness and 
+%                         fixCue and calibCue size
+% 30-Dec-2022 - Thomas  - Updated task name to visual search (oddball) (VSO)
 % ----------------------------------------------------------------------------------------
 
-function ml_makeConditionsFix(timingFileName, conditionsFileName, fixNames, info, frequency, block, stimFixCueColorFlag)
+function ml_makeConditionsFixation(timingFileName, conditionsFileName, fixNames, info, frequency, block, stimFixCueColorFlag)
 % OPEN the conditions .txt file for writing
-conditionsFile = fopen(conditionsFileName, 'w');
+conditionsFile = fopen(['FIX-' conditionsFileName], 'w');
 
 % TIMING file name
 expTimingFile = timingFileName;
@@ -59,11 +57,11 @@ if stimFixCueColorFlag == 1
 end
 
 % STATIC TaskObjects (1 to 7)
-photodiodeCue  = sprintf('sqr(%s, %s, 1, %d, %d)', ptdSqrSize, ptdSqrColor, ptdSqrLoc(1), ptdSqrLoc(2));
-holdButton     = sprintf('crc(%s, %s, 1, %d, 0)', buttonSize, buttonColor, buttonLoc(1));
-initFixCue     = sprintf('crc(%s, %s, 1, 0, 0)', initFixCueSize, initFixCueColor);
-stimFixCue     = sprintf('crc(%s, %s, 1, 0, 0)', initFixCueSize, stimFixCueColor);
-calibCue       = sprintf('crc(%s, %s, 1, 0, 0)', calibCueSize, calibCueColor);
+photodiodeCue  = sprintf('sqr(%s, %s, 1, %d, %d)', ptdSqrSize,     ptdSqrColor, ptdSqrLoc(1), ptdSqrLoc(2));
+holdButton     = sprintf('crc(%s, %s, 1, %d, 0)',  buttonSize,     buttonColor, buttonLoc(1));
+initFixCue     = sprintf('crc(%s, %s, 1, 0,  0)',  initFixCueSize, initFixCueColor);
+stimFixCue     = sprintf('crc(%s, %s, 1, 0,  0)',  initFixCueSize, stimFixCueColor);
+calibCue       = sprintf('crc(%s, %s, 1, 0,  0)',  calibCueSize,   calibCueColor);
 correctAudio   = 'snd(.\aud\correct)';
 wrongAudio     = 'snd(.\aud\incorrect)';
 
