@@ -1,7 +1,9 @@
-% SETUP CONDITIONS file for temporal same-diff task - NIMH MonkeyLogic - Vision Lab, IISc
+% SETUP CONDITIONS file for Temporal Same-Different task
+% For NIMH MonkeyLogic - Vision Lab, IISc
 % ----------------------------------------------------------------------------------------
 % This code is essentially a template that can be modified to create the inputs needed for
-% the ml_makeConditionsSd.m function (which actually creates the conditions file)
+% the ml_makeConditionsTemporalSameDifferent.m function (which actually creates the 
+% conditions file)
 % 
 % Initial section of the template is editable by experimenter to setup the image
 % pairs/lists etc. as per the experimental requirement. 
@@ -15,9 +17,9 @@
 %   imgPairs, sdPairs, block, frequency, expectedResponse, trialFlag, info
 %
 % VERSION HISTORY
-%{
-10-Nov-2021 - Thomas - Throgoughly commented and explained the logic
-%}
+% 10-Nov-2021 - Thomas - Throgoughly commented and explained the logic
+% 31-Dec-2022 - Thomas - Reduced to 80 stims. Updated the trials so they are same on all
+%                        executions of this code and updated conditions file name
 % ----------------------------------------------------------------------------------------
 
 clc; clear; close all;
@@ -25,11 +27,11 @@ clc; clear; close all;
 % TIMING file name - No need to change if using template codes as is. But if modifying the
 % timing file for your own experiment, do rename the timing file and update the entry
 % below
-timingFileName = 'sdTiming';
+timingFileName = 'tsdTiming';
 
-% CONDITIONS file name - feel free to modify it according to your experiment name for
-% consistency. For e.g. "TSD-letterFamiliarity.txt"
-conditionsFileName = 'sdConditions.txt';
+% CONDITIONS file name - feel free to modify it according to your experiment.
+% An input of "experimentName" will create the conditions file -"TSD-experimentName.txt"
+conditionsFileName = 'template';
 
 % SELECT if the stimFix cue color - after first stim is flipped to screen is visible or 
 % not. A value of 1 means that the fix cue is same color as the initFix cue i.e. yellow 
