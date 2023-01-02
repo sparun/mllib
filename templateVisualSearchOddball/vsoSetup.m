@@ -1,7 +1,11 @@
 % SETUP CONDITIONS file for oddball search task - NIMH MonkeyLogic - Vision Lab, IISc
 % ----------------------------------------------------------------------------------------
 % This code is essentially a template that can be modified to create the inputs needed for
-% the ml_makeConditionsSearch.m function (which actually creates the conditions file)
+% the ml_makeConditionsVisualSearchOddball.m function (which actually creates the
+% conditions file). There are 4 possible locations for the stimuli in the array and this
+% code DOES NOT ensure equal sampling of all locations for the target(presently randomly
+% assigned). Experimenter should ensure that for their experiment in a way that makes
+% sense for them. 
 %
 % Initial section of the template is editable by experimenter to setup the image
 % pairs/lists etc. as per the experimental requirement.
@@ -15,9 +19,9 @@
 %   tdImgPairs, tdPairs, block, frequency, expectedResponse, trialFlag, info
 %
 % VERSION HISTORY
-%{
-01-Mar-2022 - Thomas - Thoroughly commented and explained the logic
-%}
+% 10-Nov-2021 - Thomas - Throgoughly commented and explained the logic
+% 31-Dec-2022 - Thomas - Reduced to 80 stims. Updated the trials so they are same on all
+%                        executions of this code and updated conditions file name
 % ----------------------------------------------------------------------------------------
 
 clc; clear; close all;
@@ -27,14 +31,9 @@ clc; clear; close all;
 % below
 timingFileName = 'oddballTiming';
 
-% CONDITIONS file name - feel free to modify it according to your experiment name for
-% consistency. For e.g. "TSD-letterFamiliarity.txt"
-conditionsFileName = 'oddballConditions.txt';
-
-% SET the number of distractors per search in the range 1 to 7. Ensure that the arrayLocs
-% are only showing required distrator copies by setting other unwanted distractor positions
-% to [200,200]. Stim info for these won't be sent in trial footer.
-distractorPerTrial = 4;
+% CONDITIONS file name - feel free to modify it according to your experiment.
+% An input of "experimentName" will create the conditions file -"SSD-experimentName.txt"
+conditionsFileName = 'template';
 
 %% TIMINGS of the task (all in milliseconds)
 % DURATION available for monkey to initiate the trial by pressing the hold button
@@ -55,38 +54,64 @@ imgFiles  = dir('.\stim\*.png');
 numImages = length(imgFiles);
 
 % CREATE the image pairs - each row is a condition/trial
-% Mirror Confusion Tall
-searchPairs = nchoosek(1:numImages,2);
-searchPairs = [searchPairs; fliplr(searchPairs)];
-searchFlags = 1:length(searchPairs);
+searchPairs  = [1:numImages; numImages:-1:1]';
+searchPairs  = [searchPairs; fliplr(searchPairs)]; % This will make 2 reps
+nSearchPairs = length(searchPairs);
+
+% BLOCK creation
+tdImgPairs       = [];
+block            = [];
+frequency        = [];
+expectedResponse = [];
+trialFlag        = [];
+blockL           = 16; 
+count            = 1;
+
+% FILL imgPairs, block, frequency, expectedResonse, trialFlag etc.
+while(count <= ((nSearchPairs) / blockL))
+    
+    % COUNT absentPairs remaining to be allotted to blocks
+    % Assumption is that number of same and diff trial are equal    
+    remTrials = length(searchPairs);
+    
+    % RANDOMLY pick blockL search pairs
+    rng('shuffle');
+    select                 = randperm(remTrials, blockL);
+    tdImgPairs             = [tdImgPairs; searchPairs(select, :)];
+    expectedResponse       = [expectedResponse; 2.*ones(length(select),1)];
+    trialFlag              = [trialFlag; 1.*ones(length(select),1)];
+    searchPairs(select,:)  = [];
+    
+    block     = [block; count*(ones(blockL, 1))];
+    frequency = [frequency; (ones(blockL, 1))];
+    count     = count + 1;
+end
+
+% ASSIGN target locations (only 1:4 as others will be out of screen at [200, 200], see
+% below)
+targetLocation   = repmat(1:4,nSearchPairs/4,1)';
+targetLocation   = targetLocation(:);
 
 % TASK variables
 maxJitterDVA   = 2;
 respRadius     = 3.5;
 holdXLoc       = 20;
 holdYLoc       = 0;
-nReps          = 1; % In effect after considering AB and BA searched it will be nReps*2
 
-% PREPARE array locations with target at each position
-arrayLocs     = ml_getCircleLocations(10, 15, 90, 0, [20,0], 1);
-arrayLocs     = arrayLocs(2:5,:);
+% PREPARE array locations with target at each position. We require only 4 points (1 target
+% and 3 distractors) here so we make the remaining 4 points (max 8 that code can take) 
+% 200,200 (out of screen in practice).You can use the ml_getCircleLocations function to 
+% visualize the points look by turning on the figFlad (4th input to 1)
+
+% IMPORTANT: Ensure that the arrayLocs are only showing required distrator copies by 
+% setting other unwanted distractor positions to [200,200]. Stim info for these won't be 
+% sent in trial footer.
+distractorPerTrial = 3;
+arrayLocs          = ml_getCircleLocations(10, 15, 90, 0, [holdXLoc,holdYLoc], 1);
+arrayLocs          = arrayLocs(2:5,:);
 for targetPos = 0:3
     finalArrayLocs{targetPos+1} = [circshift(arrayLocs(1:4,:), -targetPos, 1); repmat([200 200],4,1)];
 end
-
-%% PREPARE conditions file
-% CONDITIONS file name
-conditionsFileName = 'OS-templateOddball.txt';
-
-% FILL imgPairs, block, frequency, expectedResonse, trialFlag etc.
-tdImgPairs       = repmat(searchPairs,nReps,1);
-trialFlag        = repmat(searchFlags,nReps,1)';
-block            = repmat(1:nReps,length(searchPairs),1);
-block            = block(:);
-expectedResponse = 2.*ones(length(block),1);
-frequency        = ones(length(block), 1);
-targetLocation   = repmat(1:4,length(searchPairs)/4,1);
-targetLocation   = targetLocation(:);
 
 % PREPARE file names for stims in condition file - images are in folder 'stim'
 % ALSO add the target distractor positions - Here for simplicity possible stim locations
@@ -219,4 +244,4 @@ for trialID = 1:length(tdImgPairs)
 end
 
 %% CREATE conditions file
-ml_makeConditionsOddball(timingFileName, conditionsFileName, tdPairs, info, frequency, block)
+ml_makeConditionsVisualSearchOddball(timingFileName, conditionsFileName, tdPairs, info, frequency, block)

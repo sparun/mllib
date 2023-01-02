@@ -24,7 +24,7 @@
 
 function ml_makeConditionsVisualSearchOddball(timingFileName, conditionsFileName, tdPairs, info, frequency, block)
 % OPEN the conditions .txt file for writing
-conditionsFile = fopen(['VSO-' conditionsFileName], 'w');
+conditionsFile = fopen(['VSO-' conditionsFileName '.txt'], 'w');
 
 % TIMING file name
 expTimingFile = timingFileName;

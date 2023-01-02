@@ -33,7 +33,7 @@
 
 function ml_makeConditionsTemporalSameDifferent(timingFileName, conditionsFileName, stPairs, info, frequency, block, stimFixCueColorFlag)
 % OPEN the conditions .txt file for writing
-conditionsFile = fopen(['TSD-' conditionsFileName], 'w');
+conditionsFile = fopen(['TSD-' conditionsFileName '.txt'], 'w');
 
 % TIMING file name
 expTimingFile = timingFileName;

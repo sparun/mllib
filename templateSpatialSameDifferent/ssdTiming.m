@@ -380,7 +380,7 @@ end
 eventmarker(trl.footerStart);
 
 % INDICATE type of trial run
-eventmarker(trl.taskSearch);
+eventmarker(trl.taskSsd);
 
 % SEND footers
 eventmarker([cTrial cBlock cTrialWBlock cCondition cTrialError cExpResponse cTrialFlag]);      

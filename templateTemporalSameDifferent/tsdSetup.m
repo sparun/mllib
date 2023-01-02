@@ -72,7 +72,7 @@ numImages = length(imgFiles);
 
 % CREATE the image pairs - each row is a condition/trial
 samePairs = [1:numImages; 1:numImages]';
-diffPairs = [1:numImages; 100-(1:numImages)]';
+diffPairs = [1:numImages; numImages:-1:1]';
 pairs     = [samePairs; diffPairs];
 
 % LABEL conditions/trial with block number
@@ -81,7 +81,7 @@ block            = [];
 frequency        = [];
 expectedResponse = [];
 trialFlag        = [];
-blockL           = 12;
+blockL           = 16;
 halfVal          = blockL/2;
 count            = 1;
 
@@ -182,4 +182,4 @@ for trialID = 1:length(imgPairs)
 end
 
 %% CREATE conditions file
-ml_makeConditionsSD(timingFileName, conditionsFileName, sdPairs, info, frequency, block, stimFixCueColorFlag)     
+ml_makeConditionsTemporalSameDifferent(timingFileName, conditionsFileName, sdPairs, info, frequency, block, stimFixCueColorFlag)     

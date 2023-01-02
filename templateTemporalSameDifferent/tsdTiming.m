@@ -434,7 +434,7 @@ cTestY    = trl.picPosShift + TaskObject.Position(testImage,2)*1000;
 eventmarker(trl.footerStart);
 
 % INDICATE type of trial run
-eventmarker(trl.taskSameDiff);
+eventmarker(trl.taskTsd);
 
 % SEND footers
 eventmarker([cTrial cBlock cTrialWBlock cCondition cTrialError cExpResponse cTrialFlag]);      

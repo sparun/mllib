@@ -123,11 +123,11 @@ trl.start            = 1101;
 trl.stop             = 1102;
 trl.footerStart      = 1103;
 trl.footerStop       = 1104;
-trl.taskCAL          = 1105; % Calibration
-trl.taskFIX          = 1106; % Fixation
-trl.taskTSD          = 1107; % Temporal Same-Different
-trl.taskSSD          = 1108; % Spatial Same-Different
-trl.taskVSO          = 1109; % Visual Search (Oddball)
+trl.taskCal          = 1105; % Calibration
+trl.taskFix          = 1106; % Fixation
+trl.taskTsd          = 1107; % Temporal Same-Different
+trl.taskSsd          = 1108; % Spatial Same-Different
+trl.taskVso          = 1109; % Visual Search (Oddball)
 
 % TRL FOOTER SHIFT - add to actual value
 trl.trialShift       = 2000;

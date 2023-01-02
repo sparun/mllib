@@ -1,7 +1,12 @@
-% SETUP CONDITIONS file for visual search task - NIMH MonkeyLogic - Vision Lab, IISc
+% SETUP CONDITIONS file for Spatial Same-Different task 
+% For NIMH MonkeyLogic - Vision Lab, IISc
 % ----------------------------------------------------------------------------------------
 % This code is essentially a template that can be modified to create the inputs needed for
-% the ml_makeConditionsSearch.m function (which actually creates the conditions file)
+% the ml_makeConditionsSpatialSameDifferent.m function (which actually creates the 
+% conditions file). There are 8 possible locations for the stimuli in the array and this
+% code DOES NOT ensure equal sampling of all locations for the target on 
+% target-present/diff trials (presently randomly assigned). Experimenter should ensure 
+% that for their experiment in a way that makes sense for them. 
 % 
 % Initial section of the template is editable by experimenter to setup the image
 % pairs/lists etc. as per the experimental requirement. 
@@ -15,9 +20,9 @@
 %   tdImgPairs, tdPairs, block, frequency, expectedResponse, trialFlag, info
 %
 % VERSION HISTORY
-%{
-15-Nov-2021 - Thomas - Throgoughly commented and explained the logic
-%}
+% 10-Nov-2021 - Thomas - Throgoughly commented and explained the logic
+% 31-Dec-2022 - Thomas - Reduced to 80 stims. Updated the trials so they are same on all
+%                        executions of this code and updated conditions file name
 % ----------------------------------------------------------------------------------------
 
 clc; clear; close all;
@@ -25,11 +30,11 @@ clc; clear; close all;
 % TIMING file name - No need to change if using template codes as is. But if modifying the
 % timing file for your own experiment, do rename the timing file and update the entry
 % below
-timingFileName = 'searchTiming';
+timingFileName = 'ssdTiming';
 
-% CONDITIONS file name - feel free to modify it according to your experiment name for
-% consistency. For e.g. "TSD-letterFamiliarity.txt"
-conditionsFileName = 'searchConditions.txt';
+% CONDITIONS file name - feel free to modify it according to your experiment.
+% An input of "experimentName" will create the conditions file -"SSD-experimentName.txt"
+conditionsFileName = 'template';
 
 % SELECT if the stimFix cue color - after first stim is flipped to screen is visible or 
 % not. A value of 1 means that the fix cue is same color as the initFix cue i.e. yellow 
@@ -48,7 +53,7 @@ stimFixCueAboveStimFlag = 0;
 
 % SET the number of distractors per search in the range 1 to 7. Ensure that the arrayLocs
 % are only showing required distrator copies by setting other unwanted distractor positions
-% to [200,200]. Stim infor for these won't be sent in trial footer.
+% to [200,200]. Stim information for these (unwanted positions) won't be sent in trial footer.
 distractorPerTrial = 7;
 
 %% TIMINGS of the task (all in milliseconds)
@@ -71,8 +76,8 @@ numImages = length(imgFiles);
 
 % CREATE the image pairs - each row is a condition/trial
 absentPairs  = [1:numImages; 1:numImages]';
-presentPairs = [1:numImages; 100-(1:numImages)]';
-searchPairs  = [absentPairs; presentPairs];
+presentPairs = [1:numImages; numImages:-1:1]';
+allPairs     = [absentPairs; presentPairs];
 
 % BLOCK creation
 tdImgPairs       = [];
@@ -80,12 +85,12 @@ block            = [];
 frequency        = [];
 expectedResponse = [];
 trialFlag        = [];
-blockL           = 12; 
+blockL           = 16; 
 halfVal          = blockL/2;
 count            = 1;
 
 % FILL imgPairs, block, frequency, expectedResonse, trialFlag etc.
-while(count <= ((length(searchPairs)) / blockL))
+while(count <= ((length(allPairs)) / blockL))
     
     % COUNT absentPairs remaining to be allotted to blocks
     % Assumption is that number of same and diff trial are equal    
@@ -129,7 +134,7 @@ arrayLocs   = [...
 
 for trialID = 1:length(tdImgPairs) 
     
-    % RANDOMLYrearrange possible search stim locations
+    % RANDOMLY rearrange possible search stim locations
     arrayLocs = arrayLocs(randperm(size(arrayLocs, 1)), :);
     
     targetImageID       = tdImgPairs(trialID, 1);
@@ -224,4 +229,4 @@ for trialID = 1:length(tdImgPairs)
 end
 
 %% CREATE conditions file
-ml_makeConditionsSearch(timingFileName, conditionsFileName, tdPairs, info, frequency, block, stimFixCueColorFlag)     
+ml_makeConditionsSpatialSameDifferent(timingFileName, conditionsFileName, tdPairs, info, frequency, block, stimFixCueColorFlag)     

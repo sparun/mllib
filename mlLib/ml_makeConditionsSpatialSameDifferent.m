@@ -27,7 +27,7 @@
 
 function ml_makeConditionsSpatialSameDifferent(timingFileName, conditionsFileName, tdPairs, info, frequency, block, stimFixCueColorFlag)
 % OPEN the conditions.txt file for writing
-conditionsFile = fopen(['SSD-' conditionsFileName], 'w');
+conditionsFile = fopen(['SSD-' conditionsFileName '.txt'], 'w');
 
 % TIMING file name
 expTimingFile = timingFileName;

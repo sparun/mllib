@@ -34,7 +34,7 @@
 
 function ml_makeConditionsFixation(timingFileName, conditionsFileName, fixNames, info, frequency, block, stimFixCueColorFlag)
 % OPEN the conditions .txt file for writing
-conditionsFile = fopen(['FIX-' conditionsFileName], 'w');
+conditionsFile = fopen(['FIX-' conditionsFileName '.txt'], 'w');
 
 % TIMING file name
 expTimingFile = timingFileName;

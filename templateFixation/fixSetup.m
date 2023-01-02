@@ -1,7 +1,8 @@
-% SETUP CONDITIONS file for fixation task - NIMH MonkeyLogic - Vision Lab, IISc
+% SETUP CONDITIONS file for Fixation task
+% For NIMH MonkeyLogic - Vision Lab, IISc
 % ----------------------------------------------------------------------------------------
 % This code is essentially a template that can be modified to create the inputs needed for
-% the ml_makeConditionsFix.m function (which actually creates the conditions file)
+% the ml_makeConditionsFixation.m function (which actually creates the conditions file)
 % 
 % Initial section of the template is editable by experimenter to setup the image
 % pairs/lists etc. as per the experimental requirement. 
@@ -15,9 +16,9 @@
 %   imgFiles, numImages, imgPerTrial, fixNames, block, frequency, trialFlag, info
 %
 % VERSION HISTORY
-%{
-10-Nov-2021 - Thomas - Throgoughly commented and explained the logic
-%}
+% 10-Nov-2021 - Thomas - Throgoughly commented and explained the logic
+% 31-Dec-2022 - Thomas - Reduced to 80 stims. Updated the trials so they are same on all
+%                        executions of this code and updated conditions file name
 % ----------------------------------------------------------------------------------------
 
 clc; clear; close all;
@@ -27,9 +28,9 @@ clc; clear; close all;
 % below
 timingFileName = 'fixTiming';
 
-% CONDITIONS file name - feel free to modify it according to your experiment name for
-% consistency. For e.g. "FIX-letterFamiliarity.txt"
-conditionsFileName = 'fixConditions.txt';
+% CONDITIONS file name - feel free to modify it according to your experiment.
+% An input of "experimentName" will create the conditions file -"FIX-experimentName.txt"
+conditionsFileName = 'template';
 
 % SELECT if the stimFix cue color - after first stim is flipped to screen is visible or 
 % not. A value of 1 means that the fix cue is same color as the initFix cue i.e. yellow 
@@ -63,23 +64,24 @@ imgFiles    = dir('.\stim\*.png');
 numImages   = length(imgFiles);
 
 % CREATE the imgList - each row is a condition/trial
-imgPerTrial = 9;  % fixTiming.m can handle max 10 stim presentation/trial
-imgList     = reshape((1:numImages)',[],imgPerTrial);
-imgList     = [imgList; fliplr(imgList)];
-imgList     = repmat(imgList, 10, 1);
-imgList     = imgList(randperm(size(imgList, 1)), :);
+imgPerTrial = 8;  % fixTiming.m can handle max 10 stim presentation/trial
+tempList    = reshape((1:numImages)',[],imgPerTrial);
+imgList     = [];
+for tempBlocks = 1:8
+    imgList = [imgList; circshift(tempList, tempBlocks-1, 2)];
+end
 
 % USE imgList to prepare a matched matrix of image file names (no need for extension here
 % unless you have same files in different extensions in the stim directory)
-maxImgPerTrial      = 10;
-actualImagePerTrial = maxImgPerTrial - size(imgList,2);
+maxImgPerTrial     = 10;
+extraImagePerTrial = maxImgPerTrial - size(imgList,2);
 
 % INSERT ones for any stim per trial < 10 as we need some dummy image names in conditions
-% We can't insert 0's on NaN's as the timing file should still populate the unwanted
+% We can't insert 0's or NaN's as the timing file should still populate the unwanted
 % TaskObject.
-if actualImagePerTrial > 0
-    imgList = [imgList ones(size(imgList,1), actualImagePerTrial)];
-elseif actualImagePerTrial < 0
+if extraImagePerTrial > 0
+    imgList = [imgList ones(size(imgList,1), extraImagePerTrial)];
+elseif extraImagePerTrial < 0
     error('fixTiming.m can only show max 10 images per trial!')
 end
 
@@ -93,11 +95,9 @@ end
 
 % LABEL conditions/trial with block number
 nTrials         = size(imgList,1);
-nTrialsPerBlock = 22;
-nBlock          = ceil(nTrials/nTrialsPerBlock);
-block           = repmat(1:nBlock,nTrialsPerBlock,1);
+nBlock          = ceil(nTrials/maxImgPerTrial);
+block           = repmat(1:nBlock,maxImgPerTrial,1);
 block           = vec(block);
-block           = block(1:nTrials);
 
 % LABEL conditions/trial with a frequency value. Generally keep as 1, check MonkeyLogic
 % website for detailed usage
@@ -172,5 +172,5 @@ for trialID = 1:size(imgList,1)
 end
 
 %% CREATE conditions file
-ml_makeConditionsFix(timingFileName, conditionsFileName, fixNames,...
+ml_makeConditionsFixation(timingFileName, conditionsFileName, fixNames,...
     info, frequency, block, stimFixCueColorFlag)
