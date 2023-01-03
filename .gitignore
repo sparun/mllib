@@ -1,22 +1,21 @@
-# IGNORE DATA FOLDERS
+# IGNORE data folder
 templateFixation/data/
-templateSameDiff/data/
-templateSearch/data/
-templateOddball/data/
+templateTemporalSameDifferent/data/
+templateSpatialSameDifferent/data/
+templateVisualSearchOddball/data/
 
-# IGNORE BHV FILES
+# IGNORE bhv2 files
 templateFixation/*.bhv2
-templateSameDiff/*.bhv2
-templateSearch/*.bhv2
-templateOddball/*.bhv2
+templateTemporalSameDifferent/*.bhv2
+templateSpatialSameDifferent/*.bhv2
+templateVisualSearchOddball/*.bhv2
 
 # IGNORING TEMP FILES
 *.asv
 
-
-# Ignoring files in the main folder
+# IGNORE other files
 *.ffs_db
-test.txt
+
 
 
 
