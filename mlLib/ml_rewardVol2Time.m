@@ -8,16 +8,16 @@
 %{
 15-Oct-2020 - Thomas - First commented and update variable names
 09-Nov-2021 - Thomas - Elaborated the model terms 
+05-Jan-2023 - Thomas - Updated the parameters based on most recent rewardsystem calibration
 %}
 %-----------------------------------------------------------------------------------------
 
 function rewardTime = ml_rewardVol2Time(rewardVol)  
 % LINEAR MODEL y = aX + b values (from calibration)
-a = 1.02;
+a = 908.76;
 X = rewardVol;
-b = -0.0439;
+b = -23.12;
 
 % MOTOR RUN TIME needed to deliver required juice
-Y          = 1000*((a*X) + b);
-rewardTime = Y;
+rewardTime = (a*X) + b; % in ms
 end

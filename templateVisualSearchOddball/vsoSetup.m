@@ -29,7 +29,7 @@ clc; clear; close all;
 % TIMING file name - No need to change if using template codes as is. But if modifying the
 % timing file for your own experiment, do rename the timing file and update the entry
 % below
-timingFileName = 'oddballTiming';
+timingFileName = 'vsoTiming';
 
 % CONDITIONS file name - feel free to modify it according to your experiment.
 % An input of "experimentName" will create the conditions file -"SSD-experimentName.txt"
