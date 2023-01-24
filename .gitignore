@@ -1,4 +1,8 @@
 # IGNORE data folder
+mlLib
+cfg/iscan
+cfg/ml
+cfg/oep
 templateFixation/data/
 templateTemporalSameDifferent/data/
 templateSpatialSameDifferent/data/
