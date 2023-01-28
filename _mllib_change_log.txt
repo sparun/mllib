@@ -4,6 +4,11 @@ maintained by
 Dec 2022 onward - Thomas
 Till Dec 2022   - Georgin/Thomas
 
+28-01-2023 VERSION 7.3.1 - thomas
+    - updated the folder name and organisation to match mllib in visionlabdocs (OneDrive)
+    - ml_exportStim.m updated to extract filenames also
+    - ml_startNetcamRecord.m updated to create standardized folder name on netcam pc
+
 05-01-2023 VERSION 7.1 - thomas	
     - Cleaned up the cfg2 files for all task. Only subject 'test' is saved now. Add others as needed
     - experiment name format updated. E.g.,  'S001-E01-TSD-taskName' where S is session and E is experiment run order on that day.
