@@ -6,29 +6,23 @@
 % from screen.
 %
 % INPUTS
-%   nPoints            - Number of points whose coordinates need to be calcualted
-%   radius             - Displacement of points from the centre (0,0 by default).
-%   rotation           - Angualar value to rotate all points. You'd do this to get the
-%                        points ordered 1-nPoints where you want. Makes things easier in 
-%                        vsoSetup (see templateVisualSearchOddball).
-%   figflag            - Display a plot of the point locations on the Elo monitor
-%   holdLocs           - x and y location of the hold button on the screen.
-%   holdLocsCenterFlag - if 1, reposition the points on a circle centred on hold button
-%                        location (holdLocs)
-%   stimFixCueColor
+%   nPoints              - Number of points whose coordinates need to be calcualted
+%   radius               - Displacement of points from the centre (0,0 by default).
+%   rotation             - Angular value to rotate all points. You'd do this to get the
+%                          points ordered 1-nPoints where you want. Makes things easier in 
+%                          vsoSetup (see templateVisualSearchOddball).
+%   figflag              - Display a plot of the point locations on the Elo monitor
+%   holdLocs             - x and y location of the hold button on the screen.
+%   holdLocsCenterFlag   - if 1, reposition the points on a circle centered on hold button
+%                          location (holdLocs)
 %
 % OUTPUT
-%   locs               - nPoints x 2 (x,y) matrix
-%
+%   locs                 - nPoints x 2 (x,y) matrix
 %
 % VERSION HISTORY
-% 20-Nov-2021 - Thomas - First implementation
-% 02-Jan-2023 - Thomas - Commented
+%   20-Nov-2021 - Thomas - First implementation
+%   02-Jan-2023 - Thomas - Commented
 % ----------------------------------------------------------------------------------------
-
-
-% GET X,Y VALUES FOR POINTS ON A CIRCULAR PATH
-
 
 function locs = ml_getCircleLocations(nPoints, radius, rotation, figflag, holdLocs, holdLocsCenterFlag)
 if~exist('rotation','var'),            rotation            = 0; end

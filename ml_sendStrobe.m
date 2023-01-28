@@ -3,9 +3,7 @@
 % SEND a strobe pulse on a single bit session opened by ml_openSession.m
 % 
 % VERSION HISTORY
-%{
-15-Oct-2020  - Thomas - First commented
-%}
+%   15-Oct-2020 - Thomas - First commented
 %-----------------------------------------------------------------------------------------
 
 function ml_sendStrobe(transmitSession2)

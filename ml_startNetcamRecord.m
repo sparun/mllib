@@ -1,22 +1,27 @@
 % START NETCAM RECORD - NIMH MonkeyLogic - Vision Lab, IISc
 % ----------------------------------------------------------------------------------------
 % Records netcam video remotely on netcamPC by accessing watchtower via LAN and
-% connecting to cameras, renaming the global folder based on exp name and creating a
-% subfolder subject wise and bhv file name wise. 
+% connecting to cameras, renaming the storage folder based on exp name
 %
-% REQUIRED: starting watchtower on netcamPC and logging in and binding the cameras.
+% REQUIRED
+%   Starting watchtower on netcamPC and logging in and binding the cameras.
+%
+% INPUT
+%   MLConfig - Structure with details of bhv filename
+%
+% OUTPUT
+%   outcome  - logical, indicates if recording was started successfully
+%   apitoken - unique token generated for this session that can be used to close recording
+%              later (via ml_stopNetcamRecord)
 % 
 % VERSION HISTORY
-%{
-15-Oct-2020 - Thomas - First implementation
-%}
+%   15-Oct-2020 - Thomas - First implementation
 %-----------------------------------------------------------------------------------------
 
 function [outcome, apitoken] = ml_startNetcamRecord(MLConfig)
 
-% FOLDER and subfolder names for recording the video files on Netcam PC
-folderName    = ['D:\series4\' MLConfig.ExperimentName '\' MLConfig.SubjectName];
-subFolderName = string(['\'  MLConfig.FormattedName '\']);
+% FOLDER name for recording the video files on Netcam PC
+folderName    = ['D:\series4\' MLConfig.MLPath.DataFile '_netcam'];
 
 try
     % WATCHTOWER details (on Netcam PC)
@@ -66,7 +71,6 @@ try
     response = webwrite([watchtowerURL, '/api/cameras/action'], ...
         'SerialGroup[]', string([cameraID{1}; cameraID{2}; cameraID{3}; cameraID{4}])',...
         'Action', 'RECORDGROUP',...
-        'AdditionalPath', subFolderName,....
         'apitoken', apitoken,...
         weboptions('CertificateFilename','','ArrayFormat','repeating'));
     

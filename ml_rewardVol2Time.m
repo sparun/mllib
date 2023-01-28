@@ -4,12 +4,17 @@
 % calibration using differing periods on ON time and dispensed juice. The models terms
 % must be calculated from a dedicated juice calibration routine and modelling effort.
 % 
+% INPUT
+%   rewardVol  - required colume to be dispersed to the monkey
+%
+% OUTPUT
+%   rewardTime - based on the most recent juicepipe calibration model, return the time the
+%                motor should be kept ON to dispense rewardVol
+%
 % VERSION HISTORY
-%{
-15-Oct-2020 - Thomas - First commented and update variable names
-09-Nov-2021 - Thomas - Elaborated the model terms 
-05-Jan-2023 - Thomas - Updated the parameters based on most recent rewardsystem calibration
-%}
+%   15-Oct-2020 - Thomas - First commented and update variable names
+%   09-Nov-2021 - Thomas - Elaborated the model terms 
+%   05-Jan-2023 - Thomas - Updated the parameters based on most recent rewardsystem calibration
 %-----------------------------------------------------------------------------------------
 
 function rewardTime = ml_rewardVol2Time(rewardVol)  

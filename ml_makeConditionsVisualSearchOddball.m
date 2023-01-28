@@ -18,8 +18,8 @@
 %   "VSO-conditionsFileName.txt" in the current directory
 %
 % VERSION HISTORY
-% 27-Feb-2022 - Thomas  - First implementation
-% 30-Dec-2022 - Thomas  - Updated task name to visual search (oddball) (VSO)
+%   27-Feb-2022 - Thomas  - First implementation
+%   30-Dec-2022 - Thomas  - Updated task name to visual search (oddball) (VSO)
 % ----------------------------------------------------------------------------------------
 
 function ml_makeConditionsVisualSearchOddball(timingFileName, conditionsFileName, tdPairs, info, frequency, block)

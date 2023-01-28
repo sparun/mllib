@@ -5,9 +5,8 @@
 % distractor stimulus provides no reward.
 %
 % VERSION HISTORY
-%{
-27-Feb-2022 - Thomas  - First implementation
-%}
+%   27-Feb-2022 - Thomas  - First implementation
+% ----------------------------------------------------------------------------------------
 
 % HEADER start ---------------------------------------------------------------------------
 

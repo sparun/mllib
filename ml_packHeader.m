@@ -10,10 +10,8 @@
 % OUTPUT
 %   files            - struture with the fileNames, fileDates and fileContents
 % 
-%{
 % VERSION HISTORY
-15-Oct-2020  - Georgin - First implementation
-%}
+%   15-Oct-2020 - Georgin - First implementation
 %-----------------------------------------------------------------------------------------
 
 function files = ml_packHeader(allowedFileTypes,mlLibFolderName)

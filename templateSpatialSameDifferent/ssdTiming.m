@@ -6,11 +6,10 @@
 %   - Bottom button for 'diff/present' response.
 %
 % VERSION HISTORY
-%{
-06-Feb-2021 - Thomas  - First implementation
-07-Nov-2021 - Thomas  - Included stimFixCue TaskObject in conditions file and task,
-                        option to show fix, throughout trial introduced.
-%}
+%   06-Feb-2021 - Thomas  - First implementation
+%   07-Nov-2021 - Thomas  - Included stimFixCue TaskObject in conditions file and task,
+%                           option to show fixCue, throughout trial introduced.
+% ----------------------------------------------------------------------------------------
 
 % HEADER start ---------------------------------------------------------------------------
 

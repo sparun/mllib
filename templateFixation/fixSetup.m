@@ -16,9 +16,9 @@
 %   imgFiles, numImages, imgPerTrial, fixNames, block, frequency, trialFlag, info
 %
 % VERSION HISTORY
-% 10-Nov-2021 - Thomas - Throgoughly commented and explained the logic
-% 31-Dec-2022 - Thomas - Reduced to 80 stims. Updated the trials so they are same on all
-%                        executions of this code and updated conditions file name
+%   10-Nov-2021 - Thomas - Throgoughly commented and explained the logic
+%   31-Dec-2022 - Thomas - Reduced to 80 stims. Updated the trials so they are same on all
+%                          executions of this code and updated conditions file name
 % ----------------------------------------------------------------------------------------
 
 clc; clear; close all;

@@ -5,9 +5,9 @@
 % recording and send header to ecube system.
 %
 % VERSION HISTORY
-% 14-Oct-2020 - Thomas  - First version
-% 08-Nov-2021 - Thomas  - Commented
-% 30-Dec-2022 - Thomas  - Added Tutu as monkey name
+%   14-Oct-2020 - Thomas - First version
+%   08-Nov-2021 - Thomas - Commented
+%   30-Dec-2022 - Thomas - Added Tutu as monkey name
 % ----------------------------------------------------------------------------------------
 
 function TrialRecord = ml_initExp(TrialRecord, MLConfig)

@@ -1,15 +1,21 @@
 % fillDashboard.m - VisionLab, IISc
-%{
-Example code that will return text strings for display on MonkeyLogic control screen
-where the whole and running accuracies as well as a summary of editable variables is
-shown. The function takes TrialData.VariableChanges and TrialRecord as input and return
-an array of formatted strings.
-
-Note: this is only for template SD and templateSearch
-
-VERSION HISTORY
-- 02-Mar-2022 - Thomas  - First documentation
-%}
+%
+% Example code that will return text strings for display on MonkeyLogic control screen
+% where the whole and running accuracies as well as a summary of editable variables is
+% shown. 
+%
+% INPUT
+%   editables              - editables contain variables to display related to task
+%   TrialRecord            - contains record of trials (correct, incorrect etc.)
+%
+% OUTPUT
+%   line                   - formatted lines for display
+%
+% NOTE: This is only for templateVisualSearchOddball
+%
+% VERSION HISTORY
+%   02-Mar-2022 - Thomas  - First documentation
+% ----------------------------------------------------------------------------------------
 
 function lines = fillDashboard(editables, TrialRecord)
 % ASSIGN variables

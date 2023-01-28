@@ -3,9 +3,7 @@
 % Closes DAQ sessions of both DAQ cards on ML PC after setting all bits to low
 %
 % VERSION HISTORY
-%{
-22-Oct-2020 - Thomas  - Added comments
-%}
+%   22-Oct-2020 - Thomas  - Added comments
 % ----------------------------------------------------------------------------------------
 
 function ml_closeSession(transmitSession1, transmitSession2)

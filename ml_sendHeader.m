@@ -8,12 +8,10 @@
 % REQUIRED: MATLAB DAQ toolbox
 %
 % VERSION HISTORY
-%{
-07-Mar-2020  - Georgin - First implementation
-              Thomas
-19-Sep-2020  - Thomas  - Updated event codes implemented
-22-Oct-2020  - Thomas  - Removed header in TrialRecord. Now handled in ml_initExp
-%}
+%   07-Mar-2020 - Georgin - First implementation
+%                 Thomas
+%   19-Sep-2020 - Thomas  - Updated event codes implemented
+%   22-Oct-2020 - Thomas  - Removed header in TrialRecord. Now handled in ml_initExp
 % ----------------------------------------------------------------------------------------
 
 function ml_sendHeader(MLConfig)

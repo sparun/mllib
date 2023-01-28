@@ -9,14 +9,13 @@
 % priority over the one in the main ML directory. To activate this alert_function,
 % turn on the alert button on the task panel of the main menu.
 %
-% NOTE - save this file as alert_function.m in local folder when using.
+% NOTE - save this file as alert_function.m in local folder when using. Update function
+%        name
 %
 % VERSION HISTORY
-%{
-14-Oct-2020 - Thomas  - First version
-08-Nov-2021 - Thomas  - Added clearing of iScan serialport object in
-                        task_aborted hook, throw error is raster threshold not 0
-%}
+%   14-Oct-2020 - Thomas - First version
+%   08-Nov-2021 - Thomas - Added clearing of iScan serialport object in
+%                          task_aborted hook, throw error if raster threshold not 0
 % ----------------------------------------------------------------------------------------
 
 function alert_function(hook,MLConfig,TrialRecord)

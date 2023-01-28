@@ -4,9 +4,7 @@
 % lines to eCube
 % 
 % VERSION HISTORY
-%{
-% - 15-Oct-2020  - Georgin - First implementation
-%}
+%   15-Oct-2020  - Georgin - First implementation
 %-----------------------------------------------------------------------------------------
 
 function headerStr = ml_makeHeader(files)

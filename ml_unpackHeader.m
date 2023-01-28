@@ -4,9 +4,7 @@
 % for ML template experiments into 'unpackedFiles'
 % 
 % VERSION HISTORY
-%{
-15-Oct-2020  - Georgin - First implementation
-%}
+%   15-Oct-2020 - Georgin - First implementation
 %-----------------------------------------------------------------------------------------
 
 function ml_unpackHeader(files)

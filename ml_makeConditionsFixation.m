@@ -18,18 +18,18 @@
 %   "FIX-conditionsFileName.txt" in the current directory
 %
 % VERSION HISTORY
-% 14-Jun-2019 - Thomas  - First implementation
-%               Zhivago
-% 09-Mar-2020 - Thomas  - Integrated calibration and validation blocks as block 1
-%               Jhilik    and 2 respectively
-%               Harish
-% 22-Oct-2020 - Thomas  - Removed validation block, fixed info and other minor updates
-% 29-Oct-2020 - Thomas  - Removed extra info
-% 01-Nov-2020 - Arun    - Changed hold button color to blue from green
-%               Jhilik 
-% 03-Nov-2021 - Thomas  - Reworked to include stimFix cue, reduced holf brightness and 
-%                         fixCue and calibCue size
-% 30-Dec-2022 - Thomas  - Updated task name to visual search (oddball) (VSO)
+%   14-Jun-2019 - Thomas  - First implementation
+%                 Zhivago
+%   09-Mar-2020 - Thomas  - Integrated calibration and validation blocks as block 1
+%                 Jhilik    and 2 respectively
+%                 Harish
+%   22-Oct-2020 - Thomas  - Removed validation block, fixed info and other minor updates
+%   29-Oct-2020 - Thomas  - Removed extra info
+%   01-Nov-2020 - Arun    - Changed hold button color to blue from green
+%                 Jhilik 
+%   03-Nov-2021 - Thomas  - Reworked to include stimFix cue, reduced holf brightness and 
+%                           fixCue and calibCue size
+%   30-Dec-2022 - Thomas  - Updated task name to visual search (oddball) (VSO)
 % ----------------------------------------------------------------------------------------
 
 function ml_makeConditionsFixation(timingFileName, conditionsFileName, fixNames, info, frequency, block, stimFixCueColorFlag)

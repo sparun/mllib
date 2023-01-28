@@ -5,16 +5,15 @@
 % in understanding the same.
 %
 % INPUT
-% eventNumber = n*1 vector of eventcodes that are present in ml_loadEvents, but cannot be
-%               used to decode footer data as they are processed and sent in a range
+%   eventNumber - n*1 vector of eventcodes that are present in ml_loadEvents, but cannot be
+%                 used to decode footer data as they are processed and sent in a range
 %
 % OUTPUT
-% eventName   = n*1 cell array of eventcode meanings picked from ml_loadEvents
+%   eventName   - n*1 cell array of eventcode meanings picked from ml_loadEvents
 %
 % VERSION HISTORY
-%{
-% - 15-Oct-2020 - Thomas  - Initial implementation
-%}
+%
+%   15-Oct-2020 - Thomas - Initial implementation
 % ----------------------------------------------------------------------------------------
 
 function eventName = ml_getEventName(eventNumber)

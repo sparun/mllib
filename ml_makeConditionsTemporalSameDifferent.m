@@ -19,16 +19,16 @@
 %   "TSD-conditionsFileName.txt" in the current directory
 %
 % VERSION HISTORY
-% 14-Jun-2019 - Thomas  - First implementation
-%               Zhivago
-% 09-Mar-2020 - Thomas  - Integrated calibration and validation blocks as block 1
-%               Jhilik    and 2 respectively
-%               Harish
-% 22-Oct-2020 - Thomas  - Removed validation block, fixed info and other minor updates
-% 29-Oct-2020 - Thomas  - Removed extra info
-% 03-Nov-2021 - Thomas  - Reworked to include stimFix cue, reduced holf brightness and 
-%                         fixCue and calibCue size
-% 30-Dec-2022 - Thomas  - Updated task name to temporal same-different (TSD)
+%   14-Jun-2019 - Thomas  - First implementation
+%                 Zhivago
+%   09-Mar-2020 - Thomas  - Integrated calibration and validation blocks as block 1
+%                 Jhilik    and 2 respectively
+%                 Harish
+%   22-Oct-2020 - Thomas  - Removed validation block, fixed info and other minor updates
+%   29-Oct-2020 - Thomas  - Removed extra info
+%   03-Nov-2021 - Thomas  - Reworked to include stimFix cue, reduced holf brightness and 
+%                           fixCue and calibCue size
+%   30-Dec-2022 - Thomas  - Updated task name to temporal same-different (TSD)
 % ----------------------------------------------------------------------------------------
 
 function ml_makeConditionsTemporalSameDifferent(timingFileName, conditionsFileName, stPairs, info, frequency, block, stimFixCueColorFlag)

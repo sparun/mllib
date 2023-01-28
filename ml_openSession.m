@@ -7,9 +7,7 @@
 % are renamed.
 %
 % VERSION HISTORY
-%{
-% - 22-Oct-2020 - Thomas  - Added comments
-%}
+%    22-Oct-2020 - Thomas - Added comments
 % ----------------------------------------------------------------------------------------
 
 function[transmitSession1, transmitSession2] = ml_openSession()

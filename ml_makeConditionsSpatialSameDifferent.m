@@ -19,10 +19,10 @@
 %   "SSD-conditionsFileName.txt" in the current directory
 %
 % VERSION HISTORY
-% 16-Feb-2021 - Thomas  - First implementation (2x2 array, simple search)
-% 06-Nov-2021 - Thomas  - Reworked to include stimFix cue, reduced hold brightness and 
-%                         fixCue and calibCue size
-% 30-Dec-2022 - Thomas  - Updated task name to spatial same-different (SSD)
+%   16-Feb-2021 - Thomas  - First implementation (2x2 array, simple search)
+%   06-Nov-2021 - Thomas  - Reworked to include stimFix cue, reduced hold brightness and 
+%                           fixCue and calibCue size
+%   30-Dec-2022 - Thomas  - Updated task name to spatial same-different (SSD)
 % ----------------------------------------------------------------------------------------
 
 function ml_makeConditionsSpatialSameDifferent(timingFileName, conditionsFileName, tdPairs, info, frequency, block, stimFixCueColorFlag)

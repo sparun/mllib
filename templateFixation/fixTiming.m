@@ -4,18 +4,17 @@
 % button. Breaking of fixation/hold or touch outside of hold button will abort the trial.
 % 
 % VERSION HISTORY
-%{
-02-Sep-2020 - Thomas  - First implementation
-14-Sep-2020 - Thomas  - Updated codes with new implementation of event and error
-                        codes. Simplified code structure and other changes.
-14-Oct-2020 - Thomas  - Updated all eyejoytrack to absolute time and not rt
-29-Oct-2020 - Thomas  - Updated to match the version of templateSD
-31-Dec-2020 - Thomas  - Updated editable names and implemented holdRadiusBuffer and
-                        accomodated code for stimOffPeriod of 0
-03-Nov-2021 - Thomas  - Updated to deal with wmFixCue
-05-Nov-2021 - Thomas  - wmFixCue renamed to generalized stimFixFlag, option to show fix
-              Georgin   throughout trial introduced.
-%}
+%   02-Sep-2020 - Thomas  - First implementation
+%   14-Sep-2020 - Thomas  - Updated codes with new implementation of event and error
+%                           codes. Simplified code structure and other changes.
+%   14-Oct-2020 - Thomas  - Updated all eyejoytrack to absolute time and not rt
+%   29-Oct-2020 - Thomas  - Updated to match the version of templateSD
+%   31-Dec-2020 - Thomas  - Updated editable names and implemented holdRadiusBuffer and
+%                           accomodated code for stimOffPeriod of 0
+%   03-Nov-2021 - Thomas  - Updated to deal with wmFixCue
+%   05-Nov-2021 - Thomas  - wmFixCue renamed to generalized stimFixFlag, option to show
+%                 Georgin   fixCue throughout trial introduced.
+% ----------------------------------------------------------------------------------------
 
 % HEADER start ---------------------------------------------------------------------------
 

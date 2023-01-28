@@ -6,10 +6,16 @@
 % calibration block is run again). Exhausts selected blocks without repeat (unless
 % calibration block run manually).
 %
+% INPUT
+%   TrialRecord - this structure is created by MonkeyLogic and contains 
+%                  variables used to name the storage folder in netcamPC
+%
+% OUTPUT
+%   nextBlock   - ID of the next block to be run where -1 indicates end of
+%                  experiment (quits the task to pause screen)
+%
 % VERSION HISTORY
-%{
-14-Sep-2020 - Thomas  - First implementation
-%}
+%   14-Sep-2020 - Thomas  - First implementation
 % ----------------------------------------------------------------------------------------
 
 function nextBlock = ml_blockChange(TrialRecord)

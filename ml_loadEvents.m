@@ -6,11 +6,11 @@
 % name label from event code easy)
 %
 % VERSION HISTORY
-% 09-Nov-2021 - Zhivago - Final version
-%               Thomas  
-%               Georgin
-% 30-Dec-2022 - Thomas  - Updated the task names (trl.taskXXX) 
-%                         to CAL, FIX, TSD, SDD and added task VSO
+%   09-Nov-2021 - Zhivago - Final version
+%                 Thomas  
+%                 Georgin
+%   30-Dec-2022 - Thomas  - Updated the task names (trl.taskXXX) 
+%                           to CAL, FIX, TSD, SDD and added task VSO
 % ----------------------------------------------------------------------------------------
 
 function [err, pic, aud, bhv, rew, exp, trl, chk, asc] = ml_loadEvents()

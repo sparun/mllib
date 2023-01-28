@@ -5,9 +5,7 @@
 % REQUIRED: netcam recording being started and apitoken from current remote session
 % 
 % VERSION HISTORY
-%{
-15-Oct-2020  - Thomas - First implementation
-%}
+%   15-Oct-2020 - Thomas - First implementation
 %-----------------------------------------------------------------------------------------
 
 function outcome= ml_stopNetcamRecord(apitoken)

@@ -5,9 +5,7 @@
 %   "configureCallback(iScan,"terminator",@ml_readSerialData)"
 % 
 % VERSION HISTORY
-%{
-15-Oct-2020  - Thomas - First implementation
-%}
+%   15-Oct-2020 - Thomas - First implementation
 %-----------------------------------------------------------------------------------------
 
 function ml_readSerialData(iScan, evt)
