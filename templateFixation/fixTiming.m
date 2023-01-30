@@ -33,16 +33,12 @@ set_iti(500);
 
 % EDITABLE variables that can be changed during the task
 editable(...
-    'goodPause',      'badPause',         'taskFixRadius',...
-    'calFixRadius',   'calFixInitPeriod', 'calFixHoldPeriod',...
-    'calFixRandFlag', 'rewardVol');
+    'goodPause',      'badPause',...
+    'taskFixRadius',  'calFixRadius',   'rewardVol');
 goodPause        = 200;
 badPause         = 1000;
 taskFixRadius    = 10;
 calFixRadius     = 8;
-calFixInitPeriod = 500;
-calFixHoldPeriod = 300;
-calFixRandFlag   = 1;
 rewardVol        = 0.2;
 
 % PARAMETERS relevant for task timing and hold/fix control
@@ -358,8 +354,6 @@ cGoodPause        = trl.shift + TrialRecord.Editable.goodPause;
 cBadPause         = trl.shift + TrialRecord.Editable.badPause;
 cTaskFixRadius    = trl.shift + TrialRecord.Editable.taskFixRadius*10;
 cCalFixRadius     = trl.shift + TrialRecord.Editable.calFixRadius*10;
-cCalFixInitPeriod = trl.shift + TrialRecord.Editable.calFixInitPeriod;
-cCalFixHoldPeriod = trl.shift + TrialRecord.Editable.calFixHoldPeriod;
 cRewardVol        = trl.shift + TrialRecord.Editable.rewardVol*1000;
 
 % PREPARE stim info - sets of stim ID, stimPosX and stimPosY to transmit
@@ -397,8 +391,7 @@ eventmarker(trl.edtStart);
 
 % SEND editable in following order
 eventmarker([...
-    cGoodPause        cBadPause         cTaskFixRadius cCalFixRadius...
-    cCalFixInitPeriod cCalFixHoldPeriod cRewardVol]);
+    cGoodPause cBadPause cTaskFixRadius cCalFixRadius cRewardVol]);
 
 % EDITABLE stop marker
 eventmarker(trl.edtStop);
@@ -437,10 +430,11 @@ TrialRecord.User.juiceConsumed(trialNum)      = juiceConsumed;
 
 % SAVE to Data.UserVars
 bhv_variable(...
-    'juiceConsumed', juiceConsumed, 'tHoldButtonOn', tHoldButtonOn,...
-    'tTrialInit',    tTrialInit,    'tFixCueOn',     tFixCueOn,...
-    'tFixAcq',       tFixAcq,       'tFixCueOff',    tFixCueOff,...
-    'tStimOn',       tStimOn,       'tStimOff',      tStimOff,...
+    'fixHoldPeriod', fixHoldPeriod, 'holdRadiusBuffer', holdRadiusBuffer,...
+    'juiceConsumed', juiceConsumed, 'tHoldButtonOn',    tHoldButtonOn,...
+    'tTrialInit',    tTrialInit,    'tFixCueOn',        tFixCueOn,...
+    'tFixAcq',       tFixAcq,       'tFixCueOff',       tFixCueOff,...
+    'tStimOn',       tStimOn,       'tStimOff',         tStimOff,...
     'tAllOff',       tAllOff);
 
 % FOOTER end------------------------------------------------------------------------------

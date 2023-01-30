@@ -15,7 +15,7 @@
 %-----------------------------------------------------------------------------------------
 
 function files = ml_packHeader(allowedFileTypes,mlLibFolderName)
-if(~exist('mlLibFolderName','var')),  mlLibFolderName  = 'mlLib'; end
+if(~exist('mlLibFolderName','var')),  mlLibFolderName  = 'mllib'; end
 if(~exist('allowedFileTypes','var')), allowedFileTypes = {'*.m','*.mat','*.txt'}; end
 
 % From current path find the mlLib path
@@ -56,6 +56,7 @@ if (libFlag == 1)
         for fileID = 1:length(allFiles)
             fileName            = allFiles(fileID).name;
             files.fileNames     = [files.fileNames; fileName];
+            files.fileDates     = [files.fileDates; filedate];
             files.fileContents  = [files.fileContents; ml_getFileContents(fileName)];
         end
     end
