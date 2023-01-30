@@ -19,7 +19,9 @@
 %   03-Nov-2021 - Thomas  - Included wmFixCue TaskObject in conditions file
 %                 Georgin
 %   30-Jan-2023 - Thomas  - Toggling photodiodeCue for last calibOff and separating it
-%                 Arun      from holdOff by calFixWrapPeriod 
+%                 Arun      from holdOff by calFixWrapPeriod. Removed calibration task
+%                           timing related info from editables and all undocumented task
+%                           related variables are being stored in data.UserVars
 % ----------------------------------------------------------------------------------------
 
 % HEADER start ---------------------------------------------------------------------------
@@ -38,24 +40,20 @@ trialNum = TrialRecord.CurrentTrialNumber;
 set_iti(500);
 
 % EDITABLE variables that can be changed during the task
-editable(...
-    'goodPause',     'badPause',         'taskFixRadius',...
-    'calFixRadius',  'calFixInitPeriod', 'calFixHoldPeriod',...
-    'calFixRandFlag','rewardVol');
+editable('goodPause', 'badPause','taskFixRadius', 'calFixRadius', 'rewardVol');
 goodPause        = 200;
-badPause         = 1000;
-taskFixRadius    = 10;
+badPause         = 500;
+taskFixRadius    = 8;
 calFixRadius     = 8;
-calFixInitPeriod = 500;
-calFixHoldPeriod = 300;
-calFixWrapPeriod = 50;
-calFixRandFlag   = 1;
 rewardVol        = 0.2;
 
 % PARAMETERS relevant for task timing and hold/fix control
 holdInitPeriod   = Info.holdInitPeriod;
 holdRadius       = TrialData.TaskObject.Attribute{1, 2}{1, 2};
 holdRadiusBuffer = 2;
+calFixInitPeriod = 500;
+calFixHoldPeriod = 300;
+calFixWrapPeriod = 50;
 reward           = ml_rewardVol2Time(rewardVol);
 
 % ASSIGN event codes from TrialRecord.User
@@ -88,9 +86,7 @@ calEvts  = [...
     pic.calib9On; pic.calib9Off; pic.calib10On; pic.calib10Off];
 
 % RANDOMIZE the position of points if calRandFlag
-if(calFixRandFlag)
-    calLocs = calLocs(randperm(size(calLocs, 1)), :);
-end
+calLocs = calLocs(randperm(size(calLocs, 1)), :);
 
 % DECLARE select timing and reward variables as NaN
 tHoldButtonOn = NaN;
@@ -277,9 +273,6 @@ cGoodPause        = trl.shift + TrialRecord.Editable.goodPause;
 cBadPause         = trl.shift + TrialRecord.Editable.badPause;
 cTaskFixRadius    = trl.shift + TrialRecord.Editable.taskFixRadius*10;
 cCalFixRadius     = trl.shift + TrialRecord.Editable.calFixRadius*10;
-cCalFixInitPeriod = trl.shift + TrialRecord.Editable.calFixInitPeriod;
-cCalFixHoldPeriod = trl.shift + TrialRecord.Editable.calFixHoldPeriod;
-cCalFixWrapPeriod = trl.shift + TrialRecord.Editable.calFixWrapPeriod;
 cRewardVol        = trl.shift + TrialRecord.Editable.rewardVol*1000;
 
 % PREPARE stim info - sets of stim ID, stimPosX and stimPosY to transmit
@@ -311,9 +304,7 @@ eventmarker([cTrial cBlock cTrialWBlock cCondition cTrialError cExpResponse cTri
 eventmarker(trl.edtStart);
 
 % SEND editable in following order
-eventmarker([...
-    cGoodPause        cBadPause         cTaskFixRadius    cCalFixRadius...
-    cCalFixInitPeriod cCalFixHoldPeriod cCalFixWrapPeriod cRewardVol]);
+eventmarker([cGoodPause cBadPause cTaskFixRadius cCalFixRadius cRewardVol]);
 
 % EDITABLE stop marker
 eventmarker(trl.edtStop);
@@ -339,10 +330,12 @@ TrialRecord.User.juiceConsumed(trialNum)    = juiceConsumed;
 
 % SAVE to Data.UserVars
 bhv_variable(...
-    'juiceConsumed', juiceConsumed, 'tHoldButtonOn', tHoldButtonOn,...
-    'tTrialInit',    tTrialInit,    'tFixAcqCueOn',  tFixAcqCueOn,...
-    'tFixAcq',       tFixAcq,       'tFixAcqCueOff', tFixAcqCueOff,...
-    'tAllOff',       tAllOff);
+    'holdRadiusBuffer', holdRadiusBuffer, 'calFixInitPeriod', calFixInitPeriod,...
+    'calFixHoldPeriod', calFixHoldPeriod, 'calFixWrapPeriod', calFixWrapPeriod,...
+    'juiceConsumed',    juiceConsumed,    'tHoldButtonOn',    tHoldButtonOn,...
+    'tTrialInit',       tTrialInit,       'tFixAcqCueOn',     tFixAcqCueOn,...
+    'tFixAcq',          tFixAcq,          'tFixAcqCueOff',    tFixAcqCueOff,...
+    'tAllOff',          tAllOff);
 
 % FOOTER end------------------------------------------------------------------------------
 % DASHBOARD (customize as required)-------------------------------------------------------

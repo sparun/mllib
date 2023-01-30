@@ -14,6 +14,9 @@
 %   03-Nov-2021 - Thomas  - Updated to deal with wmFixCue
 %   05-Nov-2021 - Thomas  - wmFixCue renamed to generalized stimFixFlag, option to show
 %                 Georgin   fixCue throughout trial introduced.
+%   30-Jan-2023 - Thomas  - Removed calibration task timing related info from editables 
+%                 Arun      and all undocumented task related variables are being stored
+%                           in data.UserVars
 % ----------------------------------------------------------------------------------------
 
 % HEADER start ---------------------------------------------------------------------------
@@ -390,8 +393,7 @@ eventmarker([cTrial cBlock cTrialWBlock cCondition cTrialError cExpResponse cTri
 eventmarker(trl.edtStart);
 
 % SEND editable in following order
-eventmarker([...
-    cGoodPause cBadPause cTaskFixRadius cCalFixRadius cRewardVol]);
+eventmarker([cGoodPause cBadPause cTaskFixRadius cCalFixRadius cRewardVol]);
 
 % EDITABLE stop marker
 eventmarker(trl.edtStop);

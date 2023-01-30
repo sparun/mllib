@@ -19,7 +19,9 @@
 %   03-Nov-2021 - Thomas  - Included wmFixCue TaskObject in conditions file
 %                 Georgin
 %   30-Jan-2023 - Thomas  - Toggling photodiodeCue for last calibOff and separating it
-%                 Arun      from holdOff by calFixWrapPeriod 
+%                 Arun      from holdOff by calFixWrapPeriod. Removed calibration task
+%                           timing related info from editables and all undocumented task
+%                           related variables are being stored in data.UserVars
 % ----------------------------------------------------------------------------------------
 
 % HEADER start ---------------------------------------------------------------------------
@@ -38,12 +40,10 @@ trialNum = TrialRecord.CurrentTrialNumber;
 set_iti(500);
 
 % EDITABLE variables that can be changed during the task
-editable(...
-    'goodPause',     'badPause',... 
-    'taskFixRadius', 'calFixRadius', 'rewardVol');
+editable('goodPause', 'badPause','taskFixRadius', 'calFixRadius', 'rewardVol');
 goodPause        = 200;
-badPause         = 1000;
-taskFixRadius    = 10;
+badPause         = 500;
+taskFixRadius    = 8;
 calFixRadius     = 8;
 rewardVol        = 0.2;
 
@@ -304,8 +304,7 @@ eventmarker([cTrial cBlock cTrialWBlock cCondition cTrialError cExpResponse cTri
 eventmarker(trl.edtStart);
 
 % SEND editable in following order
-eventmarker([...
-    cGoodPause cBadPause cTaskFixRadius cCalFixRadius cRewardVol]);
+eventmarker([cGoodPause cBadPause cTaskFixRadius cCalFixRadius cRewardVol]);
 
 % EDITABLE stop marker
 eventmarker(trl.edtStop);

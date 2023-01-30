@@ -25,6 +25,9 @@
 %   03-Nov-2021 - Thomas  - Included wmFixCue TaskObject in conditions file and task
 %   05-Nov-2021 - Thomas  - wmFixCue renamed to generalized stimFixFlag, option to show
 %                 Georgin   fixCue throughout trial introduced.
+%   30-Jan-2023 - Thomas  - Removed calibration task timing related info from editables 
+%                 Arun      and all undocumented task related variables are being stored
+%                           in data.UserVars
 % ----------------------------------------------------------------------------------------
 
 % HEADER start ---------------------------------------------------------------------------
@@ -43,17 +46,11 @@ trialNum = TrialRecord.CurrentTrialNumber;
 set_iti(500);
 
 % EDITABLE variables that can be changed during the task
-editable(...
-    'goodPause',     'badPause',         'taskFixRadius',...
-    'calFixRadius',  'calFixInitPeriod', 'calFixHoldPeriod',...
-    'calFixRandFlag','rewardVol');
+editable('goodPause', 'badPause','taskFixRadius', 'calFixRadius', 'rewardVol');
 goodPause        = 200;
-badPause         = 1000;
-taskFixRadius    = 10;
+badPause         = 500;
+taskFixRadius    = 8;
 calFixRadius     = 8;
-calFixInitPeriod = 500;
-calFixHoldPeriod = 300;
-calFixRandFlag   = 1;
 rewardVol        = 0.2;
 
 % PARAMETERS relevant for task timing and hold/fix control
@@ -416,8 +413,6 @@ cGoodPause        = trl.shift + TrialRecord.Editable.goodPause;
 cBadPause         = trl.shift + TrialRecord.Editable.badPause;
 cTaskFixRadius    = trl.shift + TrialRecord.Editable.taskFixRadius*10;
 cCalFixRadius     = trl.shift + TrialRecord.Editable.calFixRadius*10;
-cCalFixInitPeriod = trl.shift + TrialRecord.Editable.calFixInitPeriod;
-cCalFixHoldPeriod = trl.shift + TrialRecord.Editable.calFixHoldPeriod;
 cRewardVol        = trl.shift + TrialRecord.Editable.rewardVol*1000;
 
 % PREPARE stim info - sets of stim ID, stimPosX and stimPosY to transmit
@@ -441,9 +436,7 @@ eventmarker([cTrial cBlock cTrialWBlock cCondition cTrialError cExpResponse cTri
 eventmarker(trl.edtStart);
 
 % SEND editable in following order
-eventmarker([...
-    cGoodPause        cBadPause         cTaskFixRadius cCalFixRadius...
-    cCalFixInitPeriod cCalFixHoldPeriod cRewardVol]);
+eventmarker([cGoodPause cBadPause cTaskFixRadius cCalFixRadius cRewardVol]);
 
 % EDITABLE stop marker
 eventmarker(trl.edtStop);
@@ -475,13 +468,14 @@ TrialRecord.User.juiceConsumed(trialNum)      = juiceConsumed;
 
 % SAVE to Data.UserVars
 bhv_variable(...
-    'juiceConsumed',  juiceConsumed,  'tHoldButtonOn',   tHoldButtonOn,...
-    'tTrialInit',     tTrialInit,     'tFixAcqCueOn',    tFixAcqCueOn,...
-    'tFixAcq',        tFixAcq,        'tFixAcqCueOff',   tFixAcqCueOff,...
-    'tSampleOn',      tSampleOn,      'tSampleOff',      tSampleOff,...
-    'tFixMaintCueOn', tFixMaintCueOn, 'tFixMaintCueOff', tFixMaintCueOff,...
-    'tTestRespOn',    tTestRespOn,    'tBhvResp',        tBhvResp,...
-    'tTestOff',       tTestOff,       'tRespOff',        tRespOff,...
+    'fixHoldPeriod',  fixHoldPeriod,  'holdRadiusBuffer', holdRadiusBuffer,...
+    'juiceConsumed',  juiceConsumed,  'tHoldButtonOn',    tHoldButtonOn,...
+    'tTrialInit',     tTrialInit,     'tFixAcqCueOn',     tFixAcqCueOn,...
+    'tFixAcq',        tFixAcq,        'tFixAcqCueOff',    tFixAcqCueOff,...
+    'tSampleOn',      tSampleOn,      'tSampleOff',       tSampleOff,...
+    'tFixMaintCueOn', tFixMaintCueOn, 'tFixMaintCueOff',  tFixMaintCueOff,...
+    'tTestRespOn',    tTestRespOn,    'tBhvResp',         tBhvResp,...
+    'tTestOff',       tTestOff,       'tRespOff',         tRespOff,...
     'tAllOff',        tAllOff);
 
 % FOOTER end------------------------------------------------------------------------------
