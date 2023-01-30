@@ -1,8 +1,14 @@
-changeLog for series4 MonkeyLogic template codes - VisionLab, IISc
-maintained by
+Change log for series4 MonkeyLogic mllib and templateTasks - VisionLab, IISc
 
-Dec 2022 onward - Thomas
-Till Dec 2022   - Georgin/Thomas
+Maintained by
+    Dec 2022 onward - Thomas    
+    Till Dec 2022   - Georgin/Thomas
+
+30-01-2023 VERSION 7.5.1 - thomas
+    - All timing files updated to remove any timing variables as editables
+    - Task timing related variables that are hardcoded in timing file are now captures in data.UserVars of bhv2 file
+    - Added templateVisualChannelMap - fixation task with stimuli for visual channel mapping
+    - updated all good pause to 200ms, bad pause 500 ms, task and fix radius to 8 dva
 
 28-01-2023 VERSION 7.3.1 - thomas
     - updated the folder name and organisation to match mllib in visionlabdocs (OneDrive)
@@ -87,7 +93,6 @@ Till Dec 2022   - Georgin/Thomas
       Please set scanline threshold as 0 in photodiode tuner tool.
     - all ml_xxx functions updated to have comments to describe functionality
 
------------------------------------------
 29-08-2021 VERSION 5.3 - thomas/georgin
 	templateSD/Fix/Search
 	- calTiming.m now sends a vector of X and Y values (dva) for all calibration points shown using
@@ -121,8 +126,6 @@ Till Dec 2022   - Georgin/Thomas
 	mlLib
 	- ml_makeConditionsSearch - 1 target and 3 distractors from td pairs. hold and resp buttons pink and x-pos is 25 dva (was 20dva in templateSD)
 	- ml_initExp - updated monkey names to include chacha and cocochacha in error message
-
------------------------------------------
 
 05-01-2021 VERSION 4.3 - thomas/georgin
 	templateSD/Fix
@@ -160,8 +163,6 @@ Till Dec 2022   - Georgin/Thomas
 	- ml_initExp - updated PC name to 'VISIONLABML', corrected error message for header not sent
 	- ml_readSerialData - update time function to 'datestr(now)' from clock (as millisecond precision wasn't there)
 
------------------------------------------
-
 01-11-2020 VERSION 3.2 thomas/arun/jhilik
 	templateSD/Fix
 	- added trialFlag in TrialRecord.User for cal, fix and sd (NaN in cal trials).
@@ -196,8 +197,6 @@ Till Dec 2022   - Georgin/Thomas
 	- ml_blockChange - checked and verified that it now selects the previous non calib block even if calib block was successively
 	  called twice manually. Will repeat the prior block in full, so ideally load calib block after a block has just ended.
 
------------------------------------------
-
 22-10-2020 - thomas/georgin
 	templateSD
 	- packing following editable variable into trial footer using start stop and shift markers (trl.edtStart..etc)
@@ -214,8 +213,6 @@ Till Dec 2022   - Georgin/Thomas
 	- ml_loadEvents: added start stop and shift markers for editable variables and changed ascii shift from 10000 to 200000
 	- Added descriptions and comments for all functions in lib
 	- Removed unneccessary/deprecated functions
-
------------------------------------------
 
 15-10-2020 VERSION 1.0 - thomas/georgin
 	templateSD
@@ -235,8 +232,6 @@ Till Dec 2022   - Georgin/Thomas
 	- ml_alert_function: updated to close serial port correctly on exp end (but any error in ML task requires MATLAB restart)
 	- ml_loadEvents: added codes for bhvName start and stop
 	- ml_makeConditionSD: increased fixation point size to 0.6dva from 0.3dva
-
------------------------------------------
 
 12-10-2020 - VERSION 0.1 - thomas/georgin
 	templateSD 

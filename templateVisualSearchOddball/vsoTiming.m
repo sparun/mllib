@@ -154,7 +154,7 @@ while outcome < 0
         event   = [bhv.holdNotMaint pic.holdOff]; 
         outcome = err.holdBreak; break
     else
-        % Correctly held fixation & hold
+        % Correctly held hold
         eventmarker([bhv.holdMaint]);
     end    
         
@@ -312,10 +312,10 @@ TrialRecord.User.targetLocation(trialNum)     = Info.targetLocation;
 
 % SAVE to Data.UserVars
 bhv_variable(...
-    'fixHoldPeriod', fixHoldPeriod, 'holdRadiusBuffer', holdRadiusBuffer,...
-    'juiceConsumed', juiceConsumed, 'tHoldButtonOn',    tHoldButtonOn,...
-    'tTrialInit',    tTrialInit,    'tSearchRespOn',    tSearchRespOn,...
-    'tBhvResp',      tBhvResp,      'tAllOff',          tAllOff);
+    'juiceConsumed',    juiceConsumed,   'tHoldButtonOn',    tHoldButtonOn,...
+    'tTrialInit',       tTrialInit,      'tSearchRespOn',    tSearchRespOn,...
+    'tBhvResp',         tBhvResp,        'tAllOff',          tAllOff,...
+    'holdRadiusBuffer', holdRadiusBuffer);
 
 % FOOTER end------------------------------------------------------------------------------
 % DASHBOARD (customize as required)-------------------------------------------------------
