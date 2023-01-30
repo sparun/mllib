@@ -18,6 +18,8 @@
 %   31-Dec-2020 - Thomas  - Updated editable names and implemented holdRadiusBuffer
 %   03-Nov-2021 - Thomas  - Included wmFixCue TaskObject in conditions file
 %                 Georgin
+%   30-Jan-2023 - Thomas  - Toggling photodiodeCue for last calibOff and separating it
+%                 Arun      from holdOff by calFixWrapPeriod 
 % ----------------------------------------------------------------------------------------
 
 % HEADER start ---------------------------------------------------------------------------
@@ -46,6 +48,7 @@ taskFixRadius    = 10;
 calFixRadius     = 8;
 calFixInitPeriod = 500;
 calFixHoldPeriod = 300;
+calFixWrapPeriod = 50;
 calFixRandFlag   = 1;
 rewardVol        = 0.2;
 
@@ -199,17 +202,28 @@ while outcome < 0
             eventmarker([bhv.holdMaint bhv.fixMaint]);
         end
         
-        % REMOVE the calibration image image off
-        tFixAcqCueOff(locID) = toggleobject(calibCue, 'eventmarker', calEvts(locID*2));
-        visibleStims         = holdButton;
+        if locID ~= size(calLocs,1)
+            % REMOVE the calibration image image off and continue the trial
+            tFixAcqCueOff(locID) = toggleobject(calibCue, 'eventmarker', calEvts(locID*2));
+            visibleStims         = holdButton;
+        else
+            % REMOVE the calibration image image off and toggle photodiode cue as
+            % calibration completed successfully
+            tFixAcqCueOff(locID) = toggleobject([calibCue photodiodeCue], 'eventmarker', calEvts(locID*2));
+            visibleStims         = holdButton;
+        end
     end
     
     % TRIAL finished successfully if all stims fixated correctly
     if outcome < 0
-        event   = [bhv.respCorr pic.holdOff rew.juice];
+        event   = [bhv.respCorr pic.holdOff rew.juice]; % Seding pic.holdOff first to
         outcome = err.respCorr;
     end
 end
+
+% WAIT for some period so we have a temporal difference between the last calibOff and
+% holdButtonOff
+idle(calFixWrapPeriod);
 
 % SET trial outcome and remove all visible stimuli
 trialerror(outcome);
@@ -265,6 +279,7 @@ cTaskFixRadius    = trl.shift + TrialRecord.Editable.taskFixRadius*10;
 cCalFixRadius     = trl.shift + TrialRecord.Editable.calFixRadius*10;
 cCalFixInitPeriod = trl.shift + TrialRecord.Editable.calFixInitPeriod;
 cCalFixHoldPeriod = trl.shift + TrialRecord.Editable.calFixHoldPeriod;
+cCalFixWrapPeriod = trl.shift + TrialRecord.Editable.calFixWrapPeriod;
 cRewardVol        = trl.shift + TrialRecord.Editable.rewardVol*1000;
 
 % PREPARE stim info - sets of stim ID, stimPosX and stimPosY to transmit
@@ -297,8 +312,8 @@ eventmarker(trl.edtStart);
 
 % SEND editable in following order
 eventmarker([...
-    cGoodPause        cBadPause         cTaskFixRadius cCalFixRadius...
-    cCalFixInitPeriod cCalFixHoldPeriod cRewardVol]);
+    cGoodPause        cBadPause         cTaskFixRadius    cCalFixRadius...
+    cCalFixInitPeriod cCalFixHoldPeriod cCalFixWrapPeriod cRewardVol]);
 
 % EDITABLE stop marker
 eventmarker(trl.edtStop);
