@@ -12,6 +12,8 @@
 %   30-Jan-2023 - Thomas  - Removed calibration task timing related info from editables 
 %                 Arun      and all undocumented task related variables are being stored
 %                           in data.UserVars
+%   31-Jan-2023 - Thomas  - Ensuring a difference between succesive toggleobjects
+%                           (in case of eyejoytrack break) with a taskWrapPeriod.
 % ----------------------------------------------------------------------------------------
 
 % HEADER start ---------------------------------------------------------------------------
@@ -45,6 +47,7 @@ holdRadius       = TrialData.TaskObject.Attribute{1, 2}{1, 2};
 holdRadiusBuffer = 2;
 searchPeriod     = Info.searchPeriod;
 respPeriod       = Info.respPeriod;
+taskWrapPeriod   = 50;
 reward           = ml_rewardVol2Time(rewardVol);
 
 % ASSIGN event codes from TrialRecord.User
@@ -219,7 +222,7 @@ while outcome < 0
         outcome = err.holdOutside; break
     elseif ontarget(3) == 0
         % Error if monkey went outside fixRadius
-        event   = [bhv.fixNotMaint pic.holdOff pic.sampleOff]; 
+        event   = [bhv.fixNotMaint pic.holdOff pic.fixOff]; 
         outcome = err.fixBreak; break
     else
         % Correctly held fixation & hold
@@ -252,7 +255,7 @@ while outcome < 0
     % HANDLE situations where testPeriod < respPeriod
     if searchPeriod < respPeriod && sum(chosenResp) == 0
         % REMOVE searchArray image
-        tTestOff     = toggleobject([searchArray photodiodeCue],'eventmarker', pic.testOff);
+        tTestOff     = toggleobject([searchArray photodiodeCue],'eventmarker', pic.sampleOff);
         visibleStims = [stimFixCue sameButton diffButton];
         
         % WAIT for response if TEST period < RESP period
@@ -270,7 +273,7 @@ while outcome < 0
         end
         event = [];
     else
-        event = pic.testOff;
+        event = pic.sampleOff;
     end
     
     % MARK the behavioral outcome
@@ -296,6 +299,11 @@ while outcome < 0
         outcome = err.respWrong; break
     end
 end
+
+% WAIT for some period so we have a temporal difference successive toggleobjects. This is
+% useful when: right after a toggleobject, eyejoytrack gets error and visible stims are
+% toggled off, we may not see a clear state flip in photodiode signal 
+idle(taskWrapPeriod);
 
 % SET trial outcome and remove all stimuli
 trialerror(outcome);
@@ -358,10 +366,10 @@ cCalFixRadius     = trl.shift + TrialRecord.Editable.calFixRadius*10;
 cRewardVol        = trl.shift + TrialRecord.Editable.rewardVol*1000;
 
 % PREPARE stim info - sets of stim ID, stimPosX and stimPosY to transmit
-cTargetID     = trl.shift + Info.targetImageID;
+cTargetID     = trl.shift       + Info.targetImageID;
 cTargetX      = trl.picPosShift + TaskObject.Position(searchArray(1),1)*1000;
 cTargetY      = trl.picPosShift + TaskObject.Position(searchArray(1),2)*1000;
-cDistractorID = trl.shift + Info.distractorImageID;
+cDistractorID = trl.shift       + Info.distractorImageID;
 cDistractorX  = nan(Info.distractorPerTrial,1);
 cDistractorY  = nan(Info.distractorPerTrial,1);
 
@@ -392,9 +400,9 @@ eventmarker(trl.edtStop);
 eventmarker(trl.stimStart);
 
 % SEND stim info - imageID, X position and Y position
-eventmarker([cTargetID cTargetX cTargetY cDistractorID]);
+eventmarker([cTargetID cTargetX cTargetY]);
 for imgIDSend = 1:Info.distractorPerTrial
-    eventmarker([cDistractorX(imgInd) cDistractorY(imgInd)]);
+    eventmarker([cDistractorID cDistractorX(imgIDSend) cDistractorY(imgIDSend)]);
 end
 
 % STIM INFO start marker
@@ -424,7 +432,7 @@ bhv_variable(...
     'tFixAcq',       tFixAcq,       'tFixAcqCueOff',    tFixAcqCueOff,...
     'tSearchRespOn', tSearchRespOn, 'tBhvResp',         tBhvResp,...
     'tSearchOff',    tSearchOff,    'tRespOff',         tRespOff,...
-    'tAllOff',       tAllOff);
+    'tAllOff',       tAllOff,       'taskWrapPeriod',   taskWrapPeriod);
 
 % FOOTER end------------------------------------------------------------------------------
 % DASHBOARD (customize as required)-------------------------------------------------------

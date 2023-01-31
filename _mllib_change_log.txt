@@ -4,6 +4,13 @@ Maintained by
     Dec 2022 onward - Thomas    
     Till Dec 2022   - Georgin/Thomas
 
+31-01-2023 VERSION 7.5.2 - thomas
+    - All timing files updated to have a taskWrapPerios (50 ms) at end of trial. This ensures we have a temporal 
+      difference successive toggleobjects. This is useful when: right after a toggleobject, eyejoytrack gets error
+      and visible stims are toggled off, we may not see a clear state flip in photodiode signal.
+    - For SSD and VSO, we are sending stimIDLocs as [targetID targetX targetY distractor01ID distractor01X distractor01Y
+      for nDistractors = Info.distractorPerTrial]
+
 30-01-2023 VERSION 7.5.1 - thomas
     - All timing files updated to remove any timing variables as editables
     - Task timing related variables that are hardcoded in timing file are now captures in data.UserVars of bhv2 file

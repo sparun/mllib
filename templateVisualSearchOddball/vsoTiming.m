@@ -9,6 +9,8 @@
 %   30-Jan-2023 - Thomas  - Removed calibration task timing related info from editables 
 %                 Arun      and all undocumented task related variables are being stored
 %                           in data.UserVars
+%   31-Jan-2023 - Thomas  - Ensuring a difference between succesive toggleobjects
+%                           (in case of eyejoytrack break) with a taskWrapPeriod.
 % ----------------------------------------------------------------------------------------
 
 % HEADER start ---------------------------------------------------------------------------
@@ -41,6 +43,7 @@ holdRadiusBuffer = 2;
 holdPeriod       = 300;
 searchPeriod     = Info.searchPeriod;
 respPeriod       = Info.respPeriod;
+taskWrapPeriod   = 50;
 reward           = ml_rewardVol2Time(rewardVol);
 
 % ASSIGN event codes from TrialRecord.User
@@ -196,6 +199,11 @@ while outcome < 0
     end
 end
 
+% WAIT for some period so we have a temporal difference successive toggleobjects. This is
+% useful when: right after a toggleobject, eyejoytrack gets error and visible stims are
+% toggled off, we may not see a clear state flip in photodiode signal 
+idle(taskWrapPeriod);
+
 % SET trial outcome and remove all stimuli
 trialerror(outcome);
 tAllOff = toggleobject([visibleStims photodiodeCue], 'eventmarker', event);
@@ -251,10 +259,10 @@ cCalFixRadius     = trl.shift + TrialRecord.Editable.calFixRadius*10;
 cRewardVol        = trl.shift + TrialRecord.Editable.rewardVol*1000;
 
 % PREPARE stim info - sets of stim ID, stimPosX and stimPosY to transmit
-cTargetID     = trl.shift + Info.targetImageID;
+cTargetID     = trl.shift       + Info.targetImageID;
 cTargetX      = trl.picPosShift + TaskObject.Position(searchArray(1),1)*1000;
 cTargetY      = trl.picPosShift + TaskObject.Position(searchArray(1),2)*1000;
-cDistractorID = trl.shift + Info.distractorImageID;
+cDistractorID = trl.shift       + Info.distractorImageID;
 cDistractorX  = nan(Info.distractorPerTrial,1);
 cDistractorY  = nan(Info.distractorPerTrial,1);
 
@@ -285,9 +293,9 @@ eventmarker(trl.edtStop);
 eventmarker(trl.stimStart);
 
 % SEND stim info - imageID, X position and Y position
-eventmarker([cTargetID cTargetX cTargetY cDistractorID]);
+eventmarker([cTargetID cTargetX cTargetY]);
 for imgIDSend = 1:Info.distractorPerTrial
-    eventmarker([cDistractorX(imgInd) cDistractorY(imgInd)]);
+    eventmarker([cDistractorID cDistractorX(imgIDSend) cDistractorY(imgIDSend)]);
 end
 
 % STIM INFO start marker
@@ -312,10 +320,10 @@ TrialRecord.User.targetLocation(trialNum)     = Info.targetLocation;
 
 % SAVE to Data.UserVars
 bhv_variable(...
-    'juiceConsumed',    juiceConsumed,   'tHoldButtonOn',    tHoldButtonOn,...
-    'tTrialInit',       tTrialInit,      'tSearchRespOn',    tSearchRespOn,...
-    'tBhvResp',         tBhvResp,        'tAllOff',          tAllOff,...
-    'holdRadiusBuffer', holdRadiusBuffer);
+    'juiceConsumed',    juiceConsumed,    'tHoldButtonOn',  tHoldButtonOn,...
+    'tTrialInit',       tTrialInit,       'tSearchRespOn',  tSearchRespOn,...
+    'tBhvResp',         tBhvResp,         'tAllOff',        tAllOff,...
+    'holdRadiusBuffer', holdRadiusBuffer, 'taskWrapPeriod', taskWrapPeriod);
 
 % FOOTER end------------------------------------------------------------------------------
 % DASHBOARD (customize as required)-------------------------------------------------------

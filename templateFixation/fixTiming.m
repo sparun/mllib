@@ -17,6 +17,8 @@
 %   30-Jan-2023 - Thomas  - Removed calibration task timing related info from editables 
 %                 Arun      and all undocumented task related variables are being stored
 %                           in data.UserVars
+%   31-Jan-2023 - Thomas  - Ensuring a difference between succesive toggleobjects
+%                           (in case of eyejoytrack break) with a taskWrapPeriod.
 % ----------------------------------------------------------------------------------------
 
 % HEADER start ---------------------------------------------------------------------------
@@ -52,6 +54,7 @@ holdRadius       = TrialData.TaskObject.Attribute{1, 2}{1, 2};
 holdRadiusBuffer = 2;
 stimOnPeriod     = Info.stimOnPeriod;
 stimOffPeriod    = Info.stimOffPeriod;
+taskWrapPeriod   = 50;
 reward           = ml_rewardVol2Time(rewardVol);
 
 % ASSIGN event codes from TrialRecord.User
@@ -86,10 +89,10 @@ selEvts  = [...
 % HANDLE reordering of stimFixCue above or below stims
 if Info.stimFixCueAboveStimFlag
     TaskObject.Zorder(stimFixCue) = 1;
-    TaskObject.Zorder(selStim) = 0;
+    TaskObject.Zorder(selStim)    = 0;
 else
     TaskObject.Zorder(stimFixCue) = 0;
-    TaskObject.Zorder(selStim) = 1;
+    TaskObject.Zorder(selStim)    = 1;
 end
 
 % DECLARE select timing and reward variables as NaN
@@ -259,7 +262,7 @@ while outcome < 0
             ontarget = eyejoytrack(...
                 'releasetarget',holdButton, holdRadius,...
                 '~touchtarget', holdButton, holdRadius + holdRadiusBuffer,...
-                'holdfix',      stimFixCue,   taskFixRadius,...
+                'holdfix',      stimFixCue, taskFixRadius,...
                 stimOffPeriod);
             
             if ontarget(1) == 0
@@ -297,6 +300,11 @@ while outcome < 0
         outcome = err.respCorr;
     end
 end
+
+% WAIT for some period so we have a temporal difference successive toggleobjects. This is
+% useful when: right after a toggleobject, eyejoytrack gets error and visible stims are
+% toggled off, we may not see a clear state flip in photodiode signal 
+idle(taskWrapPeriod);
 
 % SET trial outcome and remove all visible stimuli
 trialerror(outcome);
@@ -437,7 +445,7 @@ bhv_variable(...
     'tTrialInit',    tTrialInit,    'tFixCueOn',        tFixCueOn,...
     'tFixAcq',       tFixAcq,       'tFixCueOff',       tFixCueOff,...
     'tStimOn',       tStimOn,       'tStimOff',         tStimOff,...
-    'tAllOff',       tAllOff);
+    'tAllOff',       tAllOff,       'taskWrapPeriod',   taskWrapPeriod);
 
 % FOOTER end------------------------------------------------------------------------------
 % DASHBOARD (customize as required)-------------------------------------------------------

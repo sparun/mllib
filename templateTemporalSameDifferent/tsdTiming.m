@@ -28,6 +28,8 @@
 %   30-Jan-2023 - Thomas  - Removed calibration task timing related info from editables 
 %                 Arun      and all undocumented task related variables are being stored
 %                           in data.UserVars
+%   31-Jan-2023 - Thomas  - Ensuring a difference between succesive toggleobjects
+%                           (in case of eyejoytrack break) with a taskWrapPeriod.
 % ----------------------------------------------------------------------------------------
 
 % HEADER start ---------------------------------------------------------------------------
@@ -63,6 +65,7 @@ samplePeriod     = Info.samplePeriod;
 delayPeriod      = Info.delayPeriod;
 testPeriod       = Info.testPeriod;
 respPeriod       = Info.respPeriod;
+taskWrapPeriod   = 50;
 reward           = ml_rewardVol2Time(rewardVol);
 
 % ASSIGN event codes from TrialRecord.User
@@ -355,6 +358,11 @@ while outcome < 0
     end
 end
 
+% WAIT for some period so we have a temporal difference successive toggleobjects. This is
+% useful when: right after a toggleobject, eyejoytrack gets error and visible stims are
+% toggled off, we may not see a clear state flip in photodiode signal 
+idle(taskWrapPeriod);
+
 % SET trial outcome and remove all visible stimuli
 trialerror(outcome);
 tAllOff  = toggleobject([visibleStims photodiodeCue], 'eventmarker', event);
@@ -416,10 +424,10 @@ cCalFixRadius     = trl.shift + TrialRecord.Editable.calFixRadius*10;
 cRewardVol        = trl.shift + TrialRecord.Editable.rewardVol*1000;
 
 % PREPARE stim info - sets of stim ID, stimPosX and stimPosY to transmit
-cSampleID = trl.shift + Info.sampleImageID;
+cSampleID = trl.shift       + Info.sampleImageID;
 cSampleX  = trl.picPosShift + TaskObject.Position(sampleImage,1)*1000;
 cSampleY  = trl.picPosShift + TaskObject.Position(sampleImage,2)*1000;
-cTestID   = trl.shift + Info.testImageID;
+cTestID   = trl.shift       + Info.testImageID;
 cTestX    = trl.picPosShift + TaskObject.Position(testImage,1)*1000;
 cTestY    = trl.picPosShift + TaskObject.Position(testImage,2)*1000;
 
@@ -476,7 +484,7 @@ bhv_variable(...
     'tFixMaintCueOn', tFixMaintCueOn, 'tFixMaintCueOff',  tFixMaintCueOff,...
     'tTestRespOn',    tTestRespOn,    'tBhvResp',         tBhvResp,...
     'tTestOff',       tTestOff,       'tRespOff',         tRespOff,...
-    'tAllOff',        tAllOff);
+    'tAllOff',        tAllOff,        'taskWrapPeriod',   taskWrapPeriod);
 
 % FOOTER end------------------------------------------------------------------------------
 % DASHBOARD (customize as required)-------------------------------------------------------

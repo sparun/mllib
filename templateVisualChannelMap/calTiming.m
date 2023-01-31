@@ -19,7 +19,7 @@
 %   03-Nov-2021 - Thomas  - Included wmFixCue TaskObject in conditions file
 %                 Georgin
 %   30-Jan-2023 - Thomas  - Toggling photodiodeCue for last calibOff and separating it
-%                 Arun      from holdOff by calFixWrapPeriod. Removed calibration task
+%                 Arun      from holdOff by taskWrapPeriod. Removed calibration task
 %                           timing related info from editables and all undocumented task
 %                           related variables are being stored in data.UserVars
 % ----------------------------------------------------------------------------------------
@@ -53,7 +53,7 @@ holdRadius       = TrialData.TaskObject.Attribute{1, 2}{1, 2};
 holdRadiusBuffer = 2;
 calFixInitPeriod = 500;
 calFixHoldPeriod = 300;
-calFixWrapPeriod = 50;
+taskWrapPeriod   = 50;
 reward           = ml_rewardVol2Time(rewardVol);
 
 % ASSIGN event codes from TrialRecord.User
@@ -217,9 +217,10 @@ while outcome < 0
     end
 end
 
-% WAIT for some period so we have a temporal difference between the last calibOff and
-% holdButtonOff
-idle(calFixWrapPeriod);
+% WAIT for some period so we have a temporal difference successive toggleobjects. This is
+% useful when: right after a toggleobject, eyejoytrack gets error and visible stims are
+% toggled off, we may not see a clear state flip in photodiode signal 
+idle(taskWrapPeriod);
 
 % SET trial outcome and remove all visible stimuli
 trialerror(outcome);
@@ -331,7 +332,7 @@ TrialRecord.User.juiceConsumed(trialNum)    = juiceConsumed;
 % SAVE to Data.UserVars
 bhv_variable(...
     'holdRadiusBuffer', holdRadiusBuffer, 'calFixInitPeriod', calFixInitPeriod,...
-    'calFixHoldPeriod', calFixHoldPeriod, 'calFixWrapPeriod', calFixWrapPeriod,...
+    'calFixHoldPeriod', calFixHoldPeriod, 'taskWrapPeriod',   taskWrapPeriod,...
     'juiceConsumed',    juiceConsumed,    'tHoldButtonOn',    tHoldButtonOn,...
     'tTrialInit',       tTrialInit,       'tFixAcqCueOn',     tFixAcqCueOn,...
     'tFixAcq',          tFixAcq,          'tFixAcqCueOff',    tFixAcqCueOff,...
